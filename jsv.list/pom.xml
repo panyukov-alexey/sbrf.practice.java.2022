@@ -12,7 +12,7 @@
 	<artifactId>jsv.list</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>jsv.list</name>
-	<description>JSV list demo app for 2022 sommer practice</description>
+	<description>JSV list demo app for 2022 summer practice</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>

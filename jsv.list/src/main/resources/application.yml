@@ -1,0 +1,19 @@
+server:
+  address: 'localhost'
+  port: 8080
+
+spring:
+  security:
+    user:
+      name: admin
+      password: password
+  datasource:
+    url: jdbc:postgresql://surus.db.elephantsql.com/pkddzguy
+    username: pkddzguy
+    password: UuF4nnLrVzG2uYs873oSNc5ZkHe1ucbG
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

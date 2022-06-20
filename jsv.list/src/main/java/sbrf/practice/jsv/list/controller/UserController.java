@@ -11,7 +11,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private UserService service;
+    private final UserService service;
 
     public UserController(@Autowired UserService service) {
         this.service = service;
@@ -23,7 +23,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User findById(@PathVariable("id")UUID id) {
+    public User findById(@PathVariable("id") UUID id) {
         return this.service.findById(id);
     }
 

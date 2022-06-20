@@ -12,7 +12,7 @@ import java.util.UUID;
 @Service
 public class UserService {
 
-    private UserRepository repository;
+    private final UserRepository repository;
 
     public UserService(@Autowired UserRepository repository) {
         this.repository = repository;

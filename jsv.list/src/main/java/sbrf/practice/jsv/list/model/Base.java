@@ -1,5 +1,8 @@
 package sbrf.practice.jsv.list.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -10,6 +13,9 @@ import javax.persistence.TemporalType;
 import java.util.Date;
 
 @MappedSuperclass
+@Getter
+@Setter
+@NoArgsConstructor
 public abstract class Base {
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)

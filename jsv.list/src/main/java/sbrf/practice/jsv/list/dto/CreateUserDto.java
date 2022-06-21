@@ -1,6 +1,8 @@
 package sbrf.practice.jsv.list.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +12,7 @@ import javax.validation.constraints.Pattern;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class CreateUserDto {
     @NotNull
     @JsonProperty("username")
@@ -21,9 +24,4 @@ public class CreateUserDto {
     @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*]\\d)[A-Za-z\\d]{8,32}$")
     @JsonProperty("password")
     private String password;
-
-    public CreateUserDto(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 }

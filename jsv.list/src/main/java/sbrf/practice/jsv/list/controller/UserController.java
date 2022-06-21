@@ -7,6 +7,7 @@ import sbrf.practice.jsv.list.dto.UpdateUserDto;
 import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.service.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,27 +22,27 @@ public class UserController {
 
     @GetMapping()
     public List<User> findAll() {
-        return this.service.findAll();
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
     public User findById(@PathVariable("id") UUID id) {
-        return this.service.findById(id);
+        return service.findById(id);
     }
 
     @PostMapping()
-    public User create(@RequestBody CreateUserDto dto) {
-        return this.service.create(dto);
+    public User create(@Valid @RequestBody CreateUserDto dto) {
+        return service.create(dto);
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable("id") UUID id, @RequestBody UpdateUserDto dto) {
+    public User update(@PathVariable("id") UUID id, @Valid  @RequestBody UpdateUserDto dto) {
         return this.service.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable("id") UUID id) {
-        this.service.deleteById(id);
+        service.deleteById(id);
     }
 
 }

@@ -2,21 +2,18 @@ server:
   address: 'localhost'
   port: 8080
 
+datasource:
+  postgres:
+    jdbcUrl: jdbc:postgresql://surus.db.elephantsql.com/pkddzguy
+    username: pkddzguy
+    password: UuF4nnLrVzG2uYs873oSNc5ZkHe1ucbG
+  h2:
+    jdbcUrl: jdbc:h2:mem:database
+    username: sa
+    password: password
+
 spring:
   security:
     user:
       name: admin
       password: password
-  datasource:
-    url: jdbc:h2:mem:database
-    username: sa
-    password: password
-  h2:
-    console:
-      enabled: true
-  jpa:
-    hibernate:
-      ddl-auto: update
-    database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
-    show-sql: true

@@ -18,12 +18,12 @@ databaseChangeLog:
                   type: varchar(200)
                   constraints:
                     nullable: false
+                    unique: true
               - column:
                   name: PASSWORD
                   type: varchar(200)
                   constraints:
                     nullable: false
-                    unique: true
               - column:
                   name: CREATED_AT
                   type: timestamp
@@ -33,5 +33,5 @@ databaseChangeLog:
                   name: UPDATED_AT
                   type: timestamp
                   constraints:
-                    nullable: false
+                    nullable: true
 

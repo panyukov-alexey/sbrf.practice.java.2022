@@ -4,7 +4,7 @@ create table if not exists USERS
     USERNAME varchar not null,
     PASSWORD varchar not null,
     CREATED_AT timestamp not null,
-    UPDATED_AT timestamp not null,
+    UPDATED_AT timestamp,
     constraint TABLE_NAME_PK
         primary key (ID)
 
@@ -14,7 +14,7 @@ create unique index TABLE_NAME_ID_UINDEX
     on USERS (ID);
 
 create unique index TABLE_NAME_PASSWORD_UINDEX
-    on USERS (PASSWORD);
+    on USERS (USERNAME);
 
 INSERT INTO "USERS" ("USERNAME", "PASSWORD", "CREATED_AT", "UPDATED_AT")
 VALUES ('Charlie Scene', 'Gdy7wQz7', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),

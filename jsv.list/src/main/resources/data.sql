@@ -1,19 +1,19 @@
 create table if not exists USERS
 (
-    ID       int auto_increment,
+    ID       bigint auto_increment,
     USERNAME varchar not null,
     PASSWORD varchar not null,
     CREATED_AT timestamp not null,
     UPDATED_AT timestamp,
-    constraint TABLE_NAME_PK
+    constraint USERS_PK
         primary key (ID)
 
 );
 
-create unique index TABLE_NAME_ID_UINDEX
+create unique index UDX_USERS_ID
     on USERS (ID);
 
-create unique index TABLE_NAME_USERNAME_UINDEX
+create unique index UDX_USERS_USERNAME
     on USERS (USERNAME);
 
 INSERT INTO "USERS" ("USERNAME", "PASSWORD", "CREATED_AT", "UPDATED_AT")

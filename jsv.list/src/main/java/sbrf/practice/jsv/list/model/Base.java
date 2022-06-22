@@ -17,12 +17,10 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 public abstract class Base {
-    @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at", updatable = false)
     @CreationTimestamp
     private Date createdAt;
     @Column(name = "updated_at")
     @UpdateTimestamp
-    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 }

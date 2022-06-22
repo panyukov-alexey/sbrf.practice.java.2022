@@ -13,7 +13,7 @@ create table if not exists USERS
 create unique index TABLE_NAME_ID_UINDEX
     on USERS (ID);
 
-create unique index TABLE_NAME_PASSWORD_UINDEX
+create unique index TABLE_NAME_USERNAME_UINDEX
     on USERS (USERNAME);
 
 INSERT INTO "USERS" ("USERNAME", "PASSWORD", "CREATED_AT", "UPDATED_AT")

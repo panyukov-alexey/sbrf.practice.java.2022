@@ -3,18 +3,22 @@ create table if not exists USERS
     ID       int auto_increment,
     USERNAME varchar not null,
     PASSWORD varchar not null,
-    constraint USERS_PK
+    CREATED_AT timestamp not null,
+    UPDATED_AT timestamp not null,
+    constraint TABLE_NAME_PK
         primary key (ID)
+
 );
 
-create unique index USERS_ID_UINDEX
+create unique index TABLE_NAME_ID_UINDEX
     on USERS (ID);
 
-create unique index USERS_PASSWORD_UINDEX
+create unique index TABLE_NAME_PASSWORD_UINDEX
     on USERS (PASSWORD);
 
-INSERT INTO "USERS" ("USERNAME", "PASSWORD") VALUES ('Charlie Scene', 'Gdy7wQ');
-INSERT INTO "USERS" ("USERNAME", "PASSWORD") VALUES ('J-Dog', 'o8eQfF');
-INSERT INTO "USERS" ("USERNAME", "PASSWORD") VALUES ('Funny Man', 'YxeO22');
-INSERT INTO "USERS" ("USERNAME", "PASSWORD") VALUES ('Johnny 3 Tears', 'D5hVnE');
-INSERT INTO "USERS" ("USERNAME", "PASSWORD") VALUES ('Danny', 'tqLyZ1');
+INSERT INTO "USERS" ("USERNAME", "PASSWORD", "CREATED_AT", "UPDATED_AT")
+VALUES ('Charlie Scene', 'Gdy7wQz7', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       ('J-Dog', 'o8eQfFpf', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       ('Funny Man', 'YxeO22e1', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       ('Johnny 3 Tears', 'D5hxcVnE', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       ('Danny', 'tqLyZ10q', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());

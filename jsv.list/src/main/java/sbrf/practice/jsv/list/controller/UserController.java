@@ -2,8 +2,6 @@ package sbrf.practice.jsv.list.controller;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sbrf.practice.jsv.list.dto.CreateUserDto;
 import sbrf.practice.jsv.list.dto.UpdateUserDto;
@@ -24,23 +22,11 @@ public class UserController {
         this.service = service;
         log.info("UserController has been initialized");
     }
-
-    @Autowired
-    private PasswordEncoder passwordEncoder(){
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder;
-    };
     
     @GetMapping()
     public List<User> findAll() {
         log.info("Attempt to find all users");
         return service.findAll();
-    }
-
-    @GetMapping("/check")
-    public String check(UUID id){
-        User user = service.findAll().get(0);
-        return passwordEncoder().encode(user.getPassword());
     }
 
     @GetMapping("/{id}")

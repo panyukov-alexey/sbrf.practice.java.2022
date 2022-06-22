@@ -5,6 +5,7 @@ server:
 spring:
   liquibase:
     change-log: changelog.yaml
+    enabled: true
   security:
     user:
       name: admin
@@ -20,5 +21,5 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
-    defer-datasource-initialization: true
+    defer-datasource-initialization: false
     show-sql: true

@@ -1,22 +1,6 @@
-
-create table "Users_test"
-(
-    ID       INTEGER auto_increment,
-    NAME     CHARACTER VARYING not null,
-    PASSWORD CHARACTER VARYING not null,
-    constraint USERS_TEST_PK
-        primary key (ID)
-);
-
-create unique index USERS_TEST_ID_UINDEX
-    on "Users_test" (ID);
-
-create unique index USERS_TEST_PASSWORD_UINDEX
-    on "Users_test" (PASSWORD);
-
-
-INSERT INTO "Users_test" ("NAME", "PASSWORD") VALUES ('Charlie Scene', 'Gdy7wQ');
-INSERT INTO "Users_test" ("NAME", "PASSWORD") VALUES ('J-Dog', 'o8eQfF');
-INSERT INTO "Users_test" ("NAME", "PASSWORD") VALUES ('Funny Man', 'YxeO22');
-INSERT INTO "Users_test" ("NAME", "PASSWORD") VALUES ('Johnny 3 Tears', 'D5hVnE');
-INSERT INTO "Users_test" ("NAME", "PASSWORD") VALUES ('Danny', 'tqLyZ1');
+INSERT INTO "USERS" ("USERNAME", "PASSWORD", "CREATED_AT", "UPDATED_AT")
+VALUES ('Charlie Scene', '$2a$10$/9aouasjYQw4/wwzSWEkdOwoRmEqg5cYHm6gQ0KnTK2QpLakSdHqW', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       ('J-Dog', '$2a$10$DIHrF7Nhig.z4eQ4RtvM3O6QKOhIsI6m..mVJjSwGli7vHP6FXf6W', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       ('Funny Man', '$2a$10$llE8XWDFCntFBROCqiYFQuk.akjbOSvw.he6EuySI6SUh3BuVnCRK', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       ('Johnny 3 Tears', '$2a$10$qxNP6DgdVOsazqML4NDMl.jmg1IgcMaRfczvAOWPBb78l744RH9gm', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP()),
+       ('Danny', '$2a$10$YZhYqtiFQfHKGn6GK/eJxuP0vIJb2k9Xw4CYjk4B9fZ4SqKEX9KOi', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());

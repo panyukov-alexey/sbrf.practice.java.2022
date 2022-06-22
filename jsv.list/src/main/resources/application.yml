@@ -1,0 +1,22 @@
+server:
+  address: 'localhost'
+  port: 8080
+
+spring:
+  security:
+    user:
+      name: admin
+      password: password
+  datasource:
+    url: jdbc:h2:mem:database
+    username: sa
+    password: password
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
+    show-sql: true

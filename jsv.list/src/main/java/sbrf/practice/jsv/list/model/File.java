@@ -23,8 +23,8 @@ public class File extends Base {
     @Column(name = "id")
     @ColumnDefault("random_uuid()")
     private UUID id;
-    @Column(name="filename")
+    @Column(name = "filename")
     private String filename;
-    @Column(name="filepath")
+    @Column(name = "filepath")
     private String filepath;
 }

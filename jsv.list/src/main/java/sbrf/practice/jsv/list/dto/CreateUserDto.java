@@ -1,7 +1,6 @@
 package sbrf.practice.jsv.list.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +20,7 @@ public class CreateUserDto {
      * Минимум одна буква, одна цифра и длина от 8 до 32 символов
      */
     @NotNull
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*]\\d)[A-Za-z\\d]{8,32}$")
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
     @JsonProperty("password")
     private String password;
 }

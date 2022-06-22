@@ -1,6 +1,8 @@
 package sbrf.practice.jsv.list.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.CreateUserDto;
 import sbrf.practice.jsv.list.dto.UpdateUserDto;
@@ -16,6 +18,12 @@ public class UserService {
 
     private final UserRepository repository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder(){
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder;
+    };
+
     public UserService(@Autowired UserRepository repository) {
         this.repository = repository;
     }
@@ -29,7 +37,9 @@ public class UserService {
     }
 
     public User create(CreateUserDto dto) {
-        User user = new User(dto.getUsername(), dto.getPassword());
+        User user = new User();
+        user.setUsername(dto.getUsername());
+        user.setPassword(passwordEncoder().encode(dto.getPassword()));
         return repository.save(user);
     }
 

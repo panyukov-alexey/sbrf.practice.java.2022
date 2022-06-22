@@ -4,7 +4,7 @@ databaseChangeLog:
       author: Valera
       changes:
         - createTable:
-            createTable: USERS
+            tableName: USERS
             columns:
               - column:
                   name: ID

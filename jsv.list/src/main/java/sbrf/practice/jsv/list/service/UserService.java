@@ -18,14 +18,14 @@ public class UserService {
 
     private final UserRepository repository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder(){
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder;
-    };
-
     public UserService(@Autowired UserRepository repository) {
         this.repository = repository;
+    }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder() {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder;
     }
 
     public List<User> findAll() {

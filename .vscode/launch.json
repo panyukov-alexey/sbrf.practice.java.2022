@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-Application<jsv.list>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "sbrf.practice.jsv.list.Application",
+            "projectName": "jsv.list",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

@@ -22,7 +22,7 @@ public class UserController {
         this.service = service;
         log.info("UserController has been initialized");
     }
-
+    
     @GetMapping()
     public List<User> findAll() {
         log.info("Attempt to find all users");

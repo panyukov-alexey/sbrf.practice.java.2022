@@ -12,3 +12,4 @@ buildNumber.properties
 .DS_Store
 *.iml
 .idea/
+apache-maven-3.8.6/

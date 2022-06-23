@@ -18,15 +18,12 @@ public class UserService {
 
     private final UserRepository repository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder(){
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder;
-    };
-
     public UserService(@Autowired UserRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public List<User> findAll() {
         return repository.findAll();
@@ -39,7 +36,7 @@ public class UserService {
     public User create(CreateUserDto dto) {
         User user = new User();
         user.setUsername(dto.getUsername());
-        user.setPassword(passwordEncoder().encode(dto.getPassword()));
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         return repository.save(user);
     }
 

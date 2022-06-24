@@ -47,18 +47,18 @@ public class FileController {
     @PostMapping()
     public File create(@Valid @ModelAttribute CreateFileDto dto) throws IOException {
         return service.create(dto);
-        log.info("Trying to upload new file")
+        log.info("Trying to upload new file");
     }
 
     @PutMapping("/{id}")
     public File update(@PathVariable("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto) throws IOException {
         return this.service.update(id, dto);
-        log.info("Trying to update a file with given id")
+        log.info("Trying to update a file with given id");
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable("id") UUID id) {
         service.deleteById(id);
-        log.info("Trying to delete a file with given id")
+        log.info("Trying to delete a file with given id");
     }
 }

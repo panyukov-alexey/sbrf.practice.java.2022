@@ -15,18 +15,12 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Autowired
-    private PasswordEncoder passwordEncoder(){
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder;
-    };
 
     @Autowired
     public void initialize(AuthenticationManagerBuilder builder, DataSource dataSource) throws Exception {
         builder.jdbcAuthentication().dataSource(dataSource)
                 .usersByUsernameQuery("SELECT username,password,'true' as enabled FROM users WHERE username=?")
-                .authoritiesByUsernameQuery("SELECT username, 'ROLE_USER' FROM users WHERE username=?")
-                .passwordEncoder(passwordEncoder());
+                .authoritiesByUsernameQuery("SELECT username, 'ROLE_USER' FROM users WHERE username=?");
     }
 
     @Bean
@@ -34,5 +28,11 @@ public class SecurityConfig {
        return (web) -> web.ignoring().antMatchers("/h2-console/**");
 
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder;
+    };
 
 }

@@ -1,43 +1,50 @@
 package sbrf.practice.jsv.list.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.sql.Blob;
+import java.util.UUID;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import org.hibernate.annotations.GenericGenerator;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
-import java.util.UUID;
-
+@Entity
+@Table(name = "files")
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "files")
-public class File extends Base {
+public class File extends Base{
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+        name = "uuid",
+        strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false)
-    @ColumnDefault("random_uuid()")
     private UUID id;
-    @Column(name = "user_id")
-    private UUID userId;
 
-    @Column(name = "filename")
-    private String filename;
-    @Column(name = "binary")
-    private byte[] binary;
+    @Column(name = "file_name", unique = true)
+    private String fileName;
 
-    @ManyToOne()
-    @JoinColumn(name = "user_id", updatable = false, insertable = false)
-    @JsonIgnore
-    private User user;
+    @ManyToOne
+    @JoinColumn(name = "author_id", insertable=false, updatable=false)
+    private User author;
 
-    public File(UUID userId, String filename, byte[] binary) {
-        this.userId = userId;
-        this.filename = filename;
-        this.binary = binary;
+    @Column(name = "author_id")
+    private UUID authorID;
+
+    @Column(name = "content")
+    private Blob content;
+
+    public File(String fileName, UUID authorID, Blob content) {
+        this.fileName = fileName;
+        this.authorID = authorID;
+        this.content = content;
     }
 }

@@ -25,7 +25,6 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
         return (web) -> web.ignoring().antMatchers("/h2-console/**");
-
     }
 
     @Bean
@@ -33,7 +32,5 @@ public class SecurityConfig {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder;
     }
-
-    ;
 
 }

@@ -1,4 +1,4 @@
-package sbrf.practice.jsv.list.dto;
+package sbrf.practice.jsv.list.dto.users;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

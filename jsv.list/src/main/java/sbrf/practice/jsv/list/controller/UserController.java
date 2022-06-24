@@ -3,8 +3,9 @@ package sbrf.practice.jsv.list.controller;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sbrf.practice.jsv.list.dto.CreateUserDto;
-import sbrf.practice.jsv.list.dto.UpdateUserDto;
+
+import sbrf.practice.jsv.list.dto.users.CreateUserDto;
+import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
 import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.service.UserService;
 

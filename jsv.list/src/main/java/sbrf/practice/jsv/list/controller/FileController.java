@@ -2,8 +2,9 @@ package sbrf.practice.jsv.list.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sbrf.practice.jsv.list.dto.CreateFileDto;
-import sbrf.practice.jsv.list.dto.UpdateFileDto;
+
+import sbrf.practice.jsv.list.dto.files.CreateFileDto;
+import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.model.File;
 import sbrf.practice.jsv.list.service.FileService;
 

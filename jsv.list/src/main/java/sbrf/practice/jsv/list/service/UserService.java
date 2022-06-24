@@ -3,8 +3,9 @@ package sbrf.practice.jsv.list.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import sbrf.practice.jsv.list.dto.CreateUserDto;
-import sbrf.practice.jsv.list.dto.UpdateUserDto;
+
+import sbrf.practice.jsv.list.dto.users.CreateUserDto;
+import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
 import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.repository.UserRepository;
 

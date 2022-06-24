@@ -1,4 +1,4 @@
-package sbrf.practice.jsv.list.dto;
+package sbrf.practice.jsv.list.dto.users;
 
 
 import javax.validation.constraints.NotNull;

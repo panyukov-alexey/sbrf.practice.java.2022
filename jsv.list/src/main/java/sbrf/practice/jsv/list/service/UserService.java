@@ -25,15 +25,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     public List<User> findAll() {
         return repository.findAll();
     }
 
     public User findById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no user with id=\'%d\'", id)));
     }
 
     public User create(CreateUserDto dto) {

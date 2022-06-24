@@ -31,7 +31,7 @@ public class User extends Base {
     private String password;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<File> files = new ArrayList<>();
+    private List<File> files = new ArrayList<File>();
 
     public User(String username, String password) {
         this.username = username;

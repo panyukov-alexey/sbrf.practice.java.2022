@@ -24,14 +24,15 @@ public class File extends Base {
     private UUID id;
     @Column(name = "user_id")
     private UUID userId;
-    @ManyToOne()
-    @JoinColumn(name = "user_id", updatable = false, insertable = false)
-    @JsonIgnore
-    private User user;
+
     @Column(name = "filename")
     private String filename;
     @Column(name = "binary")
     private byte[] binary;
+
+    @ManyToOne()
+    @JoinColumn(name = "user_id", updatable = false, insertable = false)
+    private User user;
 
     public File(UUID userId, String filename, byte[] binary) {
         this.userId = userId;

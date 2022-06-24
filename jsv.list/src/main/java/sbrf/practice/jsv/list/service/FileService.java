@@ -27,7 +27,7 @@ public class FileService {
     }
 
     public File findById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id=\'%d\'", id)));
     }
 
     public File create(CreateFileDto dto) throws IOException {

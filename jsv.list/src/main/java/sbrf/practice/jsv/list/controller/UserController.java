@@ -18,7 +18,8 @@ import java.util.UUID;
 public class UserController {
     private final UserService service;
 
-    public UserController(@Autowired UserService service) {
+    @Autowired
+    public UserController(UserService service) {
         this.service = service;
         log.info("UserController has been initialized");
     }

@@ -12,4 +12,5 @@ buildNumber.properties
 .DS_Store
 *.iml
 .idea/
+.vscode/
 apache-maven-3.8.6/

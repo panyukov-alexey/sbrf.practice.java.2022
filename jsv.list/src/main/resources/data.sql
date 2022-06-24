@@ -1,6 +1,6 @@
 create table if not exists USERS
 (
-    ID         bigint auto_increment,
+    ID         binary(255) not null,
     USERNAME   varchar   not null,
     PASSWORD   varchar   not null,
     CREATED_AT timestamp not null,

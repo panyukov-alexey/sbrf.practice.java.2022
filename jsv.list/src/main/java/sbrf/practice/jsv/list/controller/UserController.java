@@ -1,5 +1,6 @@
 package sbrf.practice.jsv.list.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +17,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/users")
 @Log4j2
+@RequiredArgsConstructor
 public class UserController {
     private final UserService service;
-
-    @Autowired
-    public UserController(UserService service) {
-        this.service = service;
-        log.info("UserController has been initialized");
-    }
 
     @GetMapping()
     public List<User> findAll() {

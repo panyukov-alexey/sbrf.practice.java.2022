@@ -1,6 +1,9 @@
 package sbrf.practice.jsv.list.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
@@ -42,6 +45,15 @@ public class FileController {
         return service.findFilesByAuthor(authorId);
         
     }
+
+    @GetMapping("files/sorted")
+    private Page<File> findAllSorted(@RequestParam("sort") Sort sort, 
+                                    @RequestParam("page") Integer page,
+                                    @RequestParam("val") Integer valPerPage) {
+        log.info("Trying to get and sort all existing files");
+        return service.findAllSorted(sort, page, valPerPage);
+    }
+
 
     @PostMapping()
     public File create(@Valid @ModelAttribute CreateFileDto dto) throws IOException {

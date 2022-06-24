@@ -1,6 +1,10 @@
 package sbrf.practice.jsv.list.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -31,7 +35,15 @@ public class FileService {
 
     public List<File> findFilesByAuthor(UUID authorId) {
         List<File> files = findAllFiles();
-        return files.stream().filter(f -> f.getAuthorID() == authorId).collect(Collectors.toList());
+        return files.stream().filter(f -> f.getAuthorID().toString().equals(authorId.toString())).collect(Collectors.toList());
+    }
+
+    // public Page<File> findAllSorted(Pageable pageable) {
+    //     return repository.findAll(pageable);
+    // }
+
+    public Page<File> findAllSorted(Sort sort, Integer page, Integer valPerPage) {
+        return repository.findAll(PageRequest.of(page, valPerPage, sort));
     }
 
     public File create(CreateFileDto dto) throws IOException {

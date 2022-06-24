@@ -1,3 +1,21 @@
+create table if not exists USERS
+(
+    ID       bigint auto_increment,
+    USERNAME varchar not null,
+    PASSWORD varchar not null,
+    CREATED_AT timestamp not null,
+    UPDATED_AT timestamp,
+    constraint USERS_PK
+        primary key (ID)
+
+);
+
+create unique index UDX_USERS_ID
+    on USERS (ID);
+
+create unique index UDX_USERS_USERNAME
+    on USERS (USERNAME);
+
 INSERT INTO "USERS" ("USERNAME", "PASSWORD", "CREATED_AT", "UPDATED_AT")
 VALUES ('Charlie Scene', '$2a$10$/9aouasjYQw4/wwzSWEkdOwoRmEqg5cYHm6gQ0KnTK2QpLakSdHqW', CURRENT_TIMESTAMP(),
         CURRENT_TIMESTAMP()),

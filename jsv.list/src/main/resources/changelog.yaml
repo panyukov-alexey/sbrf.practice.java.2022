@@ -11,8 +11,8 @@ databaseChangeLog:
                   type: bigint
                   autoIncrement: true
                   constraints:
-                    primaryKey:  true
-                    nullable:  false
+                    primaryKey: true
+                    nullable: false
               - column:
                   name: USERNAME
                   type: varchar(200)

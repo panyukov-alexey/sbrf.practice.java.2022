@@ -13,7 +13,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity()
+@Entity
 @Table(name = "files")
 public class File extends Base {
     @Id

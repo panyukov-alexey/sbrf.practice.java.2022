@@ -1,8 +1,8 @@
 create table if not exists USERS
 (
-    ID       bigint auto_increment,
-    USERNAME varchar not null,
-    PASSWORD varchar not null,
+    ID         bigint auto_increment,
+    USERNAME   varchar   not null,
+    PASSWORD   varchar   not null,
     CREATED_AT timestamp not null,
     UPDATED_AT timestamp,
     constraint USERS_PK

@@ -32,6 +32,7 @@ public class File extends Base {
 
     @ManyToOne()
     @JoinColumn(name = "user_id", updatable = false, insertable = false)
+    @JsonIgnore
     private User user;
 
     public File(UUID userId, String filename, byte[] binary) {

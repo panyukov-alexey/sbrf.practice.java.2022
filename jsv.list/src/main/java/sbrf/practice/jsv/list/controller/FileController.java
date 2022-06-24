@@ -26,12 +26,6 @@ public class FileController {
         log.info("Trying to get all existing files");
     }
 
-    @GetMapping("files/sorted")
-    private List<File> findAllSorted(@RequestParam("sort") String sort, Pageable pageable) {
-        return service.findAllSorted(pageable);
-        log.info("Trying to get and sort all existing files");
-    }
-
     @GetMapping("files/{id}")
     private File findFileById(@PathVariable("id") UUID id) {
         return service.findFileById(id);

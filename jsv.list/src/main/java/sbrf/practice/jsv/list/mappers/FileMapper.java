@@ -1,25 +1,28 @@
 package sbrf.practice.jsv.list.mappers;
 
-import java.util.Optional;
-
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
+import org.mapstruct.Mappings;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
-import sbrf.practice.jsv.list.dto.files.FileDto;
+import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.model.File;
 
-@Mapper
-public interface FileMapper {
-    @Mapping(target = "fileName", source = "fileName")
-    @Mapping(target = "authorID", source = "authorID")
-    @Mapping(target = "content", source = "content")
-    File fileDtoToFile(CreateFileDto dto);
-    File fileDtoToFile(FileDto dto);
+import java.io.IOException;
 
-    @Mapping(target = "fileName", source = "fileName")
-    @Mapping(target = "authorID", source = "authorID")
-    @Mapping(target = "content", source = "content")
-    FileDto fileToFileDto(File file);
-    FileDto fileToFileDto(Optional<File> file);
+@Mapper(componentModel = "spring")
+public interface FileMapper {
+
+    @Mappings({
+            @Mapping(target = "filename", expression = "java(dto.getFile().getOriginalFilename())"),
+            @Mapping(target = "authorId", source = "dto.authorId"),
+            @Mapping(target = "content", expression = "java(dto.getFile().getBytes())"),
+    })
+    File createFileDtoToFile(CreateFileDto dto) throws IOException;
+
+    @Mappings({
+            @Mapping(target = "filename", expression = "java(dto.getFile().getOriginalFilename())"),
+            @Mapping(target = "authorId", source = "dto.authorId"),
+            @Mapping(target = "content", expression = "java(dto.getFile().getBytes())"),
+    })
+    File updateFileDtoToFile(UpdateFileDto dto) throws IOException;
 }

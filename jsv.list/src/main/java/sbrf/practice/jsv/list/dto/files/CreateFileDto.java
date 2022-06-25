@@ -2,14 +2,12 @@ package sbrf.practice.jsv.list.dto.files;
 
 // import com.fasterxml.jackson.annotation.JsonProperty;
 // import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+// import lombok.Getter;
+// import lombok.Setter;
 import java.sql.Blob;
 import java.util.UUID;
 import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
 public class CreateFileDto extends FileDto{
     // @NotNull
     // @JsonProperty("file_name")

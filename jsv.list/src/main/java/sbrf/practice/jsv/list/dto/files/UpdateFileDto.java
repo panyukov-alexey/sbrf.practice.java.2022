@@ -4,11 +4,6 @@ import java.sql.Blob;
 
 import javax.validation.constraints.NotNull;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class UpdateFileDto extends FileDto{
     public UpdateFileDto(@NotNull String fileName, @NotNull Blob content){
         super(fileName, content);

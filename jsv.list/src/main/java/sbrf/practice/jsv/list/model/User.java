@@ -36,7 +36,7 @@ public class User extends Base {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy="author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Value("#{Collections.emptyList()}")
     @JsonIgnore
     private List<File> files;

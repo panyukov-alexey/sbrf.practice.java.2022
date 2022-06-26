@@ -26,11 +26,13 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: CREATED_AT
+                  defaultValueComputed: "current_timestamp()"
                   type: timestamp
                   constraints:
                     nullable: false
               - column:
                   name: UPDATED_AT
+                  defaultValueComputed: "current_timestamp()"
                   type: timestamp
                   constraints:
                     nullable: true
@@ -51,18 +53,71 @@ databaseChangeLog:
                     nullable: false
                     unique: true
               - column:
+                  name: AUTHOR_ID
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: USER_FILES_FK
+                    references: USERS(ID)
+              - column:
                   name: CONTENT
                   type: BLOB
                   constraints:
                     nullable: false
               - column:
                   name: CREATED_AT
+                  defaultValueComputed: "current_timestamp()"
                   type: timestamp
                   constraints:
                     nullable: false
               - column:
                   name: UPDATED_AT
+                  defaultValueComputed: "current_timestamp()"
                   type: timestamp
                   constraints:
                     nullable: true
-
+        - insert:
+            tableName: USERS
+            columns:
+              - column:
+                  name: USERNAME
+                  value: Charlie Scene
+              - column:
+                  name: PASSWORD
+                  value: $2a$10$/9aouasjYQw4/wwzSWEkdOwoRmEqg5cYHm6gQ0KnTK2QpLakSdHqW
+        - insert:
+            tableName: USERS
+            columns:
+              - column:
+                  name: USERNAME
+                  value: J-Dog
+              - column:
+                  name: PASSWORD
+                  value: $2a$10$DIHrF7Nhig.z4eQ4RtvM3O6QKOhIsI6m..mVJjSwGli7vHP6FXf6W
+        - insert:
+            tableName: USERS
+            columns:
+              - column:
+                  name: USERNAME
+                  value: Funny Man
+              - column:
+                  name: PASSWORD
+                  value: $2a$10$llE8XWDFCntFBROCqiYFQuk.akjbOSvw.he6EuySI6SUh3BuVnCRK
+        - insert:
+            tableName: USERS
+            columns:
+              - column:
+                  name: USERNAME
+                  value: Johnny 3 Tears
+              - column:
+                  name: PASSWORD
+                  value: $2a$10$qxNP6DgdVOsazqML4NDMl.jmg1IgcMaRfczvAOWPBb78l744RH9gm
+        - insert:
+            tableName: USERS
+            columns:
+              - column:
+                  name: USERNAME
+                  value: Danny
+              - column:
+                  name: PASSWORD
+                  value: $2a$10$YZhYqtiFQfHKGn6GK/eJxuP0vIJb2k9Xw4CYjk4B9fZ4SqKEX9KOi

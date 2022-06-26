@@ -1,5 +1,6 @@
 package sbrf.practice.jsv.list.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,9 +12,7 @@ import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
 @MappedSuperclass
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public abstract class Base {
     @Column(name = "created_at", updatable = false)
     @CreationTimestamp

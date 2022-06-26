@@ -47,11 +47,11 @@ public class FileService {
     }
 
     public File create(CreateFileDto dto) throws IOException {
-        return repository.save(mapper.createFileDtoToFile(dto));
+        return repository.save(mapper.fileDtoToFile(dto));
     }
 
     public File update(UUID id, UpdateFileDto dto) throws IOException {
-        return repository.save(mapper.updateFileDtoToFile(dto));
+        return repository.save(mapper.fileDtoToFile(dto));
     }
 
     public void deleteById(UUID id) {

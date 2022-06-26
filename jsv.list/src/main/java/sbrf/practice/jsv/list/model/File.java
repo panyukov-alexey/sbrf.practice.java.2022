@@ -1,6 +1,8 @@
 package sbrf.practice.jsv.list.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,9 +16,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "files")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @EqualsAndHashCode(callSuper = false)
 public class File extends Base {
     @Id
@@ -27,7 +27,6 @@ public class File extends Base {
     )
     @Column(name = "id", updatable = false, nullable = false)
     @Type(type = "uuid-char")
-    @ColumnDefault("random_uuid()")
     private UUID id;
 
     @Column(name = "filename")

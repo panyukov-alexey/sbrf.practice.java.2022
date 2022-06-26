@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Valera
+      changes:
+        - createTable:
+            tableName: USERS
+            columns:
+              - column:
+                  name: ID
+                  type: varchar(255)
+                  defaultValueComputed: "random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: USERNAME
+                  type: varchar(24)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: PASSWORD
+                  type: varchar(128)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: timestamp
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: FILES
+            columns:
+              - column:
+                  name: ID
+                  type: varchar(255)
+                  defaultValueComputed: "random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: FILENAME
+                  type: varchar(72)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: CONTENT
+                  type: BLOB
+                  constraints:
+                    nullable: false
+              - column:
+                  name: CREATED_AT
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: UPDATED_AT
+                  type: timestamp
+                  constraints:
+                    nullable: true
+

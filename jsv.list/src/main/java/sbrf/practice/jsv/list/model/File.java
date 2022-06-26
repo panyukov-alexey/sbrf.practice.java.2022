@@ -8,19 +8,17 @@ import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
-import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "files")
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class User extends Base {
+public class File extends Base {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -31,18 +29,26 @@ public class User extends Base {
     @Type(type = "uuid-char")
     @ColumnDefault("random_uuid()")
     private UUID id;
-    @Column(name = "username", unique = true)
-    private String username;
-    @Column(name = "password")
-    private String password;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Value("#{Collections.emptyList()}")
+    @Column(name = "filename")
+    private String filename;
+
+    @ManyToOne()
+    @JoinColumn(name = "author_id", insertable = false, updatable = false)
     @JsonIgnore
-    private List<File> files;
+    private User author;
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
+    @Column(name = "author_id")
+    @Type(type = "uuid-char")
+    private UUID authorId;
+
+    @Column(name = "content")
+    @Lob
+    private byte[] content;
+
+    public File(String filename, UUID authorId, byte[] content) {
+        this.filename = filename;
+        this.authorId = authorId;
+        this.content = content;
     }
 }

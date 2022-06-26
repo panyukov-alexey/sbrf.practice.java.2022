@@ -3,10 +3,9 @@ server:
   port: 8080
 
 spring:
-  security:
-    user:
-      name: admin
-      password: password
+  liquibase:
+    change-log: changelog.yaml
+    enabled: false
   datasource:
     url: jdbc:h2:mem:database
     username: sa

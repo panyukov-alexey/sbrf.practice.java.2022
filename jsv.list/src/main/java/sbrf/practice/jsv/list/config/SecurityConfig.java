@@ -1,6 +1,5 @@
 package sbrf.practice.jsv.list.config;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,11 +14,6 @@ import javax.sql.DataSource;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        return encoder;
-    }
 
     @Autowired
     public void initialize(AuthenticationManagerBuilder builder, DataSource dataSource) throws Exception {
@@ -30,6 +24,12 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
-        return web -> web.ignoring().antMatchers("/h2-console/**");
+        return (web) -> web.ignoring().antMatchers("/h2-console/**");
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder;
     }
 }

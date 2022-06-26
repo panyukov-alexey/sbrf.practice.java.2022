@@ -1,15 +1,10 @@
 package sbrf.practice.jsv.list.service;
 
-import org.modelmapper.ModelMapper;
-import org.modelmapper.Converters.Converter;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import sbrf.practice.jsv.list.convertors.UserConvertor;
-import sbrf.practice.jsv.list.dto.CreateUserDto;
-import sbrf.practice.jsv.list.dto.UpdateUserDto;
+import sbrf.practice.jsv.list.dto.users.CreateUserDto;
+import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
+import sbrf.practice.jsv.list.mappers.UserMapper;
 import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.repository.UserRepository;
 
@@ -18,41 +13,27 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
     private final UserRepository repository;
 
-    private final UserConvertor userConvertor;
-
-    public UserService(@Autowired UserRepository repository, @Autowired UserConvertor userConvertor) {
-        this.repository = repository;
-        this.userConvertor = userConvertor;
-    }
-
-    
+    private final UserMapper mapper;
 
     public List<User> findAll() {
         return repository.findAll();
     }
 
     public User findById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no user with id='%d'", id)));
     }
 
     public User create(CreateUserDto dto) {
-        return repository.save(userConvertor.convertToEntity(dto));
+        return repository.save(mapper.createUserDtoToUser(dto));
     }
 
     public User update(UUID id, UpdateUserDto dto) {
-        User user;
-        try {
-            user = findById(id);
-            user.setUsername(dto.getUsername());
-            user.setPassword(dto.getPassword());
-        } catch (EntityNotFoundException e) {
-            user = new User(dto.getUsername(), dto.getPassword());
-        }
-        return repository.save(user);
+        return repository.save(mapper.updateUserDtoToUser(dto));
     }
 
     public void deleteById(UUID id) {

@@ -1,5 +1,6 @@
 package sbrf.practice.jsv.list.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,8 +30,6 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() throws Exception {
-        return (web) -> web.ignoring().antMatchers("/h2-console/**");
-
+        return web -> web.ignoring().antMatchers("/h2-console/**");
     }
-
 }

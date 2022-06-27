@@ -1,12 +1,10 @@
 package sbrf.practice.jsv.list.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.users.CreateUserDto;
 import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
+import sbrf.practice.jsv.list.mappers.UserMapper;
 import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.repository.UserRepository;
 
@@ -19,33 +17,22 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository repository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserMapper mapper;
 
     public List<User> findAll() {
         return repository.findAll();
     }
 
     public User findById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no user with id=\'%d\'", id)));
+        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no user with id='%d'", id)));
     }
 
     public User create(CreateUserDto dto) {
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        return repository.save(user);
+        return repository.save(mapper.createUserDtoToUser(dto));
     }
 
     public User update(UUID id, UpdateUserDto dto) {
-        User user;
-        try {
-            user = findById(id);
-            user.setUsername(dto.getUsername());
-            user.setPassword(dto.getPassword());
-        } catch (EntityNotFoundException e) {
-            user = new User(dto.getUsername(), dto.getPassword());
-        }
-        return repository.save(user);
+        return repository.save(mapper.updateUserDtoToUser(dto));
     }
 
     public void deleteById(UUID id) {

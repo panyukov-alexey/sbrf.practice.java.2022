@@ -1,37 +1,41 @@
 package sbrf.practice.jsv.list.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class User extends Base {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     @Column(name = "id", updatable = false, nullable = false)
-    @ColumnDefault("random_uuid()")
+    @Type(type = "uuid-char")
     private UUID id;
     @Column(name = "username", unique = true)
     private String username;
     @Column(name = "password")
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<File> files = new ArrayList<File>();
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Value("#{Collections.emptyList()}")
+    @JsonIgnore
+    private List<File> files;
 
     public User(String username, String password) {
         this.username = username;

@@ -1,50 +1,50 @@
 package sbrf.practice.jsv.list.model;
 
-import java.sql.Blob;
-import java.util.UUID;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.GenericGenerator;
-
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
+
+import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "files")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-public class File extends Base{
+@EqualsAndHashCode(callSuper = false)
+public class File extends Base {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
-        name = "uuid",
-        strategy = "org.hibernate.id.UUIDGenerator")
+            name = "UUID",
+            strategy = "org.hibernate.id.UUIDGenerator"
+    )
     @Column(name = "id", updatable = false, nullable = false)
+    @Type(type = "uuid-char")
     private UUID id;
 
-    @Column(name = "file_name", unique = true)
-    private String fileName;
+    @Column(name = "filename")
+    private String filename;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id", insertable=false, updatable=false)
+    @ManyToOne()
+    @JoinColumn(name = "author_id", insertable = false, updatable = false)
+    @JsonIgnore
     private User author;
 
     @Column(name = "author_id")
-    private UUID authorID;
+    @Type(type = "uuid-char")
+    private UUID authorId;
 
     @Column(name = "content")
-    private Blob content;
+    @Lob
+    private byte[] content;
 
-    public File(String fileName, UUID authorID, Blob content) {
-        this.fileName = fileName;
-        this.authorID = authorID;
+    public File(String filename, UUID authorId, byte[] content) {
+        this.filename = filename;
+        this.authorId = authorId;
         this.content = content;
     }
 }

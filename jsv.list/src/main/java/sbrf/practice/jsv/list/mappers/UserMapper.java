@@ -3,16 +3,17 @@ package sbrf.practice.jsv.list.mappers;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import lombok.RequiredArgsConstructor;
 import sbrf.practice.jsv.list.dto.users.CreateUserDto;
 import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
 import sbrf.practice.jsv.list.model.User;
 
+@RequiredArgsConstructor
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
-    @Autowired
     protected PasswordEncoder passwordEncoder;
 
     @Mappings({

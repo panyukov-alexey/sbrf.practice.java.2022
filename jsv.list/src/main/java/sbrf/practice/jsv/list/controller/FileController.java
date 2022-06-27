@@ -25,20 +25,20 @@ public class FileController {
     private final FileService service;
 
     @GetMapping("files")
-    private List<FileDto> findAllFiles() {
+    private List<FileDto> findAllFiles() throws IOException{
         log.info("Trying to get all existing files");
         return service.findAllFiles();
     }
 
     @GetMapping("files/{id}")
-    private FileDto findFileById(@PathVariable("id") UUID id) {
+    private FileDto findFileById(@PathVariable("id") UUID id) throws IOException{
         log.info("Trying to get a file by given id={}", id);
         return service.findFileById(id);
 
     }
 
     @GetMapping("users/{userId}/files")
-    private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) {
+    private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) throws IOException{
        log.info("Trying to get all files the user with given id owns");
        return service.findFilesByAuthor(authorId);
     
@@ -47,7 +47,7 @@ public class FileController {
     @GetMapping("files/sorted")
     private Page<FileDto> findAllSorted(@RequestParam("sort") Sort sort,
                                      @RequestParam("page") Integer page,
-                                     @RequestParam("val") Integer valPerPage) {
+                                     @RequestParam("val") Integer valPerPage) throws IOException{
         log.info("Trying to get and sort all existing files by", sort);
         return service.findAllSorted(sort, page, valPerPage);
     }

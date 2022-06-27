@@ -26,20 +26,44 @@ public class FileService {
     private final FileRepository repository;
     private final FileMapper mapper;
 
-    public List<FileDto> findAllFiles() {
-        return repository.findAll().stream().map(f->mapper.fileToFileDto(f)).collect(Collectors.toList());
+    public List<FileDto> findAllFiles() throws IOException {
+        return repository.findAll().stream().map(f->{
+            try {
+                return mapper.fileToFileDto(f);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+        }).collect(Collectors.toList());
     }
 
-    public FileDto findFileById(UUID id) throws EntityNotFoundException{
+    public FileDto findFileById(UUID id) throws EntityNotFoundException, IOException{
         return mapper.fileToFileDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id='%d'", id))));
     }
 
-    public List<FileDto> findFilesByAuthor(UUID authorId) {
-        return repository.findByAuthorId(authorId).stream().map(f->mapper.fileToFileDto(f)).collect(Collectors.toList());
+    public List<FileDto> findFilesByAuthor(UUID authorId) throws IOException {
+        return repository.findByAuthorId(authorId).stream().map(f->{
+            try {
+                return mapper.fileToFileDto(f);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+        }).collect(Collectors.toList());
     }
 
     public Page<FileDto> findAllSorted(Sort sort, Integer page, Integer valPerPage) {
-        List<FileDto> files = repository.findAll(PageRequest.of(page, valPerPage, sort)).stream().map(f->mapper.fileToFileDto(f)).collect(Collectors.toList());
+        List<FileDto> files = repository.findAll(PageRequest.of(page, valPerPage, sort)).stream().map(f->{
+            try {
+                return mapper.fileToFileDto(f);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            return null;
+        }).collect(Collectors.toList());
         return new PageImpl<FileDto>(files);
     }
 

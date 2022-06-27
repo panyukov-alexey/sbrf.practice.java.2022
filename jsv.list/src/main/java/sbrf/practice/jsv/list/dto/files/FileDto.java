@@ -23,8 +23,4 @@ public class FileDto {
     @NotNull
     @JsonProperty("authorId")
     private UUID authorId;
-
-    @NotNull
-    @JsonProperty("file")
-    private MultipartFile file;
 }

@@ -17,6 +17,10 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository repository;
+<<<<<<< HEAD
+=======
+
+>>>>>>> d826f6be1ce236cf0c26f8539bfbf89deade1402
     private final UserMapper mapper;
 
     public List<User> findAll() {

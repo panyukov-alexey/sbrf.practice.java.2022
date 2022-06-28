@@ -28,6 +28,7 @@ public interface FileMapper {
     File updateFileDtoToFile(UpdateFileDto dto) throws IOException;
 
     @Mappings({
+            @Mapping(target = "id", source = "id"),
         @Mapping(target = "fileName", source = "filename"),
         @Mapping(target = "authorId", source = "authorId"),
     })

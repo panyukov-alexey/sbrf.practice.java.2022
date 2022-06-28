@@ -10,7 +10,6 @@ import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -24,7 +23,7 @@ public class UserService {
     private final UserMapper mapper;
 
     public List<UserDto> findAll() {
-        return repository.findAll().stream().map(u->{
+        return repository.findAll().stream().map(u -> {
             try {
                 return mapper.userToUserDto(u);
             } catch (IOException e) {

@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FileService {
 
-    private final FileRepository repository;
+    private final FileRepository fileRepository;
     private final FileMapper mapper;
 
     public List<FileDto> findAllFiles() throws IOException {
-        return repository.findAll().stream().map(f->{
+        return fileRepository.findAll().stream().map(f -> {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
@@ -38,12 +38,12 @@ public class FileService {
         }).collect(Collectors.toList());
     }
 
-    public FileDto findFileById(UUID id) throws EntityNotFoundException, IOException{
-        return mapper.fileToFileDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id='%d'", id))));
+    public FileDto findFileById(UUID id) throws EntityNotFoundException, IOException {
+        return mapper.fileToFileDto(fileRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id='%d'", id))));
     }
 
     public List<FileDto> findFilesByAuthor(UUID authorId) throws IOException {
-        return repository.findByAuthorId(authorId).stream().map(f->{
+        return fileRepository.findByAuthorId(authorId).stream().map(f -> {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
@@ -55,7 +55,7 @@ public class FileService {
     }
 
     public Page<FileDto> findAllSorted(Sort sort, Integer page, Integer valPerPage) {
-        List<FileDto> files = repository.findAll(PageRequest.of(page, valPerPage, sort)).stream().map(f->{
+        List<FileDto> files = fileRepository.findAll(PageRequest.of(page, valPerPage, sort)).stream().map(f -> {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
@@ -68,16 +68,21 @@ public class FileService {
     }
 
     public FileDto create(CreateFileDto dto) throws IOException {
-        File file = repository.save(mapper.createFileDtoToFile(dto));
+        File file = fileRepository.save(mapper.createFileDtoToFile(dto));
         return mapper.fileToFileDto(file);
     }
 
     public FileDto update(UUID id, UpdateFileDto dto) throws IOException {
-        File file = repository.save(mapper.updateFileDtoToFile(dto));
+        File file = fileRepository.save(mapper.updateFileDtoToFile(dto));
         return mapper.fileToFileDto(file);
     }
 
     public void deleteById(UUID id) {
-        repository.deleteById(id);
+        fileRepository.deleteById(id);
+    }
+
+    public byte[] downloadFileById(UUID id) {
+        File file = fileRepository.findById(id).orElseThrow();
+        return file.getContent();
     }
 }

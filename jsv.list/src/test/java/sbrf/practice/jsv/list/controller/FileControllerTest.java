@@ -32,22 +32,36 @@ class FileControllerTest {
 
     @Test
     void findAll() throws Exception {
-        UUID uuidTest = UUID.randomUUID();
+        UUID uuidTest1 = UUID.randomUUID();
+        UUID uuidTest2 = UUID.randomUUID();
+        UUID uuidTest3 = UUID.randomUUID();
+
         when(service.findAll())
-                .thenReturn(List.of(new File(uuidTest,
-                        "test1",
-                        new byte[]{(byte) 1, (byte) 0})));
+                .thenReturn(List.of(
+                        new File(uuidTest1, "testFile1", new byte[]{(byte) 1, (byte) 0}),
+                        new File(uuidTest2, "testFile2", new byte[]{(byte) 0, (byte) 1, (byte) 1}),
+                        new File(uuidTest3, "testFile3", new byte[]{(byte) 1, (byte) 1, (byte) 1})
+                ));
 
         this.mockMvc.perform(MockMvcRequestBuilders
-                .get("/files"))
+                        .get("/files"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].userId").value(uuidTest.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].filename").value("test1"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].userId").value(uuidTest1.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].filename").value("testFile1"))
+
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].userId").value(uuidTest2.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].filename").value("testFile2"))
+
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(3)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].userId").value(uuidTest3.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].filename").value("testFile3"));
     }
 
     @Test
     void findById() {
+//        when(service.findById(UUID.randomUUID())).thenReturn(Lis)
     }
 
     @Test

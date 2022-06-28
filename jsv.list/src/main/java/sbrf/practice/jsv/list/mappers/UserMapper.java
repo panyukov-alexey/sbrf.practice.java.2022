@@ -31,6 +31,7 @@ public abstract class UserMapper {
     })
     public abstract User updateUserDtoToUser(UpdateUserDto dto) throws IOException;
 
+    @Mapping(target = "id", source = "id")
     @Mapping(target = "username", source = "username")
     public abstract UserDto userToUserDto(User user) throws IOException;
 }

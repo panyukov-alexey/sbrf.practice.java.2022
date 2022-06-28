@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import sbrf.practice.jsv.list.model.File;
@@ -56,12 +57,28 @@ class FileControllerTest {
 
                 .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(3)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[2].userId").value(uuidTest3.toString()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[2].filename").value("testFile3"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[2].filename").value("testFile3"))
+                .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    void findById() {
-//        when(service.findById(UUID.randomUUID())).thenReturn(Lis)
+    void findById() throws Exception {
+        UUID uuidTest1 = UUID.randomUUID();
+        UUID uuidTest2 = UUID.randomUUID();
+        UUID uuidTest3 = UUID.randomUUID();
+
+        when(service.findById(uuidTest2))
+                .thenReturn(
+                        new File(uuidTest2, "testFile2", new byte[]{(byte) 0, (byte) 1, (byte) 1})
+                );
+
+        this.mockMvc.perform(MockMvcRequestBuilders
+                        .get("/files/uuidTest2"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()", Matchers.is(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].userId", Matchers.is(uuidTest2.toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].filename", Matchers.is("testFile2")))
+                .andDo(MockMvcResultHandlers.print());
     }
 
     @Test

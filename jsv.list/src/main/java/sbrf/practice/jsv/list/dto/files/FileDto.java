@@ -16,6 +16,11 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class FileDto {
+
+    @NotNull
+    @JsonProperty("id")
+    private UUID id;
+
     @NotNull
     @JsonProperty("fileName")
     private String fileName;

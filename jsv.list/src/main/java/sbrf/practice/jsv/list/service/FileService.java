@@ -1,7 +1,6 @@
 package sbrf.practice.jsv.list.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -28,7 +27,7 @@ public class FileService {
     private final FileMapper mapper;
 
     public List<FileDto> findAllFiles() throws IOException {
-        return fileRepository.findAll().stream().map(f->{
+        return fileRepository.findAll().stream().map(f -> {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
@@ -39,12 +38,12 @@ public class FileService {
         }).collect(Collectors.toList());
     }
 
-    public FileDto findFileById(UUID id) throws EntityNotFoundException, IOException{
+    public FileDto findFileById(UUID id) throws EntityNotFoundException, IOException {
         return mapper.fileToFileDto(fileRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id='%d'", id))));
     }
 
     public List<FileDto> findFilesByAuthor(UUID authorId) throws IOException {
-        return fileRepository.findByAuthorId(authorId).stream().map(f->{
+        return fileRepository.findByAuthorId(authorId).stream().map(f -> {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
@@ -56,7 +55,7 @@ public class FileService {
     }
 
     public Page<FileDto> findAllSorted(Sort sort, Integer page, Integer valPerPage) {
-        List<FileDto> files = fileRepository.findAll(PageRequest.of(page, valPerPage, sort)).stream().map(f->{
+        List<FileDto> files = fileRepository.findAll(PageRequest.of(page, valPerPage, sort)).stream().map(f -> {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {

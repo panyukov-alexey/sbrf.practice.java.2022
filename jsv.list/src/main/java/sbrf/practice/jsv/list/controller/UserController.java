@@ -7,13 +7,10 @@ import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.users.CreateUserDto;
 import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
 import sbrf.practice.jsv.list.dto.users.UserDto;
-import sbrf.practice.jsv.list.model.File;
-import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.service.FileService;
 import sbrf.practice.jsv.list.service.UserService;
 
 import javax.validation.Valid;
-
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +42,7 @@ public class UserController {
     // }
 
     @GetMapping("/{id}/files")
-    private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) throws IOException{
+    private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) throws IOException {
         log.info("Trying to get all files the user with given id owns");
         return fileService.findFilesByAuthor(authorId);
 

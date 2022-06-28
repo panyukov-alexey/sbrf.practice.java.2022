@@ -22,6 +22,6 @@ public class CreateFileDto {
 
     @NotNull
     @JsonProperty("file")
-    @IsValidSchema()
+    @IsValidSchema
     private MultipartFile file;
 }

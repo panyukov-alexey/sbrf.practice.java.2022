@@ -15,7 +15,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = SchemaValidator.class)
 public @interface IsValidSchema {
     //error message
-    public String message() default "Invalid schema";
+    public String message() default "Invalid JSON schema";
     //represents group of constraints
     public Class<?>[] groups() default {};
     //represents additional information about annotation

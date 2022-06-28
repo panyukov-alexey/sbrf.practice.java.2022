@@ -4,12 +4,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
-import sbrf.practice.jsv.list.model.File;
 import sbrf.practice.jsv.list.service.FileService;
+
+import org.springframework.core.io.Resource;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -65,6 +68,14 @@ public class FileController {
         log.info("Trying to update a file with given id={}", id);
         return this.service.update(id, dto);
 
+    }
+
+    @GetMapping(path = "files/{id}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    @ResponseBody
+    public ResponseEntity<Resource> downloadFile(@PathVariable("id") UUID id) throws IOException {
+        log.info("Trying to download a file with given id={}", id);
+        return this.service.download(id);
+        
     }
 
     @DeleteMapping("files/{id}")

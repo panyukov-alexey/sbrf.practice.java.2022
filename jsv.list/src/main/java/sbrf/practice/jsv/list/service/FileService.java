@@ -5,6 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
@@ -12,6 +16,9 @@ import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.mappers.FileMapper;
 import sbrf.practice.jsv.list.model.File;
 import sbrf.practice.jsv.list.repository.FileRepository;
+
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -51,6 +58,21 @@ public class FileService {
     public FileDto update(UUID id, UpdateFileDto dto) throws IOException {
         File file = repository.save(mapper.updateFileDtoToFile(dto));
         return mapper.fileToFileDto(file);
+    }
+
+    public ResponseEntity<Resource> download(UUID id) throws IOException {
+        FileDto file = findFileById(id);
+        byte[] content = file.getContent();
+        String filename = file.getFileName();
+        ByteArrayResource resource = new ByteArrayResource(content);
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_OCTET_STREAM)
+            .contentLength(resource.contentLength())
+            .header(HttpHeaders.CONTENT_DISPOSITION,
+                    ContentDisposition.attachment()
+                        .filename(filename)
+                        .build().toString())
+            .body(resource);
     }
 
     public void deleteById(UUID id) {

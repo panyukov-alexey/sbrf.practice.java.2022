@@ -4,8 +4,6 @@ import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +23,6 @@ public class FileDto {
     private UUID authorId;
 
     @NotNull
-    @JsonProperty("file")
-    private MultipartFile file;
+    @JsonProperty("content")
+    private byte[] content;
 }

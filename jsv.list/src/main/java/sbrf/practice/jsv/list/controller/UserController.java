@@ -25,13 +25,13 @@ public class UserController {
 
     @GetMapping()
     public List<UserDto> findAll() throws IOException {
-        log.info("Trying to get all existing users");
+        log.info("Got all users");
         return userService.findAll();
     }
 
     @GetMapping("/{id}")
     public UserDto findById(@PathVariable("id") UUID id) throws IOException {
-        log.info("Trying to get a file by given id={}", id);
+        log.info("Got a file with given id={}", id);
         return userService.findById(id);
     }
 
@@ -43,26 +43,26 @@ public class UserController {
 
     @GetMapping("/{id}/files")
     private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) throws IOException {
-        log.info("Trying to get all files the user with given id owns");
+        log.info("Got all files the user with given id={} owns", authorId);
         return fileService.findFilesByAuthor(authorId);
 
     }
 
     @PostMapping()
     public UserDto create(@Valid @RequestBody CreateUserDto dto) throws IOException {
-        log.info("Trying to create new user");
+        log.info("Created new user");
         return userService.create(dto);
     }
 
     @PutMapping("/{id}")
     public UserDto update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateUserDto dto) throws IOException {
-        log.info("Trying to update a user with given id={}", id);
+        log.info("Updated a user with given id={}", id);
         return userService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable("id") UUID id) {
-        log.info("Trying to delete a user with given id={}", id);
+        log.info("Deleted a user with given id={}", id);
         userService.deleteById(id);
     }
 

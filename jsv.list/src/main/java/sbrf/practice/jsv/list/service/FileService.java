@@ -1,5 +1,6 @@
 package sbrf.practice.jsv.list.service;
 
+import lombok.extern.log4j.Log4j2;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class FileService {
 
     private final FileRepository fileRepository;
@@ -31,8 +33,8 @@ public class FileService {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.info("Exception encountered while getting all files: {}", e);
+                throw new Exception("Error: unable to get files");
             }
             return null;
         }).collect(Collectors.toList());
@@ -47,8 +49,8 @@ public class FileService {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.info("Exception encountered while getting files uploaded by a user: {}", e);
+                throw new Exception("Error: unable to get files uploaded by the user");
             }
             return null;
         }).collect(Collectors.toList());
@@ -59,8 +61,8 @@ public class FileService {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.info("Exception encountered while getting and sorting all files: {}", e);
+                throw new Exception("Error: unable to get and sort files");
             }
             return null;
         }).collect(Collectors.toList());

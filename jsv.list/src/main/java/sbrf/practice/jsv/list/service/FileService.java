@@ -16,6 +16,7 @@ import sbrf.practice.jsv.list.repository.FileRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,9 +35,8 @@ public class FileService {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
                 log.info("Exception encountered while getting all files: {}", e);
-                throw new Exception("Error: unable to get files");
+                throw new UncheckedIOException("Error: unable to get files", e);
             }
-            return null;
         }).collect(Collectors.toList());
     }
 
@@ -50,21 +50,19 @@ public class FileService {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
                 log.info("Exception encountered while getting files uploaded by a user: {}", e);
-                throw new Exception("Error: unable to get files uploaded by the user");
+                throw new UncheckedIOException("Error: unable to get files uploaded by the user", e);
             }
-            return null;
         }).collect(Collectors.toList());
     }
 
-    public Page<FileDto> findAllSorted(Sort sort, Integer page, Integer valPerPage) {
+    public Page<FileDto> findAllSorted(Sort sort, Integer page, Integer valPerPage) throws IOException {
         List<FileDto> files = fileRepository.findAll(PageRequest.of(page, valPerPage, sort)).stream().map(f -> {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
                 log.info("Exception encountered while getting and sorting all files: {}", e);
-                throw new Exception("Error: unable to get and sort files");
+                throw new UncheckedIOException("Error: unable to get and sort files", e);
             }
-            return null;
         }).collect(Collectors.toList());
         return new PageImpl<FileDto>(files);
     }

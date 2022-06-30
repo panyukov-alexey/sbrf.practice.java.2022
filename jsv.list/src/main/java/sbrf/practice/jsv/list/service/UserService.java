@@ -1,6 +1,8 @@
 package sbrf.practice.jsv.list.service;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.users.CreateUserDto;
 import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
@@ -11,12 +13,14 @@ import sbrf.practice.jsv.list.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Log4j2
 public class UserService {
 
     private final UserRepository repository;
@@ -27,10 +31,9 @@ public class UserService {
             try {
                 return mapper.userToUserDto(u);
             } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.info("Exception encountered while getting all user: {}", e);
+                throw new UncheckedIOException("Error: unable to get users", e);
             }
-            return null;
         }).collect(Collectors.toList());
     }
 

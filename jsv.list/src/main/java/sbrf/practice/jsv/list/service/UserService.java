@@ -41,6 +41,10 @@ public class UserService {
         return mapper.userToUserDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no user with id='%d'", id))));
     }
 
+    public UserDto findByUsername(String username) throws IOException {
+        return mapper.userToUserDto(repository.findByUsername(username));
+    }
+
     public UserDto create(CreateUserDto dto) throws IOException {
         User user = repository.save(mapper.createUserDtoToUser(dto));
         return mapper.userToUserDto(user);

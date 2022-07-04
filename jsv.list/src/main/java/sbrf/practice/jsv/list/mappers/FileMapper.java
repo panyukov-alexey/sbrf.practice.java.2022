@@ -1,5 +1,7 @@
 package sbrf.practice.jsv.list.mappers;
 
+import java.io.IOException;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -17,19 +19,19 @@ public interface FileMapper {
             @Mapping(target = "authorId", source = "dto.authorId"),
             @Mapping(target = "content", expression = "java(dto.getFile().getBytes())"),
     })
-    File createFileDtoToFile(CreateFileDto dto);
+    File createFileDtoToFile(CreateFileDto dto) throws IOException;
 
     @Mappings({
             @Mapping(target = "filename", expression = "java(dto.getFile().getOriginalFilename())"),
             @Mapping(target = "authorId", source = "dto.authorId"),
             @Mapping(target = "content", expression = "java(dto.getFile().getBytes())"),
     })
-    File updateFileDtoToFile(UpdateFileDto dto);
+    File updateFileDtoToFile(UpdateFileDto dto) throws IOException;
 
     @Mappings({
-        @Mapping(target = "fileName", source = "filename"),
-        @Mapping(target = "authorId", source = "authorId"),
-        @Mapping(target = "content", source = "content")
+            @Mapping(target = "id", source = "id"),
+            @Mapping(target = "fileName", source = "filename"),
+            @Mapping(target = "authorId", source = "authorId"),
     })
-    FileDto fileToFileDto(File file);
+    FileDto fileToFileDto(File file) throws IOException;
 }

@@ -35,6 +35,7 @@ public class FileService {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
                 log.info("Exception encountered while getting all files: {}", e);
+                log.info("Error getting file with id: {}", f.getId());
                 throw new UncheckedIOException("Error: unable to get files", e);
             }
         }).collect(Collectors.toList());
@@ -50,6 +51,7 @@ public class FileService {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {
                 log.info("Exception encountered while getting files uploaded by a user: {}", e);
+                log.info("Error getting file with id: {}", f.getId());
                 throw new UncheckedIOException("Error: unable to get files uploaded by the user", e);
             }
         }).collect(Collectors.toList());

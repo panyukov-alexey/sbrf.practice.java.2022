@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотрщик JSON</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>ПРОСМОТРЩИК JSON</h1>
+    <h2>Добро пожаловать, <strong th:text="${username}"></strong>!</h2>
+</header>
+<main>
+    <section>
+        <form action="#" th:action="@{/upload}" method="POST" enctype="multipart/form-data">
+            <button type="submit">Загрузить файл!</button>
+            <div>
+                <input type="file" name="file"/>
+            </div>
+        </form>
+    </section>
+    <section>
+        <table>
+            <thead>
+            <tr>
+                <th>Уникальный идентификатор</th>
+                <th>Имя файла</th>
+                <th>Дата создания</th>
+                <th>Дата изменения</th>
+                <th>Действие</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="file:${files}">
+                <td th:text="${file.getId()}"></td>
+                <td th:text="${file.getFileName()}"></td>
+                <td th:text="${file.getCreatedAt()}"></td>
+                <td th:text="${file.getUpdatedAt()}"></td>
+                <td>
+                    <form action="#" th:action="@{'/remove/' + ${file.getId()}}" method="POST"
+                          enctype="multipart/form-data">
+                        <button type="submit">Удалить</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+<footer></footer>
+</body>
+</html>

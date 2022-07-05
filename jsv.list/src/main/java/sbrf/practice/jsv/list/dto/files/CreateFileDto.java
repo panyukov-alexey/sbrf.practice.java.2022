@@ -5,9 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sbrf.practice.jsv.list.validator.IsValidSchema;
-
 import org.springframework.web.multipart.MultipartFile;
+import sbrf.practice.jsv.list.validator.IsValidSchema;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;

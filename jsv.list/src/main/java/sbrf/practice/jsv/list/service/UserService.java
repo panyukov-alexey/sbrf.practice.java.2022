@@ -2,7 +2,6 @@ package sbrf.practice.jsv.list.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.users.CreateUserDto;
 import sbrf.practice.jsv.list.dto.users.UpdateUserDto;

@@ -1,7 +1,7 @@
 package sbrf.practice.jsv.list.service;
 
-import lombok.extern.log4j.Log4j2;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;

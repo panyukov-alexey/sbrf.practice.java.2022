@@ -22,6 +22,7 @@ public class HomeController {
     UserService userService;
     @Autowired
     FileService fileService;
+
     @GetMapping("/")
     public String homepage(Principal principal, Model model) throws IOException {
         String username = principal.getName();

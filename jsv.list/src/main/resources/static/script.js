@@ -6,7 +6,7 @@ $(() => {
         console.log("LELELE");
         $.ajax({
             url: `${url}/files`, type: "POST",
-            data: {  file: $(this).serialize()}
+            data: {file: $(this).serialize()}
         });
     });
 

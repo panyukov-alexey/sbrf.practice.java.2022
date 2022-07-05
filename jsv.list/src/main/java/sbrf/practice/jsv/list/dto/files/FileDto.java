@@ -1,5 +1,6 @@
 package sbrf.practice.jsv.list.dto.files;
 
+import java.util.Date;
 import java.util.UUID;
 
 import javax.validation.constraints.NotNull;
@@ -24,4 +25,13 @@ public class FileDto {
     @NotNull
     @JsonProperty("authorId")
     private UUID authorId;
+
+    @NotNull
+    @JsonProperty("createdAt")
+    private Date createdAt;
+
+    @NotNull
+    @JsonProperty("updatedAt")
+    private Date updatedAt;
+
 }

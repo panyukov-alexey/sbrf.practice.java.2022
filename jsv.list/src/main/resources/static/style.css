@@ -1,0 +1,56 @@
+html {
+    color: whitesmoke;
+    font-size: 16px;
+}
+
+h1, h2 {
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    border: lawngreen 1px solid;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: green;
+}
+
+form {
+    display: flex;
+    align-content: space-around;
+}
+
+button {
+    border: 2px solid gray;
+    color: gray;
+    background-color: greenyellow;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+button:hover {
+    background: green;
+    cursor: pointer;
+}
+
+main section {
+    margin: 48px 0;
+    width: 1024px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, td {
+    border: yellowgreen 2px solid;
+}

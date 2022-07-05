@@ -51,7 +51,7 @@ databaseChangeLog:
                   type: varchar(72)
                   constraints:
                     nullable: false
-                    unique: true
+                    unique: false
               - column:
                   name: AUTHOR_ID
                   type: varchar(255)

@@ -25,14 +25,16 @@ public class UserController {
 
     @GetMapping()
     public List<UserDto> findAll() throws IOException {
+        List<UserDto> allUser = userService.findAll();
         log.info("Got all users");
-        return userService.findAll();
+        return allUser;
     }
 
     @GetMapping("/{id}")
     public UserDto findById(@PathVariable("id") UUID id) throws IOException {
+        UserDto foundUser = userService.findById(id);
         log.info("Got a file with given id={}", id);
-        return userService.findById(id);
+        return foundUser;
     }
 
     // @GetMapping("/{id}/files")
@@ -43,27 +45,28 @@ public class UserController {
 
     @GetMapping("/{id}/files")
     private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) throws IOException {
+        List<FileDto> filesByAuthor = fileService.findFilesByAuthor(authorId);
         log.info("Got all files the user with given id={} owns", authorId);
-        return fileService.findFilesByAuthor(authorId);
-
+        return filesByAuthor;
     }
 
     @PostMapping()
     public UserDto create(@Valid @RequestBody CreateUserDto dto) throws IOException {
+        UserDto newUser = userService.create(dto);
         log.info("Created new user");
-        return userService.create(dto);
+        return newUser;
     }
 
     @PutMapping("/{id}")
     public UserDto update(@PathVariable("id") UUID id, @Valid @RequestBody UpdateUserDto dto) throws IOException {
+        UserDto updatedUser = userService.update(id, dto);
         log.info("Updated a user with given id={}", id);
-        return userService.update(id, dto);
+        return updatedUser;
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable("id") UUID id) {
-        log.info("Deleted a user with given id={}", id);
         userService.deleteById(id);
+        log.info("Deleted a user with given id={}", id);
     }
-
 }

@@ -30,8 +30,10 @@ public class User extends Base implements UserDetails {
     @Column(name = "id", updatable = false, nullable = false)
     @Type(type = "uuid-char")
     private UUID id;
+
     @Column(name = "username", unique = true)
     private String username;
+
     @Column(name = "password")
     private String password;
 

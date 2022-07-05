@@ -25,48 +25,52 @@ public class FileController {
 
     @GetMapping()
     private List<FileDto> findAllFiles() throws IOException {
+        List<FileDto> allFiles = fileService.findAllFiles();
         log.info("Got all files");
-        return fileService.findAllFiles();
+        return allFiles;
     }
 
     @GetMapping("/{id}")
     private FileDto findFileById(@PathVariable("id") UUID id) throws IOException {
+        FileDto foundFile = fileService.findFileById(id);
         log.info("Got a file with given id={}", id);
-        return fileService.findFileById(id);
-
+        return foundFile;
     }
 
     @GetMapping("/sorted")
     private Page<FileDto> findAllSorted(@RequestParam("sort") Sort sort,
                                         @RequestParam("page") Integer page,
                                         @RequestParam("val") Integer valPerPage) throws IOException {
+        Page<FileDto> sortedFiles = fileService.findAllSorted(sort, page, valPerPage);
         log.info("Got and sorted all files by", sort);
-        return fileService.findAllSorted(sort, page, valPerPage);
+        return sortedFiles;
     }
 
 
     @PostMapping("/upload")
     public FileDto create(@Valid @ModelAttribute CreateFileDto dto) throws IOException {
+        FileDto newFile = fileService.create(dto);
         log.info("Uploaded new file");
-        return fileService.create(dto);
-
+        return newFile;
     }
 
     @GetMapping("/{id}/download")
     private byte[] downloadFileById(@PathVariable("id") UUID id) {
+        byte[] file = fileService.downloadFileById(id);
         log.info("File with id={} was dowloaded", id);
-        return fileService.downloadFileById(id);
+        return file;
     }
 
     @PutMapping("/{id}")
     public FileDto update(@PathVariable("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto) throws IOException {
+        FileDto updatedFile = fileService.update(id, dto);
         log.info("Updated a file with given id={}", id);
-        return fileService.update(id, dto);
+        return updatedFile;
     }
 
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable("id") UUID id) {
-        log.info("Deleted a file with given id={}", id);
         fileService.deleteById(id);
+        log.info("Deleted a file with given id={}", id);
     }
 }

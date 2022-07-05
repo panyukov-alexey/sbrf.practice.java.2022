@@ -84,7 +84,8 @@ databaseChangeLog:
                   value: Charlie Scene
               - column:
                   name: PASSWORD
-                  value: $2a$10$/9aouasjYQw4/wwzSWEkdOwoRmEqg5cYHm6gQ0KnTK2QpLakSdHqW
+#                  value: $2a$10$/9aouasjYQw4/wwzSWEkdOwoRmEqg5cYHm6gQ0KnTK2QpLakSdHqW
+                  value: $2a$12$vWTOPG/96AkOJlbetvzBx.WJyogIcBLvO2ZlfsAXcvcBo2sicsegS
         - insert:
             tableName: USERS
             columns:

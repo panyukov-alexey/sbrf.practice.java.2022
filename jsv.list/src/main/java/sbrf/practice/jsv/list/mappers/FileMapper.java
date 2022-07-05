@@ -2,6 +2,7 @@ package sbrf.practice.jsv.list.mappers;
 
 import java.io.IOException;
 
+import liquibase.pro.packaged.M;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -32,6 +33,8 @@ public interface FileMapper {
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "fileName", source = "filename"),
             @Mapping(target = "authorId", source = "authorId"),
+            @Mapping(target="createdAt", source ="createdAt"),
+            @Mapping(target="updatedAt", source="updatedAt")
     })
     FileDto fileToFileDto(File file) throws IOException;
 }

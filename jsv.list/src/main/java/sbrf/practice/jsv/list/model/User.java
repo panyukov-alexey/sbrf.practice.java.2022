@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +29,7 @@ public class User extends Base implements UserDetails {
             strategy = "org.hibernate.id.UUIDGenerator"
     )
     @Column(name = "id", updatable = false, nullable = false)
+    @ColumnDefault("random_uuid()")
     @Type(type = "uuid-char")
     private UUID id;
 

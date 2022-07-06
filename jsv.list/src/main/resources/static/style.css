@@ -1,6 +1,12 @@
 html {
-    color: whitesmoke;
+    color: black;
     font-size: 16px;
+    font-family: "Times New Roman", serif;
+}
+
+* {
+    box-sizing: border-box;
+    border-collapse: collapse;
 }
 
 h1, h2 {
@@ -9,8 +15,13 @@ h1, h2 {
 }
 
 header {
-    border: lawngreen 1px solid;
-    width: 100%;
+    border: 1px black solid;
+    border-left: 0;
+    border-right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
 }
 
 body {
@@ -18,39 +29,57 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: green;
+    margin: 0;
+    padding: 0;
 }
 
-form {
+main {
+    width: 80%;
+    border: 1px black solid;
+    border-top: 0;
+    border-bottom: 0;
     display: flex;
-    align-content: space-around;
-}
-
-button {
-    border: 2px solid gray;
-    color: gray;
-    background-color: greenyellow;
-    padding: 8px 20px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: bold;
-}
-
-button:hover {
-    background: green;
-    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 main section {
+    width: 80%;
     margin: 48px 0;
-    width: 1024px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
 }
 
 table th, td {
-    border: yellowgreen 2px solid;
+    border: 1px black solid;
+}
+
+form {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+button {
+    border: 1px black solid;
+    color: black;
+    border-radius: 0;
+    font-weight: bold;
+    background-color: white;
+    width: 128px;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: ghostwhite;
 }

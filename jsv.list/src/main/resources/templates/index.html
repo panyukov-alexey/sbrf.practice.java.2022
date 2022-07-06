@@ -11,18 +11,20 @@
 <header>
     <h1>Explorer</h1>
     <div>
-        <span>Your ID: <small th:text="${user.getId()}"></small> Welcome, <strong th:text="${user.getUsername()}"></strong>!</span>
+        <span>Your ID: <small th:text="${user.getId()}"></small> Welcome, <strong
+                th:text="${user.getUsername()}"></strong>!</span>
         <a href="/logout"> Exit </a>
     </div>
 </header>
 <main>
     <section>
-        <p>This service is intended for uploading JSON files. You can create, read, update and delete files. Below you can upload new file. Have fun!</p>
+        <p>This service is intended for uploading JSON files. You can create, read, update and delete files. Below you
+            can upload new file. Have fun!</p>
         <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/upload}">
             <fieldset>
                 <legend>Uploading</legend>
                 <input name="file" type="file"/>
-                <input type="hidden" th:value="${user.getId()}" name="authorId">
+                <input name="authorId" th:value="${user.getId()}" type="hidden">
                 <button type="submit">upload</button>
             </fieldset>
         </form>

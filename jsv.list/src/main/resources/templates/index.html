@@ -2,34 +2,42 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Просмотрщик JSON</title>
+    <title>Homepage</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
 <header>
-    <h1>ПРОСМОТРЩИК JSON</h1>
-    <h2>Добро пожаловать, <strong th:text="${username}"></strong>!</h2>
+    <h1>Explorer</h1>
+    <div>
+        <span>Your ID: <small th:text="${user.getId()}"></small> Welcome, <strong th:text="${user.getUsername()}"></strong>!</span>
+        <a href="/logout"> Exit </a>
+    </div>
 </header>
 <main>
     <section>
+        <p>This service is intended for uploading JSON files. You can create, read, update and delete files. Below you can upload new file. Have fun!</p>
         <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/upload}">
-            <button type="submit">Загрузить файл!</button>
-            <div>
+            <fieldset>
+                <legend>Uploading</legend>
                 <input name="file" type="file"/>
-            </div>
+                <input type="hidden" th:value="${user.getId()}" name="authorId">
+                <button type="submit">upload</button>
+            </fieldset>
         </form>
     </section>
     <section>
         <table>
+            <caption style="text-align: left"><h2>JSV List</h2></caption>
             <thead>
             <tr>
-                <th>Уникальный идентификатор</th>
-                <th>Имя файла</th>
-                <th>Дата создания</th>
-                <th>Дата изменения</th>
-                <th>Действие</th>
+                <th>ID</th>
+                <th>filename</th>
+                <th>createdAt</th>
+                <th>updatedAt</th>
+                <th>remove</th>
+                <th>get</th>
             </tr>
             </thead>
             <tbody>
@@ -39,9 +47,15 @@
                 <td th:text="${file.getCreatedAt()}"></td>
                 <td th:text="${file.getUpdatedAt()}"></td>
                 <td>
-                    <form action="#" enctype="multipart/form-data" method="POST"
+                    <form action="#" enctype="multipart/form-data" method="DELETE"
                           th:action="@{'/remove/' + ${file.getId()}}">
-                        <button type="submit">Удалить</button>
+                        <button type="submit">remove</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="#" enctype="multipart/form-data" method="GET"
+                          th:action="@{'/download/' + ${file.getId()}}">
+                        <button type="submit">update</button>
                     </form>
                 </td>
             </tr>

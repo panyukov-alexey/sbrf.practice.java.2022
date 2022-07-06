@@ -86,7 +86,7 @@ class UserServiceTest {
 
             userDto = userService.update(userDto3.getId(), updateUserDto);
         } catch (IOException e) {
-            log.info("update: user3 wasn't updated");
+            log.info("user3 wasn't updated");
             e.printStackTrace();
         }
 

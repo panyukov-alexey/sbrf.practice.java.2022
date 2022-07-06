@@ -21,20 +21,20 @@ import static org.mockito.Mockito.when;
 @Log4j2
 class UserServiceTest {
     @Mock
-    UserService userService;
+    private UserService userService;
 
-    UserDto user1, user2, user3;
+    private UserDto userDto1, userDto2, userDto3;
 
     @BeforeEach
     void setUp() {
-        user1 = new UserDto(UUID.randomUUID(), "username1");
-        user2 = new UserDto(UUID.randomUUID(), "username2");
-        user3 = new UserDto(UUID.randomUUID(), "username3");
+        userDto1 = new UserDto(UUID.randomUUID(), "username1");
+        userDto2 = new UserDto(UUID.randomUUID(), "username2");
+        userDto3 = new UserDto(UUID.randomUUID(), "username3");
     }
 
     @Test
     void findAll() {
-        when(userService.findAll()).thenReturn(List.of(user1, user2, user3));
+        when(userService.findAll()).thenReturn(List.of(userDto1, userDto2, userDto3));
 
         List<UserDto> userDtos = userService.findAll();
 
@@ -46,9 +46,9 @@ class UserServiceTest {
     void findById() {
         UserDto userDto = null;
         try {
-            when(userService.findById(user2.getId())).thenReturn(user2);
+            when(userService.findById(userDto2.getId())).thenReturn(userDto2);
 
-            userDto = userService.findById(user2.getId());
+            userDto = userService.findById(userDto2.getId());
         } catch (IOException e) {
             log.info("user2 not found");
             e.printStackTrace();
@@ -56,7 +56,7 @@ class UserServiceTest {
 
         Assertions.assertNotNull(userDto);
         Assertions.assertEquals("username2", userDto.getUsername());
-        Assertions.assertEquals(user2.getId(), userDto.getId());
+        Assertions.assertEquals(userDto2.getId(), userDto.getId());
     }
 
     @Test
@@ -64,7 +64,7 @@ class UserServiceTest {
         CreateUserDto createUserDto = new CreateUserDto("username1", "password1");
         UserDto userDto = null;
         try {
-            when(userService.create(createUserDto)).thenReturn(user1);
+            when(userService.create(createUserDto)).thenReturn(userDto1);
 
             userDto = userService.create(createUserDto);
         } catch (IOException e) {
@@ -74,7 +74,7 @@ class UserServiceTest {
 
         Assertions.assertNotNull(userDto);
         Assertions.assertEquals("username1", userDto.getUsername());
-        Assertions.assertEquals(user1.getId(), userDto.getId());
+        Assertions.assertEquals(userDto1.getId(), userDto.getId());
     }
 
     @Test
@@ -82,9 +82,9 @@ class UserServiceTest {
         UpdateUserDto updateUserDto = new UpdateUserDto("username3", "password3");
         UserDto userDto = null;
         try {
-            when(userService.update(user3.getId(), updateUserDto)).thenReturn(user3);
+            when(userService.update(userDto3.getId(), updateUserDto)).thenReturn(userDto3);
 
-            userDto = userService.update(user3.getId(), updateUserDto);
+            userDto = userService.update(userDto3.getId(), updateUserDto);
         } catch (IOException e) {
             log.info("update: user3 wasn't updated");
             e.printStackTrace();
@@ -92,7 +92,6 @@ class UserServiceTest {
 
         Assertions.assertNotNull(userDto);
         Assertions.assertEquals("username3", userDto.getUsername());
-        Assertions.assertEquals(user3.getId(), userDto.getId());
+        Assertions.assertEquals(userDto3.getId(), userDto.getId());
     }
-    
 }

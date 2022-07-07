@@ -26,10 +26,9 @@ body {
 }
 
 main {
-    margin: 0 auto;
-    height: 100%;
+    margin: 128px auto;
     width: 80%;
-    border: 1px black solid;
+    height: 100%;
     border-top: 0;
     border-bottom: 0;
     display: flex;
@@ -37,44 +36,26 @@ main {
     align-items: center;
 }
 
-main section {
-    width: 80%;
+section {
+    margin: 12px 0 12px;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.management {
-    display: flex;
-    justify-content: space-around;
-    align-content: center;
+    justify-content: space-between;
     width: 100%;
-}
-
-form {
-    height: 100%;
-}
-
-fieldset {
-    display: flex;
-    flex-direction: column;
-    align-content: space-between;
-    justify-content: center;
-    width: 512px;
-    height: 100%;
 }
 
 table {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
-    border: 1px grey solid;
     text-align: center;
 }
 
 table th, td {
     border: 1px black solid;
+}
+
+table tr {
+    height: 16px;
 }
 
 footer {

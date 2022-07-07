@@ -19,20 +19,30 @@
     </div>
 </header>
 <main>
-    <article>
-        <h2>Что это?</h2>
-        <p>Эта страница предназначена для просмотра и управления списком загруженных на сервер JSON файлов. Здесь можно
-            просматривать, обновлять, загружать и удалять файлы.</p>
-    </article>
-    <section class="view">
+    <section>
+        <form action="#" th:action="@{/}" enctype="multipart/form-data" method="get">
+            <label for="search">Искать</label>
+            <input id="search" type="text" name="filename" />
+            <input type="submit" value="search"/>
+        </form>
+        <form action="#" th:action="@{/}" enctype="multipart/form-data" method="get">
+            <button type="submit">Сортировать</button>
+            <select name="sort" id="sort">
+                <option value="id">по уникальному идентификатору</option>
+                <option value="filename">по имени файла</option>
+                <option value="updatedAt">по дате обновления</option>
+                <option value="createdAt">по дате создания</option>
+            </select>
+        </form>
+    </section>
+    <section>
         <table>
-            <caption style="text-align: left"><h2>Файлы</h2></caption>
             <thead>
             <tr>
-                <th>уникальный идентификатор</th>
-                <th>имя файла</th>
-                <th>дата создания</th>
-                <th>дата обновления</th>
+                <th>Уникальный идентификатор</th>
+                <th>Имя файла</th>
+                <th>Дата создания</th>
+                <th>Дата обновления</th>
             </tr>
             </thead>
             <tbody>
@@ -43,40 +53,29 @@
                 <td th:text="${file.getUpdatedAt()}"></td>
             </tr>
             </tbody>
+            <tfoot>
+            </tfoot>
         </table>
     </section>
     <section>
-        <div class="management">
-            <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/edit}">
-                <fieldset>
-                    <legend>Операции над файлами</legend>
-                    <label for="id">Уникальный идентификатор</label><br>
-                    <input id="id" name="id" type="text"><br>
-                    <label for="file">Файл:</label><br>
-                    <input id="file" name="file" type="file"/><br>
-                    <input id="authorId" name="authorId" th:value="${user.getId()}" type="hidden">
-                    <input type="submit" name="action" value="create"/><br>
-                    <input type="submit" name="action" value="read"/><br>
-                    <input type="submit" name="action" value="update"/><br>
-                    <input type="submit" name="action" value="delete"/><br>
-                </fieldset>
-            </form>
-            <form action="#" enctype="form-data" method="POST" th:action="@{/filter}">
-                <fieldset>
-                    <legend>Операции над таблицей</legend>
-                    <label>Сортировка</label><br>
-                    <label for="filename"><input type="radio" id="filename" name="sortBy" value="filename"> По имени файла </label><br>
-                    <label for="filesize"><input type="radio" id="filesize" name="sortBy" value="filesize">
-                         По размеру файла</label><br>
-                    <label for="createdAt"><input type="radio" id="createdAt" name="sortBy" value="createdAt">По дате создания файла</label><br>
-                    <label for="updatedAt">                    <input type="radio" id="updatedAt" name="sortBy" value="updatedAt">
-                        По дате обновления файла</label><br>
-                    <label>Пагинация:</label><br>
-                    <input type="range" min="0" max="100"><br>
-                    <input type="submit" value="search"/><br>
-                </fieldset>
-            </form>
-        </div>
+        <form action="#" th:action="@{/}" enctype="multipart/form-data" method="get">
+            <label for="page"></label>
+            <input type="text" name="page">
+            <button type="submit">Перейти на страницу</button>
+        </form>
+    </section>
+    <section>
+        <form action="#" th:action="@{/edit}" enctype="multipart/form-data" method="post">
+            <label for="fileId">Уникальный идентификатор</label><br>
+            <input type="text" id="fileId" name="id" value=""><br>
+            <br><label>Файл</label><br>
+            <input type="file" name="file"/><br>
+            <br><input type="hidden" th:value="${user.id}" name="authorId" /><br>
+            <button type="submit" name="action" value="create">Загрузить файл</button>
+            <button type="submit" name="action" value="read">Скачать файл</button>
+            <button type="submit" name="action" value="update">Обновить файл</button>
+            <button type="submit" name="action" value="delete">Удалить файл</button>
+        </form>
     </section>
 </main>
 <footer>

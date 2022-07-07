@@ -2,44 +2,37 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Homepage</title>
+    <title>Файловый менеджер</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="script.js"></script>
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
 <header>
-    <h1>Explorer</h1>
-    <div>
-        <span>Your ID: <small th:text="${user.getId()}"></small> Welcome, <strong
-                th:text="${user.getUsername()}"></strong>!</span>
-        <a href="/logout"> Exit </a>
+    <h1>Файловый менеджер</h1>
+    <div style="text-align: right">
+        <span>уникальный идентификатор: <strong th:text="${user.getId()}"></strong> <br> имя пользователя: <strong
+                th:text="${user.getUsername()}"></strong></span> <br>
+        <a href="/logout">
+            <button>выйти</button>
+        </a>
     </div>
 </header>
 <main>
-    <section>
-        <p>This service is intended for uploading JSON files. You can create, read, update and delete files. Below you
-            can upload new file. Have fun!</p>
-        <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/upload}">
-            <fieldset>
-                <legend>Uploading</legend>
-                <input name="file" type="file"/>
-                <input name="authorId" th:value="${user.getId()}" type="hidden">
-                <button type="submit">upload</button>
-            </fieldset>
-        </form>
-    </section>
-    <section>
+    <article>
+        <h2>Что это?</h2>
+        <p>Эта страница предназначена для просмотра и управления списком загруженных на сервер JSON файлов. Здесь можно
+            просматривать, обновлять, загружать и удалять файлы.</p>
+    </article>
+    <section class="view">
         <table>
-            <caption style="text-align: left"><h2>JSV List</h2></caption>
+            <caption style="text-align: left"><h2>Файлы</h2></caption>
             <thead>
             <tr>
-                <th>ID</th>
-                <th>filename</th>
-                <th>createdAt</th>
-                <th>updatedAt</th>
-                <th>remove</th>
-                <th>get</th>
+                <th>уникальный идентификатор</th>
+                <th>имя файла</th>
+                <th>дата создания</th>
+                <th>дата обновления</th>
             </tr>
             </thead>
             <tbody>
@@ -48,23 +41,47 @@
                 <td th:text="${file.getFileName()}"></td>
                 <td th:text="${file.getCreatedAt()}"></td>
                 <td th:text="${file.getUpdatedAt()}"></td>
-                <td>
-                    <form action="#" enctype="multipart/form-data" method="DELETE"
-                          th:action="@{'/remove/' + ${file.getId()}}">
-                        <button type="submit">remove</button>
-                    </form>
-                </td>
-                <td>
-                    <form action="#" enctype="multipart/form-data" method="GET"
-                          th:action="@{'/download/' + ${file.getId()}}">
-                        <button type="submit">update</button>
-                    </form>
-                </td>
             </tr>
             </tbody>
         </table>
     </section>
+    <section>
+        <div class="management">
+            <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/edit}">
+                <fieldset>
+                    <legend>Операции над файлами</legend>
+                    <label for="id">Уникальный идентификатор</label><br>
+                    <input id="id" name="id" type="text"><br>
+                    <label for="file">Файл:</label><br>
+                    <input id="file" name="file" type="file"/><br>
+                    <input id="authorId" name="authorId" th:value="${user.getId()}" type="hidden">
+                    <input type="submit" name="action" value="create"/><br>
+                    <input type="submit" name="action" value="read"/><br>
+                    <input type="submit" name="action" value="update"/><br>
+                    <input type="submit" name="action" value="delete"/><br>
+                </fieldset>
+            </form>
+            <form action="#" enctype="form-data" method="POST" th:action="@{/filter}">
+                <fieldset>
+                    <legend>Операции над таблицей</legend>
+                    <label>Сортировка</label><br>
+                    <label for="filename"><input type="radio" id="filename" name="sortBy" value="filename"> По имени файла </label><br>
+                    <label for="filesize"><input type="radio" id="filesize" name="sortBy" value="filesize">
+                         По размеру файла</label><br>
+                    <label for="createdAt"><input type="radio" id="createdAt" name="sortBy" value="createdAt">По дате создания файла</label><br>
+                    <label for="updatedAt">                    <input type="radio" id="updatedAt" name="sortBy" value="updatedAt">
+                        По дате обновления файла</label><br>
+                    <label>Пагинация:</label><br>
+                    <input type="range" min="0" max="100"><br>
+                    <input type="submit" value="search"/><br>
+                </fieldset>
+            </form>
+        </div>
+    </section>
 </main>
-<footer></footer>
+<footer>
+    <h2>Летняя практика 2022</h2>
+    <strong>ПАО Сбербанк, г. Омск, 😺 Группа Д-5</strong>
+</footer>
 </body>
 </html>

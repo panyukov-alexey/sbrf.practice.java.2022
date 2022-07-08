@@ -41,7 +41,7 @@ public class FileController {
     private Page<FileDto> findAllSorted(@RequestParam("sort") Sort sort,
                                         @RequestParam("page") Integer page,
                                         @RequestParam("val") Integer valPerPage) throws IOException {
-        Page<FileDto> sortedFiles = fileService.findAllSorted(sort, page, valPerPage);
+        Page<FileDto> sortedFiles = fileService.findAllFiles(sort, page, valPerPage);
         log.info("Got and sorted all files by", sort);
         return sortedFiles;
     }

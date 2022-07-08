@@ -29,7 +29,7 @@ public interface FileMapper {
 
     @Mappings({
             @Mapping(target = "id", source = "id"),
-            @Mapping(target = "fileName", source = "filename"),
+            @Mapping(target = "filename", source = "filename"),
             @Mapping(target = "authorId", source = "authorId"),
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt")

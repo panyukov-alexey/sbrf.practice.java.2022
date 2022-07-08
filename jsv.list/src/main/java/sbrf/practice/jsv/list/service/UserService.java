@@ -1,55 +1,54 @@
 package sbrf.practice.jsv.list.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import lombok.AllArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.stereotype.Service;
-import sbrf.practice.jsv.list.dto.CreateUserDto;
-import sbrf.practice.jsv.list.dto.UpdateUserDto;
+import sbrf.practice.jsv.list.dto.users.CreateUserDto;
+import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
+import sbrf.practice.jsv.list.dto.users.UserDto;
+import sbrf.practice.jsv.list.mappers.UserMapper;
 import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.repository.UserRepository;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
+@Log4j2
 public class UserService {
 
     private final UserRepository repository;
+    private final UserMapper mapper;
 
-    public UserService(@Autowired UserRepository repository) {
-        this.repository = repository;
+    public List<UserDto> findAll() {
+        return repository.findAll().stream().map(u -> {
+            try {
+                return mapper.userToUserDto(u);
+            } catch (IOException e) {
+                log.info("Exception encountered while getting all user: {}", e);
+                throw new UncheckedIOException("Error: unable to get users", e);
+            }
+        }).collect(Collectors.toList());
     }
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    public List<User> findAll() {
-        return repository.findAll();
+    public UserDto findById(UUID id) throws EntityNotFoundException, IOException {
+        return mapper.userToUserDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no user with id='%d'", id))));
     }
 
-    public User findById(UUID id) {
-        return repository.findById(id).orElseThrow(() -> new EntityNotFoundException());
+    public UserDto create(CreateUserDto dto) throws IOException {
+        User user = repository.save(mapper.createUserDtoToUser(dto));
+        return mapper.userToUserDto(user);
     }
 
-    public User create(CreateUserDto dto) {
-        User user = new User();
-        user.setUsername(dto.getUsername());
-        user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        return repository.save(user);
-    }
-
-    public User update(UUID id, UpdateUserDto dto) {
-        User user;
-        try {
-            user = findById(id);
-            user.setUsername(dto.getUsername());
-            user.setPassword(dto.getPassword());
-        } catch (EntityNotFoundException e) {
-            user = new User(dto.getUsername(), dto.getPassword());
-        }
-        return repository.save(user);
+    public UserDto update(UUID id, UpdateUserDto dto) throws IOException {
+        User user = repository.save(mapper.updateUserDtoToUser(dto));
+        return mapper.userToUserDto(user);
     }
 
     public void deleteById(UUID id) {

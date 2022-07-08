@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Файловый менеджер</title>
-    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css"/>
 </head>
 <body>
 <header>
@@ -21,7 +21,7 @@
         <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
             <label for="search">Искать</label>
             <input id="search" name="filename" type="text"/>
-            <button type="submit" name="action" value="search">Искать</button>
+            <button name="action" type="submit" value="search">Искать</button>
         </form>
         <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
             <button type="submit">Сортировать</button>
@@ -31,9 +31,9 @@
                 <option value="updatedAt">По дате обновления</option>
                 <option value="createdAt">По дате создания</option>
             </select>
-            <input type="radio" id="ASC" name="direction" th:checked="${isAscending}" value="ASC">
+            <input id="ASC" name="direction" th:checked="${isAscending}" type="radio" value="ASC">
             <label for="ASC">По возрастанию</label>
-            <input type="radio" id="DESC" name="direction" th:checked="${!isAscending}" value="DESC">
+            <input id="DESC" name="direction" th:checked="${!isAscending}" type="radio" value="DESC">
             <label for="DESC">По убыванию</label>
         </form>
     </section>

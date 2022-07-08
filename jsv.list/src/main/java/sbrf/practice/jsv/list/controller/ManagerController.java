@@ -41,8 +41,8 @@ public class ManagerController {
         boolean isAscending = direction.equalsIgnoreCase("ASC");
         model.addAttribute("user", user);
         Page<FileDto> pageable = fileService.findFilesByAuthor(user.getId(),
-                Sort.by( isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria),
-        page - 1, size);
+                Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria),
+                page - 1, size);
         model.addAttribute("files", pageable.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageable.getTotalPages());
@@ -53,7 +53,7 @@ public class ManagerController {
 
     @GetMapping("/")
     public String index(Principal principal, Model model) throws IOException {
-        return pageable(1,"id", "ASC" , principal, model);
+        return pageable(1, "id", "ASC", principal, model);
     }
 
 

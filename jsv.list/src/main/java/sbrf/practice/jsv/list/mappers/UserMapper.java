@@ -10,6 +10,8 @@ import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
 import sbrf.practice.jsv.list.dto.users.UserDto;
 import sbrf.practice.jsv.list.model.User;
 
+import java.util.UUID;
+
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
@@ -23,10 +25,10 @@ public abstract class UserMapper {
     public abstract User createUserDtoToUser(CreateUserDto dto);
 
     @Mappings({
-            @Mapping(target = "username", source = "dto.username"),
+            @Mapping(target = "id", source = "id"),
             @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getPassword()))"),
     })
-    public abstract User updateUserDtoToUser(UpdateUserDto dto);
+    public abstract User updateUserDtoToUser(UUID id, UpdateUserDto dto);
 
     @Mappings({
             @Mapping(target = "id", source = "id"),

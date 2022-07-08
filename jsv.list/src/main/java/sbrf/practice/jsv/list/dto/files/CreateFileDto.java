@@ -14,7 +14,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class CreateFileDto {
 
     @NotNull

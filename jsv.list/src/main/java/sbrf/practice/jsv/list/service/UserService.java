@@ -41,7 +41,7 @@ public class UserService {
     }
 
     public UserDto update(UUID id, UpdateUserDto dto) {
-        User user = repository.save(mapper.updateUserDtoToUser(dto));
+        User user = repository.save(mapper.updateUserDtoToUser(id, dto));
         return mapper.userToUserDto(user);
     }
 

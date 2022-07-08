@@ -2,10 +2,9 @@ package sbrf.practice.jsv.list.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.beans.support.PagedListHolder;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
@@ -30,82 +29,33 @@ public class FileService {
     private final FileMapper mapper;
 
     public List<FileDto> findAllFiles() {
-        return fileRepository.findAll().stream().map(f -> {
-            try {
-                return mapper.fileToFileDto(f);
-            } catch (IOException e) {
-                log.info("Exception encountered while getting all files: {}", e);
-                log.info("Error getting file with id: {}", f.getId());
-                throw new UncheckedIOException("Error: unable to get files", e);
-            }
-        }).collect(Collectors.toList());
+        return fileRepository.findAll().stream().map(f -> mapper.fileToFileDto(f)).collect(Collectors.toList());
     }
 
     public Page<FileDto> findAllFiles(Sort sort, Integer page, Integer size) {
-        List<FileDto> files = fileRepository.findAll(PageRequest.of(page, size, sort)).stream().map(f -> {
-            try {
-                return mapper.fileToFileDto(f);
-            } catch (IOException e) {
-                log.info("Exception encountered while getting and sorting all files: {}", e);
-                throw new UncheckedIOException("Error: unable to get and sort files", e);
-            }
-        }).collect(Collectors.toList());
-        return new PageImpl<>(files);
+        return fileRepository.findAll(PageRequest.of(page, size, sort)).map(mapper::fileToFileDto);
     }
 
-    public FileDto findFileById(UUID id) throws EntityNotFoundException {
+    public FileDto findFileById(UUID id) {
         File file;
-        file = fileRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id='%d'", id)));
-        try {
-            return mapper.fileToFileDto(file);
-        } catch (IOException e) {
-            log.info("Error mapping file with id: {}", file.getId());
-            throw new UncheckedIOException("Error: unable to get file by id", e);
-        }
+        file = fileRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id={}", id)));
+        return mapper.fileToFileDto(file);
     }
 
     public List<FileDto> findFilesByAuthor(UUID authorId) {
-        return fileRepository.findByAuthorId(authorId).stream().map(f -> {
-            try {
-                return mapper.fileToFileDto(f);
-            } catch (IOException e) {
-                log.info("Exception encountered while getting files uploaded by a user: {}", e);
-                log.info("Error mapping file with id: {}", f.getId());
-                throw new UncheckedIOException("Error: unable to get files uploaded by the user", e);
-            }
-        }).collect(Collectors.toList());
+        return fileRepository.findByAuthorId(authorId).stream().map(f -> mapper.fileToFileDto(f)).collect(Collectors.toList());
     }
 
     public Page<FileDto> findFilesByAuthor(UUID id, Sort sort, Integer page, Integer size) {
-        List<FileDto> files = fileRepository.findByAuthorId(id, PageRequest.of(page, size, sort)).stream().map(f -> {
-            try {
-                return mapper.fileToFileDto(f);
-            } catch (IOException e) {
-                log.info("Exception encountered while getting and sorting all files: {}", e);
-                throw new UncheckedIOException("Error: unable to get and sort files", e);
-            }
-        }).collect(Collectors.toList());
-        return new PageImpl<>(files);
+        return fileRepository.findByAuthorId(id, PageRequest.of(page, size, sort)).map(mapper::fileToFileDto);
     }
 
     public FileDto create(CreateFileDto dto) {
-        try {
-            File file = fileRepository.save(mapper.createFileDtoToFile(dto));
-            return mapper.fileToFileDto(file);
-        } catch (IOException e) {
-            log.info("Exception encountered while creating file: {}", e);
-            throw new UncheckedIOException("Error: unable to create file", e);
-        }
+        return mapper.fileToFileDto(fileRepository.save(mapper.createFileDtoToFile(dto)));
     }
 
     public FileDto update(UUID id, UpdateFileDto dto) {
-        try {
-            File file = fileRepository.save(mapper.createFileDtoToFile(dto));
-            return mapper.fileToFileDto(file);
-        } catch (IOException e) {
-            log.info("Exception encountered while updating file: {}", e);
-            throw new UncheckedIOException("Error: unable to update file", e);
-        }
+        return mapper.fileToFileDto(fileRepository.save(mapper.updateFileDtoToFile(id, dto)));
     }
 
     public void deleteById(UUID id) {

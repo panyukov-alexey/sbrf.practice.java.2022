@@ -43,13 +43,30 @@ section {
     width: 100%;
 }
 
+.misc form {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.misc input, select {
+    margin: 0 8px;
+}
+
 .management {
     display: flex;
+    margin: auto 0;
     justify-content: space-around;
 }
 
-.management form {
-    flex: 1 1 0;
+.management form fieldset {
+    position: relative;
+    height: 100%;
+}
+
+.management form fieldset button {
+    position: absolute;
+    bottom: 100%;
 }
 
 .navigation nav {
@@ -63,19 +80,15 @@ section {
     margin: 0 12px;
 }
 
-table {
+.view table {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
     text-align: center;
 }
 
-table th, td {
+.view table th, td {
     border: 1px black solid;
-}
-
-table tr {
-    height: 16px;
 }
 
 footer {

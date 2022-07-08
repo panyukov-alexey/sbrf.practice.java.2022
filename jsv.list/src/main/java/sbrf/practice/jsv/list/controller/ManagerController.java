@@ -11,10 +11,9 @@ import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.dto.users.UserDto;
+import sbrf.practice.jsv.list.model.File;
 import sbrf.practice.jsv.list.service.FileService;
 import sbrf.practice.jsv.list.service.UserService;
-
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
@@ -32,13 +31,13 @@ public class ManagerController {
     @GetMapping("/page/{id}")
     public String pageable(
             @PathVariable(name = "id") Integer page,
-            @RequestParam(name = "criteria") String criteria,
-            @RequestParam(name = "direction") String direction,
+            @RequestParam(name = "criteria", defaultValue="id") String criteria,
+            @RequestParam(name = "direction", defaultValue = "asc") String direction,
             Principal principal,
             Model model) {
-        final int size = 10;
+        final int size = 12;
         UserDto user = userService.findByUsername(principal.getName());
-        boolean isAscending = direction.equalsIgnoreCase("ASC");
+        boolean isAscending = direction.equalsIgnoreCase("asc");
         model.addAttribute("user", user);
         Page<FileDto> pageable = fileService.findFilesByAuthor(user.getId(),
                 Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria),
@@ -46,25 +45,25 @@ public class ManagerController {
         model.addAttribute("files", pageable.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", pageable.getTotalPages());
-        model.addAttribute("isAscending", isAscending);
         System.out.println(pageable.getTotalElements());
+        model.addAttribute("isAscending", isAscending);
         return "index";
     }
 
     @GetMapping("/")
     public String index(Principal principal, Model model) {
-        return pageable(1, "id", "ASC", principal, model);
+        return pageable(1, "id", "asc", principal, model);
     }
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute CreateFileDto dto, HttpServletRequest request, Model model) {
+    public String create(@Valid @ModelAttribute CreateFileDto dto) {
         fileService.create(dto);
         return "redirect:/";
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=read")
-    public void read(@RequestParam("id") UUID id, HttpServletResponse response, Model model) throws IOException {
+    public void read(@RequestParam("id") UUID id, HttpServletResponse response) throws IOException {
         FileDto file = fileService.findFileById(id);
         byte[] content = fileService.downloadFileById(id);
         IOUtils.copy(new ByteArrayInputStream(content), response.getOutputStream());
@@ -72,13 +71,13 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto, HttpServletRequest request, Model model) {
+    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto) {
         fileService.update(id, dto);
         return "redirect:/";
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=delete")
-    public String delete(@RequestParam("id") UUID id, HttpServletRequest request, Model model) {
+    public String delete(@RequestParam("id") UUID id) {
         fileService.deleteById(id);
         return "redirect:/";
     }

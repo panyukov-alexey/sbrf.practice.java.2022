@@ -56,7 +56,7 @@ public class FileController {
     @GetMapping("/{id}/download")
     private byte[] downloadFileById(@PathVariable("id") UUID id) {
         byte[] file = fileService.downloadFileById(id);
-        log.info("File with id={} was dowloaded", id);
+        log.info("File with id={} was downloaded", id);
         return file;
     }
 

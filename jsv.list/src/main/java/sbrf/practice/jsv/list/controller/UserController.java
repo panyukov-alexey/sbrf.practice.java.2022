@@ -37,12 +37,6 @@ public class UserController {
         return foundUser;
     }
 
-    // @GetMapping("/{id}/files")
-    // public List<File> findFilesById(@PathVariable("id") UUID id) {
-    //     log.info("Trying to get all files by given id={}", id);
-    //     return findById(id).getFiles();
-    // }
-
     @GetMapping("/{id}/files")
     private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) {
         List<FileDto> filesByAuthor = fileService.findFilesByAuthor(authorId);

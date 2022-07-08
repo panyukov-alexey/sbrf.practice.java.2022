@@ -15,18 +15,18 @@ header {
     justify-content: space-around;
     width: 100%;
     align-items: center;
-    height: 72px;
+    height: 128px;
 }
 
 body {
     margin: 0;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 main {
-    margin: 128px auto;
+    margin: 32px auto;
     width: 80%;
     height: 100%;
     border-top: 0;
@@ -37,10 +37,30 @@ main {
 }
 
 section {
-    margin: 12px 0 12px;
+    margin: 16px 0;
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+.management {
+    display: flex;
+    justify-content: space-around;
+}
+
+.management form {
+    flex: 1 1 0;
+}
+
+.navigation nav {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    margin: 0 auto;
+}
+
+.navigation nav a {
+    margin: 0 12px;
 }
 
 table {
@@ -59,7 +79,7 @@ table tr {
 }
 
 footer {
-    margin-top:auto;
+    margin-top: auto;
     border: 1px black solid;
     border-left: 0;
     border-right: 0;
@@ -67,5 +87,5 @@ footer {
     justify-content: space-around;
     width: 100%;
     align-items: center;
-    height: 72px;
+    height: 128px;
 }

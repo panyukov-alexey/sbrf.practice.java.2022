@@ -39,11 +39,6 @@ public class User extends Base implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Value("#{Collections.emptyList()}")
-    @JsonIgnore
-    private List<File> files;
-
     public User(String username, String password) {
         this.username = username;
         this.password = password;

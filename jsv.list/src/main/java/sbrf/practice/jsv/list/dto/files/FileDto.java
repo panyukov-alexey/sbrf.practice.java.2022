@@ -1,12 +1,13 @@
 package sbrf.practice.jsv.list.dto.files;
 
-import java.util.UUID;
-
-import javax.validation.constraints.NotNull;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -24,4 +25,13 @@ public class FileDto {
     @NotNull
     @JsonProperty("authorId")
     private UUID authorId;
+
+    @NotNull
+    @JsonProperty("createdAt")
+    private Date createdAt;
+
+    @NotNull
+    @JsonProperty("updatedAt")
+    private Date updatedAt;
+
 }

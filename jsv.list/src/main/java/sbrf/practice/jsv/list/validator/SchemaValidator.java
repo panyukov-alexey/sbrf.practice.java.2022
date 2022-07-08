@@ -1,14 +1,13 @@
 package sbrf.practice.jsv.list.validator;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.web.multipart.MultipartFile;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class SchemaValidator implements ConstraintValidator<IsValidSchema, MultipartFile>{
+public class SchemaValidator implements ConstraintValidator<IsValidSchema, MultipartFile> {
 
     @Override
     public boolean isValid(MultipartFile content, ConstraintValidatorContext context) {
@@ -17,7 +16,7 @@ public class SchemaValidator implements ConstraintValidator<IsValidSchema, Multi
             ObjectMapper mapper = new ObjectMapper();
             JsonNode actualObj = mapper.readTree(str);
             return true;
-        } catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }

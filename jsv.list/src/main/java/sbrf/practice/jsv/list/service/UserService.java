@@ -2,7 +2,6 @@ package sbrf.practice.jsv.list.service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.users.CreateUserDto;
 import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
@@ -39,6 +38,10 @@ public class UserService {
 
     public UserDto findById(UUID id) throws EntityNotFoundException, IOException {
         return mapper.userToUserDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no user with id='%d'", id))));
+    }
+
+    public UserDto findByUsername(String username) throws IOException {
+        return mapper.userToUserDto(repository.findByUsername(username));
     }
 
     public UserDto create(CreateUserDto dto) throws IOException {

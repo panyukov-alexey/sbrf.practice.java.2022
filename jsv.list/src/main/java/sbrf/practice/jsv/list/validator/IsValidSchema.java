@@ -10,11 +10,11 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = SchemaValidator.class)
 public @interface IsValidSchema {
     //error message
-    public String message() default "Invalid JSON schema";
+    String message() default "Invalid JSON schema";
 
     //represents group of constraints
-    public Class<?>[] groups() default {};
+    Class<?>[] groups() default {};
 
     //represents additional information about annotation
-    public Class<? extends Payload>[] payload() default {};
+    Class<? extends Payload>[] payload() default {};
 }

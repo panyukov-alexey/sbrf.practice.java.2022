@@ -10,8 +10,6 @@ import sbrf.practice.jsv.list.dto.users.UpdateUserDto;
 import sbrf.practice.jsv.list.dto.users.UserDto;
 import sbrf.practice.jsv.list.model.User;
 
-import java.io.IOException;
-
 @Mapper(componentModel = "spring")
 public abstract class UserMapper {
 

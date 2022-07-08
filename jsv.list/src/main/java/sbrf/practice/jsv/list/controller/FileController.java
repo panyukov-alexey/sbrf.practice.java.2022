@@ -11,7 +11,6 @@ import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.service.FileService;
 
 import javax.validation.Valid;
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 

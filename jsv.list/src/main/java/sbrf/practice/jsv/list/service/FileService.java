@@ -57,8 +57,20 @@ public class FileService {
         }).collect(Collectors.toList());
     }
 
-    public Page<FileDto> findAllSorted(Sort sort, Integer page, Integer valPerPage) throws IOException {
-        List<FileDto> files = fileRepository.findAll(PageRequest.of(page, valPerPage, sort)).stream().map(f -> {
+    public Page<FileDto> findFilesByAuthor(UUID id, Sort sort, Integer page, Integer size) throws IOException {
+        List<FileDto> files = fileRepository.findByAuthorId(id, PageRequest.of(page, size, sort)).stream().map(f -> {
+            try {
+                return mapper.fileToFileDto(f);
+            } catch (IOException e) {
+                log.info("Exception encountered while getting and sorting all files: {}", e);
+                throw new UncheckedIOException("Error: unable to get and sort files", e);
+            }
+        }).collect(Collectors.toList());
+        return new PageImpl<FileDto>(files);
+    }
+
+    public Page<FileDto> findAllFiles(Sort sort, Integer page, Integer size) throws IOException {
+        List<FileDto> files = fileRepository.findAll(PageRequest.of(page, size, sort)).stream().map(f -> {
             try {
                 return mapper.fileToFileDto(f);
             } catch (IOException e) {

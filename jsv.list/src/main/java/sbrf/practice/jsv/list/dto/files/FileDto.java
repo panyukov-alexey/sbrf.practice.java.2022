@@ -19,8 +19,8 @@ public class FileDto {
     private UUID id;
 
     @NotNull
-    @JsonProperty("fileName")
-    private String fileName;
+    @JsonProperty("filename")
+    private String filename;
 
     @NotNull
     @JsonProperty("authorId")

@@ -9,7 +9,6 @@ import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.model.File;
 import sbrf.practice.jsv.list.repository.FileRepository;
-import sbrf.practice.jsv.list.service.FileService;
 
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
@@ -22,13 +21,13 @@ public abstract class FileMapper {
     @Autowired
     protected FileRepository fileRepository;
 
-    public File createFileDtoToFile(CreateFileDto dto)  {
+    public File createFileDtoToFile(CreateFileDto dto) {
         try {
-           File f = new File();
-           f.setContent(dto.getFile().getBytes());
-           f.setFilename(dto.getFile().getOriginalFilename());
-           f.setAuthorId(dto.getAuthorId());
-           return f;
+            File f = new File();
+            f.setContent(dto.getFile().getBytes());
+            f.setFilename(dto.getFile().getOriginalFilename());
+            f.setAuthorId(dto.getAuthorId());
+            return f;
         } catch (IOException e) {
             throw new UncheckedIOException("Cannot convert File to FileDto", e);
         }

@@ -11,9 +11,9 @@ import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.dto.users.UserDto;
-import sbrf.practice.jsv.list.model.File;
 import sbrf.practice.jsv.list.service.FileService;
 import sbrf.practice.jsv.list.service.UserService;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
@@ -31,7 +31,7 @@ public class ManagerController {
     @GetMapping("/page/{id}")
     public String pageable(
             @PathVariable(name = "id") Integer page,
-            @RequestParam(name = "criteria", defaultValue="id") String criteria,
+            @RequestParam(name = "criteria", defaultValue = "id") String criteria,
             @RequestParam(name = "direction", defaultValue = "asc") String direction,
             Principal principal,
             Model model) {

@@ -2,9 +2,9 @@ package sbrf.practice.jsv.list.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
@@ -14,8 +14,6 @@ import sbrf.practice.jsv.list.model.File;
 import sbrf.practice.jsv.list.repository.FileRepository;
 
 import javax.persistence.EntityNotFoundException;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;

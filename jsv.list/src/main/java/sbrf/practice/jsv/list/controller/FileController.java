@@ -24,14 +24,14 @@ public class FileController {
     private final FileService fileService;
 
     @GetMapping()
-    private List<FileDto> findAllFiles() throws IOException {
+    private List<FileDto> findAllFiles() {
         List<FileDto> allFiles = fileService.findAllFiles();
         log.info("Got all files");
         return allFiles;
     }
 
     @GetMapping("/{id}")
-    private FileDto findFileById(@PathVariable("id") UUID id) throws IOException {
+    private FileDto findFileById(@PathVariable("id") UUID id) {
         FileDto foundFile = fileService.findFileById(id);
         log.info("Got a file with given id={}", id);
         return foundFile;
@@ -40,15 +40,15 @@ public class FileController {
     @GetMapping("/sorted")
     private Page<FileDto> findAllSorted(@RequestParam("sort") Sort sort,
                                         @RequestParam("page") Integer page,
-                                        @RequestParam("val") Integer valPerPage) throws IOException {
-        Page<FileDto> sortedFiles = fileService.findAllFiles(sort, page, valPerPage);
+                                        @RequestParam("val") Integer size) {
+        Page<FileDto> sortedFiles = fileService.findAllFiles(sort, page, size);
         log.info("Got and sorted all files by", sort);
         return sortedFiles;
     }
 
 
     @PostMapping("/upload")
-    public FileDto create(@Valid @ModelAttribute CreateFileDto dto) throws IOException {
+    public FileDto create(@Valid @ModelAttribute CreateFileDto dto) {
         FileDto newFile = fileService.create(dto);
         log.info("Uploaded new file");
         return newFile;
@@ -62,7 +62,7 @@ public class FileController {
     }
 
     @PutMapping("/{id}")
-    public FileDto update(@PathVariable("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto) throws IOException {
+    public FileDto update(@PathVariable("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto) {
         FileDto updatedFile = fileService.update(id, dto);
         log.info("Updated a file with given id={}", id);
         return updatedFile;

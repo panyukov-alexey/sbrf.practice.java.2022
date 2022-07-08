@@ -22,17 +22,17 @@ public abstract class UserMapper {
             @Mapping(target = "username", source = "dto.username"),
             @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getPassword()))"),
     })
-    public abstract User createUserDtoToUser(CreateUserDto dto) throws IOException;
+    public abstract User createUserDtoToUser(CreateUserDto dto);
 
     @Mappings({
             @Mapping(target = "username", source = "dto.username"),
             @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getPassword()))"),
     })
-    public abstract User updateUserDtoToUser(UpdateUserDto dto) throws IOException;
+    public abstract User updateUserDtoToUser(UpdateUserDto dto);
 
     @Mappings({
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "username", source = "username"),
     })
-    public abstract UserDto userToUserDto(User user) throws IOException;
+    public abstract UserDto userToUserDto(User user);
 }

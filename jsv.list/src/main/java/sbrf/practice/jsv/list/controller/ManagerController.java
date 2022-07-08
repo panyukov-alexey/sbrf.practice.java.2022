@@ -35,7 +35,7 @@ public class ManagerController {
             @RequestParam(name = "criteria") String criteria,
             @RequestParam(name = "direction") String direction,
             Principal principal,
-            Model model) throws IOException {
+            Model model) {
         final int size = 10;
         UserDto user = userService.findByUsername(principal.getName());
         boolean isAscending = direction.equalsIgnoreCase("ASC");
@@ -52,13 +52,13 @@ public class ManagerController {
     }
 
     @GetMapping("/")
-    public String index(Principal principal, Model model) throws IOException {
+    public String index(Principal principal, Model model) {
         return pageable(1, "id", "ASC", principal, model);
     }
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid CreateFileDto dto, HttpServletRequest request, Model model) throws IOException {
+    public String create(@Valid @ModelAttribute CreateFileDto dto, HttpServletRequest request, Model model) {
         fileService.create(dto);
         return "redirect:/";
     }
@@ -72,7 +72,7 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") UUID id, @Valid UpdateFileDto dto, HttpServletRequest request, Model model) throws IOException {
+    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto, HttpServletRequest request, Model model) {
         fileService.update(id, dto);
         return "redirect:/";
     }

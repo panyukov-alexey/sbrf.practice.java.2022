@@ -26,30 +26,23 @@ public class UserService {
     private final UserMapper mapper;
 
     public List<UserDto> findAll() {
-        return repository.findAll().stream().map(u -> {
-            try {
-                return mapper.userToUserDto(u);
-            } catch (IOException e) {
-                log.info("Exception encountered while getting all user: {}", e);
-                throw new UncheckedIOException("Error: unable to get users", e);
-            }
-        }).collect(Collectors.toList());
+        return repository.findAll().stream().map(u -> mapper.userToUserDto(u)).collect(Collectors.toList());
     }
 
-    public UserDto findById(UUID id) throws EntityNotFoundException, IOException {
+    public UserDto findById(UUID id) throws EntityNotFoundException {
         return mapper.userToUserDto(repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no user with id='%d'", id))));
     }
 
-    public UserDto findByUsername(String username) throws IOException {
+    public UserDto findByUsername(String username) {
         return mapper.userToUserDto(repository.findByUsername(username));
     }
 
-    public UserDto create(CreateUserDto dto) throws IOException {
+    public UserDto create(CreateUserDto dto) {
         User user = repository.save(mapper.createUserDtoToUser(dto));
         return mapper.userToUserDto(user);
     }
 
-    public UserDto update(UUID id, UpdateUserDto dto) throws IOException {
+    public UserDto update(UUID id, UpdateUserDto dto) {
         User user = repository.save(mapper.updateUserDtoToUser(dto));
         return mapper.userToUserDto(user);
     }

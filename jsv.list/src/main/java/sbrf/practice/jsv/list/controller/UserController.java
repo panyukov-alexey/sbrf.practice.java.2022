@@ -24,14 +24,14 @@ public class UserController {
     private final FileService fileService;
 
     @GetMapping()
-    public List<UserDto> findAll() throws IOException {
+    public List<UserDto> findAll() {
         List<UserDto> allUser = userService.findAll();
         log.info("Got all users");
         return allUser;
     }
 
     @GetMapping("/{id}")
-    public UserDto findById(@PathVariable("id") UUID id) throws IOException {
+    public UserDto findById(@PathVariable("id") UUID id) {
         UserDto foundUser = userService.findById(id);
         log.info("Got a file with given id={}", id);
         return foundUser;
@@ -44,14 +44,14 @@ public class UserController {
     // }
 
     @GetMapping("/{id}/files")
-    private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) throws IOException {
+    private List<FileDto> findFilesByAuthor(@PathVariable("id") UUID authorId) {
         List<FileDto> filesByAuthor = fileService.findFilesByAuthor(authorId);
         log.info("Got all files the user with given id={} owns", authorId);
         return filesByAuthor;
     }
 
     @PostMapping()
-    public UserDto create(@Valid @RequestBody CreateUserDto dto) throws IOException {
+    public UserDto create(@Valid @RequestBody CreateUserDto dto) {
         UserDto newUser = userService.create(dto);
         log.info("Created new user");
         return newUser;

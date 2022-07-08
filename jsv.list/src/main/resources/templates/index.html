@@ -3,39 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Файловый менеджер</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="script.js"></script>
-    <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 </head>
 <body>
 <header>
-    <h1>Файловый менеджер</h1>
+    <h1>📁 Файловый менеджер</h1>
     <div style="text-align: right">
-        <span>уникальный идентификатор: <strong th:text="${user.getId()}"></strong> <br> имя пользователя: <strong
-                th:text="${user.getUsername()}"></strong></span> <br>
+        <span>Уникальный идентификатор: <strong th:text="${user.id}"></strong> <br> Имя пользователя: <strong
+                th:text="${user.username}"></strong></span> <br>
         <a href="/logout">
-            <button>выйти</button>
+            <button>Выйти</button>
         </a>
     </div>
 </header>
 <main>
-    <section>
-        <form action="#" th:action="@{/}" enctype="multipart/form-data" method="get">
+    <section class="search">
+        <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
             <label for="search">Искать</label>
-            <input id="search" type="text" name="filename" />
-            <input type="submit" value="search"/>
+            <input id="search" name="filename" type="text"/>
+            <button type="submit" name="action" value="search">Искать</button>
         </form>
-        <form action="#" th:action="@{/}" enctype="multipart/form-data" method="get">
+        <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
             <button type="submit">Сортировать</button>
-            <select name="sort" id="sort">
-                <option value="id">по уникальному идентификатору</option>
-                <option value="filename">по имени файла</option>
-                <option value="updatedAt">по дате обновления</option>
-                <option value="createdAt">по дате создания</option>
+            <select id="sort" name="criteria">
+                <option value="id">По уникальному идентификатору</option>
+                <option value="filename">По имени файла</option>
+                <option value="updatedAt">По дате обновления</option>
+                <option value="createdAt">По дате создания</option>
             </select>
+            <input type="radio" id="ASC" name="direction" th:checked="${isAscending}" value="ASC">
+            <label for="ASC">По возрастанию</label>
+            <input type="radio" id="DESC" name="direction" th:checked="${!isAscending}" value="DESC">
+            <label for="DESC">По убыванию</label>
         </form>
     </section>
-    <section>
+    <section class="view">
         <table>
             <thead>
             <tr>
@@ -47,40 +49,48 @@
             </thead>
             <tbody>
             <tr th:each="file:${files}">
-                <td th:text="${file.getId()}"></td>
-                <td th:text="${file.getFileName()}"></td>
-                <td th:text="${file.getCreatedAt()}"></td>
-                <td th:text="${file.getUpdatedAt()}"></td>
+                <td th:text="${file.id}"></td>
+                <td th:text="${file.filename}"></td>
+                <td th:text="${file.createdAt}"></td>
+                <td th:text="${file.updatedAt}"></td>
             </tr>
             </tbody>
-            <tfoot>
-            </tfoot>
         </table>
     </section>
-    <section>
-        <form action="#" th:action="@{/}" enctype="multipart/form-data" method="get">
-            <label for="page"></label>
-            <input type="text" name="page">
-            <button type="submit">Перейти на страницу</button>
-        </form>
+    <section class="navigation" th:if="${totalPages > 1}">
+        <nav>
+            <a th:href="@{/page/1}"> << </button></a>
+            <a th:href="@{'/page/' + ${(currentPage - 1) % totalPages + 1}}"> < </a>
+            <strong th:text="'Текущая страница - ' + ${currentPage} + ' из ' + ${totalPages}"></strong>
+            <a th:href="@{'/page/' + ${(currentPage + 1) % totalPages + 1}}"> > </a>
+            <a th:href="@{'/page/' + ${totalPages}}"> >> </a>
+        </nav>
     </section>
-    <section>
-        <form action="#" th:action="@{/edit}" enctype="multipart/form-data" method="post">
-            <label for="fileId">Уникальный идентификатор</label><br>
-            <input type="text" id="fileId" name="id" value=""><br>
-            <br><label>Файл</label><br>
-            <input type="file" name="file"/><br>
-            <br><input type="hidden" th:value="${user.id}" name="authorId" /><br>
-            <button type="submit" name="action" value="create">Загрузить файл</button>
-            <button type="submit" name="action" value="read">Скачать файл</button>
-            <button type="submit" name="action" value="update">Обновить файл</button>
-            <button type="submit" name="action" value="delete">Удалить файл</button>
+    <section class="management">
+        <form>
+            <fieldset>
+                <legend>Операции над файлом</legend>
+                <label for="fileId">Уникальный идентификатор</label><br>
+                <br><input id="fileId" name="id" type="text" value=""><br><br><br>
+                <button name="action" type="submit" value="read">Скачать файл</button>
+                <button name="action" type="submit" value="update">Обновить файл</button>
+                <button name="action" type="submit" value="delete">Удалить файл</button>
+            </fieldset>
+        </form>
+        <form action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
+            <fieldset>
+                <legend>Загрузка файла</legend>
+                <label>Файл</label><br>
+                <br><input name="file" type="file"/><br><br><br>
+                <input name="authorId" th:value="${user.id}" type="hidden"/>
+                <button name="action" type="submit" value="create">Загрузить файл</button>
+            </fieldset>
         </form>
     </section>
 </main>
 <footer>
-    <h2>Летняя практика 2022</h2>
-    <strong>ПАО Сбербанк, г. Омск, 😺 Группа Д-5</strong>
+    <strong>Летняя практика 2022, ПАО Сбербанк, г. Омск</strong>
+    <strong>Арестов В. А., Лепешкин В.О., Осипова Я. Д., Петров Р.Ю. 😼</strong>
 </footer>
 </body>
 </html>

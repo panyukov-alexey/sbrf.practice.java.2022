@@ -24,8 +24,9 @@ public abstract class FileMapper {
     public File createFileDtoToFile(CreateFileDto dto) {
         try {
             File f = new File();
-            f.setContent(dto.getFile().getBytes());
             f.setFilename(dto.getFile().getOriginalFilename());
+            f.setLength(dto.getFile().getSize());
+            f.setContent(dto.getFile().getBytes());
             f.setAuthorId(dto.getAuthorId());
             return f;
         } catch (IOException e) {
@@ -42,6 +43,7 @@ public abstract class FileMapper {
     @Mappings({
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "filename", source = "filename"),
+            @Mapping(target = "length", source = "length"),
             @Mapping(target = "authorId", source = "authorId"),
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt")
@@ -51,6 +53,7 @@ public abstract class FileMapper {
     @Mappings({
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "filename", source = "filename"),
+            @Mapping(target = "length", source = "length"),
             @Mapping(target = "authorId", source = "authorId"),
             @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt")

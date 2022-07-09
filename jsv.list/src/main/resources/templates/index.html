@@ -21,13 +21,14 @@
         <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
             <label for="search">Искать</label>
             <input id="search" name="filename" type="text"/>
-            <button name="action" type="submit" value="search">Искать</button>
+            <button name="action" type="submit">Искать</button>
         </form>
         <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
             <button type="submit">Сортировать</button>
             <select id="sort" name="criteria">
                 <option value="id">По уникальному идентификатору</option>
                 <option value="filename">По имени файла</option>
+                <option value="length">По размеру файла</option>
                 <option value="updatedAt">По дате обновления</option>
                 <option value="createdAt">По дате создания</option>
             </select>
@@ -43,6 +44,7 @@
             <tr>
                 <th>Уникальный идентификатор</th>
                 <th>Имя файла</th>
+                <th>Размер файла</th>
                 <th>Дата создания</th>
                 <th>Дата обновления</th>
             </tr>
@@ -51,50 +53,68 @@
             <tr th:each="file:${files}">
                 <td th:text="${file.id}"></td>
                 <td th:text="${file.filename}"></td>
+                <td th:text="${file.length} + ' байт'"></td>
                 <td th:text="${file.createdAt}"></td>
                 <td th:text="${file.updatedAt}"></td>
             </tr>
+            <tr th:if="${files.size() < maxElementsPerPage}">
+                <td style="height: 100%" colspan="5">&nbsp;</td>
+            </tr>
             </tbody>
+            <tfoot>
+            <tr>
+                <th colspan="1">Всего записей:</th>
+                <td colspan="4" th:text="${totalItems}"></td>
+            </tr>
+            </tfoot>
         </table>
     </section>
-    <section class="navigation" th:if="${totalPages > 1}">
-        <nav>
-            <a th:href="@{/page/1}"> << </button></a>
-            <a th:href="@{'/page/' + ${(currentPage - 1) % totalPages + 1}}"> < </a>
-            <strong th:text="'Текущая страница - ' + ${currentPage} + ' из ' + ${totalPages}"></strong>
-            <a th:href="@{'/page/' + ${(currentPage + 1) % totalPages + 1}}"> > </a>
-            <a th:href="@{'/page/' + ${totalPages}}"> >> </a>
+    <section class="navigation">
+        <nav th:if="${totalPages > 1}">
+            <ul>
+                <li th:if="${currentPage > 2}">
+                    <a th:href="@{/page/1}"> << </a>
+                </li>
+                <li th:if="${currentPage > 1}">
+                    <a th:href="@{'/page/' + ${currentPage - 1}}"> < </a>
+                </li>
+                <li>
+                    <strong th:text="'Текущая страница - ' + ${currentPage} + ' из ' + ${totalPages}"></strong>
+                </li>
+                <li th:if="${currentPage < totalPages}">
+                    <a th:href="@{'/page/' + ${(currentPage + 1)}}"> > </a>
+                </li>
+                <li th:if="${currentPage < totalPages && totalPages > 2}">
+                    <a th:href="@{'/page/' + ${totalPages}}"> >> </a>
+                </li>
+            </ul>
         </nav>
     </section>
     <section class="management">
         <form action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
-            <fieldset>
-                <legend>Операции над файлом</legend>
-                <label for="fileId">Уникальный идентификатор</label>
-                <br>
-                <input id="fileId" name="id" type="text" value="">
-                <br>
-                <br>
-                <label for="filename">Имя файла</label>
-                <br>
-                <input id="filename" name="filename" type="text" value="">
-                <br>
-                <input name="authorId" th:value="${user.id}" type="hidden"/>
-            </fieldset>
+            <label for="fileId">Уникальный идентификатор</label>
+            <br>
+            <input id="fileId" name="id" type="text" value="">
+            <br>
+            <br>
+            <label for="filename">Имя файла</label>
+            <br>
+            <input id="filename" name="filename" type="text" value="">
+            <br>
+            <br>
+            <input name="authorId" th:value="${user.id}" type="hidden"/>
             <button name="action" type="submit" value="read">Скачать файл</button>
             <button name="action" type="submit" value="update">Обновить файл</button>
             <button name="action" type="submit" value="delete">Удалить файл</button>
         </form>
         <form action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
-            <fieldset>
-                <legend>Загрузка файла</legend>
-                <label>Файл</label>
-                <br>
-                <br>
-                <input name="file" type="file"/>
-                <br>
-                <input name="authorId" th:value="${user.id}" type="hidden"/>
-            </fieldset>
+            <label>Файл</label>
+            <br>
+            <br>
+            <input name="file" type="file"/>
+            <br>
+            <br>
+            <input name="authorId" th:value="${user.id}" type="hidden"/>
             <button name="action" type="submit" value="create">Загрузить файл</button>
         </form>
     </section>

@@ -53,6 +53,11 @@ databaseChangeLog:
                     nullable: false
                     unique: false
               - column:
+                  name: LENGTH
+                  type: LONG
+                  constraints:
+                    nullable: false
+              - column:
                   name: AUTHOR_ID
                   type: varchar(255)
                   constraints:

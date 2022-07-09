@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -30,29 +31,31 @@ public class ManagerController {
 
     @GetMapping("/page/{id}")
     public String pageable(
-            @PathVariable(name = "id") Integer page,
+            @PathVariable(name = "id") Integer pageNumber,
+            @RequestParam(name="filename", defaultValue = "") String filename,
             @RequestParam(name = "criteria", defaultValue = "id") String criteria,
             @RequestParam(name = "direction", defaultValue = "asc") String direction,
             Principal principal,
             Model model) {
-        final int size = 12;
+        final int size = 16;
         UserDto user = userService.findByUsername(principal.getName());
         boolean isAscending = direction.equalsIgnoreCase("asc");
         model.addAttribute("user", user);
-        Page<FileDto> pageable = fileService.findFilesByAuthor(user.getId(),
+        Page<FileDto> page = fileService.findFilesByAuthor(user.getId(),
                 Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria),
-                page - 1, size);
-        model.addAttribute("files", pageable.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", pageable.getTotalPages());
-        System.out.println(pageable.getTotalElements());
+                pageNumber - 1, size);
+        model.addAttribute("files", page.getContent().stream().filter((f) -> f.getFilename().contains(filename)).collect(Collectors.toList()));
+        model.addAttribute("currentPage", pageNumber);
+        model.addAttribute("maxElementsPerPage", size);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
         model.addAttribute("isAscending", isAscending);
         return "index";
     }
 
     @GetMapping("/")
     public String index(Principal principal, Model model) {
-        return pageable(1, "id", "asc", principal, model);
+        return pageable(1, "", "id", "asc", principal, model);
     }
 
 

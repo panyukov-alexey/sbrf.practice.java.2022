@@ -23,6 +23,10 @@ public class FileDto {
     private String filename;
 
     @NotNull
+    @JsonProperty("length")
+    private Long length;
+
+    @NotNull
     @JsonProperty("authorId")
     private UUID authorId;
 

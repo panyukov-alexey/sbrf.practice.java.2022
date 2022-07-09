@@ -70,14 +70,17 @@ section {
 }
 
 .navigation nav {
-    display: flex;
-    justify-content: center;
-    align-content: center;
     margin: 0 auto;
 }
 
-.navigation nav a {
+.navigation ul {
+    margin: 0;
+    list-style-type: none;
+}
+
+.navigation ul li {
     margin: 0 12px;
+    display: inline;
 }
 
 .view table {
@@ -85,6 +88,10 @@ section {
     table-layout: fixed;
     border-collapse: collapse;
     text-align: center;
+}
+
+.view table tbody {
+    height: 320px;
 }
 
 .view table th, td {

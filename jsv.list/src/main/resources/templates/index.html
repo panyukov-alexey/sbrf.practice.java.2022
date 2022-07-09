@@ -18,11 +18,14 @@
 </header>
 <main>
     <section class="misc">
-        <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
-            <label for="search">Искать</label>
-            <input id="search" name="filename" type="text"/>
-            <button type="submit">Искать</button>
-        </form>
+        <div class="exeptSearch">
+            <p th:if="${totalItems > 0 && files.size() < 1}" class = "exept">Файл не найден</p>
+            <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
+                <label for="search">Искать</label>
+                <input id="search" name="filename" type="text"/>
+                <button type="submit">Искать</button>
+            </form>
+        </div>
         <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
             <button type="submit">Сортировать</button>
             <select id="sort" name="criteria">
@@ -94,7 +97,7 @@
         <form action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
             <label for="fileId">Уникальный идентификатор</label>
             <br>
-            <input id="fileId" name="id" type="text" value="">
+            <input id="fileId" name="id" type="text" value="" >
             <br>
             <br>
             <label for="filename">Имя файла</label>

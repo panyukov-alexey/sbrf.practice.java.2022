@@ -40,9 +40,25 @@ section {
     margin: 16px 0;
     display: flex;
     justify-content: space-between;
+    align-items:end;
     width: 100%;
 }
 
+.exeptSearch {
+    display: flex;
+    flex-direction: column;
+}
+
+.exept {
+    color: red;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+
+.misc {
+    height: 50px;
+    margin-top: 0;
+}
 .misc form {
     display: flex;
     justify-content: space-around;

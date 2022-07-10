@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
     <style>
+        @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css");
         body {
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
@@ -21,7 +22,7 @@
         <div class="col-auto text-end">
             <div class="row">
                 <div class="col-auto">
-                    Уникальный идентификатор: <strong th:text="${currentUser.id}"></strong><br>
+                    Уникальный идентификатор пользователя: <strong th:text="${currentUser.id}"></strong><br>
                     Имя пользователя: <strong th:text="${currentUser.username}"></strong>
                 </div>
                 <div class="col-sm-auto">
@@ -33,10 +34,10 @@
 </header>
 <main class="container mt-4 mb-4">
     <div class="row">
-        <form action="#" enctype="multipart/form-data" method="get" th:action="@{/page/1(criteria=${sortingCriteria},direction=${isAscending ? 'asc' : 'desc'})}">
+        <form action="#"  enctype="multipart/form-data" method="get" th:action="@{/page/1(criteria=${sortingCriteria},direction=${isAscending ? 'asc' : 'desc'})}">
             <div class="col-auto">
                 <div class="input-group mb-3">
-                    <span class="input-group-text">🔍</span>
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
                     <input class="form-control" id="search" placeholder="Искать..." name="filename" type="search"/>
                     <button class="btn btn-outline-primary" type="submit">Поиск</button>
                 </div>
@@ -48,10 +49,14 @@
             <thead class="table-dark">
             <tr>
                 <th>Уникальный идентификатор файла</th>
-                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='filename',direction=${isAscending ? 'desc' : 'asc'})}">Название файла </a></th>
-                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='length',direction=${isAscending ? 'desc' : 'asc'})}">Размер файла </a></th>
-                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='createdAt',direction=${isAscending ? 'desc' : 'asc'})}">Дата создания </a></th>
-                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='updatedAt',direction=${isAscending ? 'desc' : 'asc'})}">Дата обновления </a></th>
+                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='filename',direction=${isAscending ? 'desc' : 'asc'})}">
+                    Название файла </a></th>
+                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='length',direction=${isAscending ? 'desc' : 'asc'})}">
+                    Размер файла </a></th>
+                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='createdAt',direction=${isAscending ? 'desc' : 'asc'})}">
+                    Дата создания </a></th>
+                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='updatedAt',direction=${isAscending ? 'desc' : 'asc'})}">
+                    Дата обновления </a></th>
             </tr>
             </thead>
             <tbody>
@@ -77,46 +82,46 @@
     <div class="row">
         <ul class="pagination justify-content-center">
             <li th:class="'page-item ' + ${currentPage < 3 ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{/page/1}"> << </a>
+                <a class="page-link" th:href="@{/page/1}"> <i class="bi bi-chevron-double-left"></i> </a>
             </li>
             <li th:class="'page-item ' + ${currentPage <= 1 ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{'/page/' + ${currentPage - 1}}"> < </a>
+                <a class="page-link" th:href="@{'/page/' + ${currentPage - 1}}"> <i class="bi bi-chevron-left"></i> </a>
             </li>
             <li class="page-item">
-                <a class="page-link" th:href="@{'/page/' + ${currentPage}}" th:text="'Страница ' + ${currentPage}"></a>
+                <a class="page-link" th:href="@{'/page/' + ${currentPage}}" th:text="'Страница ' + ${currentPage} + ' из ' + ${totalPages}"></a>
             </li>
             <li th:class="'page-item ' + ${currentPage > totalPages - 1 || totalPages < 2 ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{'/page/' + ${(currentPage + 1)}}"> > </a>
+                <a class="page-link" th:href="@{'/page/' + ${(currentPage + 1)}}"> <i class="bi bi-chevron-right"></i> </a>
             </li>
             <li th:class="'page-item ' + ${currentPage >= totalPages - 1 || totalPages < 3 ? 'disabled' : '' } ">
-                <a class="page-link" th:href="@{'/page/' + ${totalPages}}"> >> </a>
+                <a class="page-link" th:href="@{'/page/' + ${totalPages}}"> <i class="bi bi-chevron-double-right"></i> </a>
             </li>
         </ul>
     </div>
     <div class="row">
-        <form class="mx-auto" action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
-            <div class="mb-1 mt-1">
-                <label class="form-label" for="id">Уникальный идентификатор файла</label>
-                <input class="form-control" id="id" th:name="id" type="text" readonly>
+        <form class="row was-validated" novalidate action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
+            <div class="mb-2 mt-2">
+                <label class="form-label" for="id">Уникальный идентификатор файла:</label>
+                <input class="form-control" id="id" name="id" type="text">
             </div>
-            <div class="mb-1">
-                <label class="form-label" for="filename">Имя файла</label>
+            <div class="mb-2">
+                <label class="form-label" for="filename">Имя файла:</label>
                 <input class="form-control" id="filename" name="filename" type="text">
             </div>
-            <div class="mb-1 mt-1">
-                <label class="form-label" for="authorId">Уникальный идентификатор пользователя</label>
-                <input class="form-control" id="authorId" name="authorId" th:value="${currentUser.id}" type="text" disabled/>
+            <div class="mb-2 mt-2">
+                <label class="form-label" for="authorId">Уникальный идентификатор пользователя:</label>
+                <input class="form-control" id="authorId" name="authorId" th:value="${currentUser.id}" type="text" readonly/>
             </div>
-            <div class="mb-1">
-                <label for="file" class="form-label">Файл</label>
+            <div class="mb-2">
+                <label for="file" class="form-label">Файл:</label>
                 <input class="form-control" id="file" name="file" type="file"/>
                 <small class="form-text text-muted">Это должен быть файл формата JSON.</small>
             </div>
             <div class="btn-group d-flex" role="group">
-                <button class="btn btn-primary" name="action" type="submit" value="create">Загрузить файл</button>
-                <button class="btn btn-primary" name="action" type="submit" value="read">Скачать файл</button>
-                <button class="btn btn-primary" name="action" type="submit" value="update">Обновить файл</button>
-                <button class="btn btn-primary" name="action" type="submit" value="delete">Удалить файл</button>
+                <button class="btn btn-primary" name="action" type="submit" value="create"><i class="bi bi-upload"></i> Загрузить файл</button>
+                <button class="btn btn-primary" name="action" type="submit" value="read"><i class="bi bi-download"></i> Скачать файл</button>
+                <button class="btn btn-primary" name="action" type="submit" value="update"><i class="bi bi-arrow-repeat"></i> Обновить файл</button>
+                <button class="btn btn-primary" name="action" type="submit" value="delete"><i class="bi bi-x-lg"></i> Удалить файл</button>
             </div>
         </form>
     </div>

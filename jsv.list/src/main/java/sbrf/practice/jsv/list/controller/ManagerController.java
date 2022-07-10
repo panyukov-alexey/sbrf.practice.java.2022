@@ -64,7 +64,10 @@ public class ManagerController {
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute CreateFileDto dto, Model model) {
+    public String create(@Valid @ModelAttribute CreateFileDto dto, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "redirect:/";
+        }
         fileService.create(dto);
         return "redirect:/";
     }
@@ -78,8 +81,15 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") @Valid UUID id, @Valid @ModelAttribute UpdateFileDto dto, Model model) {
-        fileService.update(id, dto);
+    public String update(@RequestParam("id") String uuid, @Valid @ModelAttribute UpdateFileDto dto, Model model) {
+        UUID id;
+        try {
+            id = UUID.fromString(uuid);
+            fileService.update(id, dto);
+        }
+        catch (IllegalArgumentException e) {
+
+        }
         return "redirect:/";
     }
 

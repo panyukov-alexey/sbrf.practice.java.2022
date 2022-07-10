@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
@@ -38,7 +37,7 @@ public class ManagerController {
                        @RequestParam(name = "criteria", defaultValue = "id") String criteria,
                        @RequestParam(name = "direction", defaultValue = "asc") String direction,
                        Model model) {
-        final int size = 16;
+        final int size = 10;
         boolean isAscending = direction.equalsIgnoreCase("asc");
         UserDto user = (UserDto)model.getAttribute("currentUser");
         Page<FileDto> page;
@@ -65,10 +64,7 @@ public class ManagerController {
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute("createFileDto") CreateFileDto dto, BindingResult result, Model model) {
-        if (result.hasErrors()) {
-            return index(model);
-        }
+    public String create(@Valid @ModelAttribute CreateFileDto dto, Model model) {
         fileService.create(dto);
         return "redirect:/";
     }
@@ -82,24 +78,15 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") @Valid UUID id, @Valid @ModelAttribute("updateFileDto") UpdateFileDto dto, BindingResult result, Model model) {
+    public String update(@RequestParam("id") @Valid UUID id, @Valid @ModelAttribute UpdateFileDto dto, Model model) {
         fileService.update(id, dto);
         return "redirect:/";
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=delete")
-    public String delete(@RequestParam("id") @Valid UUID id, BindingResult result, Model model) {
+    public String delete(@RequestParam("id") @Valid UUID id, Model model) {
+        fileService.deleteById(id);
         return index(model);
-    }
-
-    @ModelAttribute
-    CreateFileDto createFileDto() {
-        return new CreateFileDto();
-    }
-
-    @ModelAttribute
-    UpdateFileDto updateFileDto() {
-        return new UpdateFileDto();
     }
 
     @ModelAttribute("currentUser")

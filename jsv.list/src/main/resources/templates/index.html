@@ -6,63 +6,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+    </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-<header class="container-fluid p-3 bg-primary text-white">
-    <div class="row">
+<header class="container-fluid p-3 bg-primary text-white" style="min-height: 100px">
+    <div class="row align-items-center">
         <div class="col">
-            <h1>📁 Файловый менеджер</h1>
+            <h1>🗃️ Файловый менеджер</h1>
         </div>
-        <div class="col text-end">
-            Уникальный идентификатор: <strong th:text="${currentUser.id}"></strong><br>
-            Имя пользователя: <strong th:text="${currentUser.username}"></strong><br>
+        <div class="col-auto text-end">
+            <div class="row">
+                <div class="col-auto">
+                    Уникальный идентификатор: <strong th:text="${currentUser.id}"></strong><br>
+                    Имя пользователя: <strong th:text="${currentUser.username}"></strong>
+                </div>
+                <div class="col-sm-auto">
+                    <a th:href="@{/logout}"><button class="btn btn-danger" style="width: 128px">Выйти</button></a>
+                </div>
+            </div>
         </div>
     </div>
 </header>
-<main class="container">
-    <section class="row mt-12">
-        <div class="col">
-            <form action="#" enctype="multipart/form-data" method="get" th:action="@{/page/1(criteria=${sortingCriteria},direction=${isAscending ? 'ASC' : 'DESC'})}">
-                <div class="col-auto">
-                    <div class="input-group mb-3">
-                        <input class="form-control" id="search" name="filename" type="text"/>
-                        <button class="btn btn-outline-primary" type="submit">Поиск</button>
-                    </div>
+<main class="container mt-4 mb-4">
+    <div class="row">
+        <form action="#" enctype="multipart/form-data" method="get" th:action="@{/page/1(criteria=${sortingCriteria},direction=${isAscending ? 'asc' : 'desc'})}">
+            <div class="col-auto">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">🔍</span>
+                    <input class="form-control" id="search" placeholder="Искать..." name="filename" type="search"/>
+                    <button class="btn btn-outline-primary" type="submit">Поиск</button>
                 </div>
-            </form>
-        </div>
-        <div class="col">
-            <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}(filename=${searchingPattern})}">
-                <div class="input-group">
-                    <button class="btn btn-primary" type="submit">Сортировать</button>
-                    <select id="sort" class="form-select" name="criteria">
-                        <option value="id">По уникальному идентификатору</option>
-                        <option value="filename">По имени файла</option>
-                        <option value="length">По размеру файла</option>
-                        <option value="updatedAt">По дате обновления</option>
-                        <option value="createdAt">По дате создания</option>
-                    </select>
-                    <select id="direction" class="form-select" name="direction">
-                        <option value="asc">По возрастанию</option>
-                        <option value="desc">По убыванию</option>
-                    </select>
-                </div>
-            </form>
-        </div>
-    </section>
-    <section class="row">
-        <table class="table table-responsive table-bordered" style="min-height:50%">
-            <thead>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <table class="table table-hover table-sm table-responsive table-bordered" style="min-height:400px">
+            <thead class="table-dark">
             <tr>
-                <th>Уникальный идентификатор</th>
-                <th>Имя файла</th>
-                <th>Размер файла</th>
-                <th>Дата создания</th>
-                <th>Дата обновления</th>
+                <th>Уникальный идентификатор файла</th>
+                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='filename',direction=${isAscending ? 'desc' : 'asc'})}">Название файла </a></th>
+                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='length',direction=${isAscending ? 'desc' : 'asc'})}">Размер файла </a></th>
+                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='createdAt',direction=${isAscending ? 'desc' : 'asc'})}">Дата создания </a></th>
+                <th><a class="text-decoration-none text-white" th:href="@{/page/1(criteria='updatedAt',direction=${isAscending ? 'desc' : 'asc'})}">Дата обновления </a></th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="file:${files}">
+            <tr style="cursor: pointer;" th:attr="onclick=|setUUID('${file.id}')|" th:each="file:${files}">
                 <td th:text="${file.id}"></td>
                 <td th:text="${file.filename}"></td>
                 <td th:text="${file.length} + ' байт'"></td>
@@ -73,74 +66,76 @@
                 <td colspan="5" style="height: 100%">&nbsp;</td>
             </tr>
             </tbody>
-            <tfoot>
+            <tfoot class="table-dark">
             <tr>
-                <th colspan="1">Всего записей:</th>
+                <th colspan="1">Всего записей в базе данных</th>
                 <td colspan="4" th:text="${totalItems}"></td>
             </tr>
             </tfoot>
         </table>
-    </section>
-    <section class="row" th:if="${totalPages > 1}">
-        <ul class="pagination">
-            <li class="page-item" th:if="${currentPage > 2}">
-                <a th:href="@{/page/1}"> << </a>
+    </div>
+    <div class="row">
+        <ul class="pagination justify-content-center">
+            <li th:class="'page-item ' + ${currentPage < 3 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/page/1}"> << </a>
             </li>
-            <li class="page-item" th:if="${currentPage > 1}">
-                <a th:href="@{'/page/' + ${currentPage - 1}}"> < </a>
+            <li th:class="'page-item ' + ${currentPage <= 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/page/' + ${currentPage - 1}}"> < </a>
             </li>
             <li class="page-item">
-                <a th:href="@{'/page/' + ${currentPage}}" th:text="${currentPage}"></a>
+                <a class="page-link" th:href="@{'/page/' + ${currentPage}}" th:text="'Страница ' + ${currentPage}"></a>
             </li>
-            <li class="page-item" th:if="${currentPage < totalPages}">
-                <a th:href="@{'/page/' + ${(currentPage + 1)}}"> > </a>
+            <li th:class="'page-item ' + ${currentPage > totalPages - 1 || totalPages < 2 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/page/' + ${(currentPage + 1)}}"> > </a>
             </li>
-            <li class="page-item" th:if="${currentPage < totalPages && totalPages > 2}">
-                <a th:href="@{'/page/' + ${totalPages}}"> >> </a>
+            <li th:class="'page-item ' + ${currentPage >= totalPages - 1 || totalPages < 3 ? 'disabled' : '' } ">
+                <a class="page-link" th:href="@{'/page/' + ${totalPages}}"> >> </a>
             </li>
         </ul>
-    </section>
-    <section class="row">
-        <div class="col">
-            <form action="#" enctype="multipart/form-data" method="post" th:object="${updateFileDto}" th:action="@{~/edit}">
-                <div class="mb-3 mt-3">
-                    <label class="form-label" for="id">Уникальный идентификатор</label>
-                    <input class="form-control" id="id" th:name="id" type="text">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="filename">Имя файла</label>
-                    <input class="form-control" id="filename" name="filename" type="text">
-                </div>
-                <input name="authorId" th:value="${currentUser.id}" type="hidden"/>
-                <div class="btn-group">
-                    <button class="btn btn-primary" name="action" type="submit" value="read">Скачать файл</button>
-                    <button class="btn btn-primary" name="action" type="submit" value="update">Обновить файл</button>
-                    <button class="btn btn-primary" name="action" type="submit" value="delete">Удалить файл</button>
-                </div>
-            </form>
-        </div>
-        <div class="col">
-            <form action="#" enctype="multipart/form-data" th:object="${createFileDto}" method="post" th:action="@{~/edit}">
-                <div class="mb-3 mt-3">
-                    <label for="file" class="form-label">Файл</label>
-                    <input class="form-control" id="file" name="file" type="file"/>
-                    <small class="form-text text-muted">Это должен быть файл формата JSON.</small>
-                </div>
-                <input name="authorId" th:value="${currentUser.id}" type="hidden"/>
+    </div>
+    <div class="row">
+        <form class="mx-auto" action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
+            <div class="mb-1 mt-1">
+                <label class="form-label" for="id">Уникальный идентификатор файла</label>
+                <input class="form-control" id="id" th:name="id" type="text" readonly>
+            </div>
+            <div class="mb-1">
+                <label class="form-label" for="filename">Имя файла</label>
+                <input class="form-control" id="filename" name="filename" type="text">
+            </div>
+            <div class="mb-1 mt-1">
+                <label class="form-label" for="authorId">Уникальный идентификатор пользователя</label>
+                <input class="form-control" id="authorId" name="authorId" th:value="${currentUser.id}" type="text" disabled/>
+            </div>
+            <div class="mb-1">
+                <label for="file" class="form-label">Файл</label>
+                <input class="form-control" id="file" name="file" type="file"/>
+                <small class="form-text text-muted">Это должен быть файл формата JSON.</small>
+            </div>
+            <div class="btn-group d-flex" role="group">
                 <button class="btn btn-primary" name="action" type="submit" value="create">Загрузить файл</button>
-            </form>
-        </div>
-    </section>
+                <button class="btn btn-primary" name="action" type="submit" value="read">Скачать файл</button>
+                <button class="btn btn-primary" name="action" type="submit" value="update">Обновить файл</button>
+                <button class="btn btn-primary" name="action" type="submit" value="delete">Удалить файл</button>
+            </div>
+        </form>
+    </div>
 </main>
-<footer class="container-fluid p-3 mt-auto bg-primary text-white">
-    <div class="d-flex flex-row justify-content-between">
-        <div>
+<footer class="container-fluid p-3 mt-auto bg-primary text-white" style="min-height: 100px">
+    <div class="row text-center justify-content-center align-items-center">
+        <div class="col">
             <strong>Летняя практика 2022, ПАО Сбербанк, г. Омск</strong>
         </div>
-        <div>
+        <div class="col">
             <strong>Арестов В. А., Лепешкин В.О., Осипова Я. Д., Петров Р.Ю. 😼</strong>
         </div>
     </div>
 </footer>
+<script>
+    function setUUID(uuid) {
+        const input = document.getElementById('id');
+        input.setAttribute("value", uuid);
+    }
+</script>
 </body>
 </html>

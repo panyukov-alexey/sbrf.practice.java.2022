@@ -1,8 +1,6 @@
 package sbrf.practice.jsv.list.mappers;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
@@ -40,23 +38,5 @@ public abstract class FileMapper {
         return f;
     }
 
-    @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "filename", source = "filename"),
-            @Mapping(target = "length", source = "length"),
-            @Mapping(target = "authorId", source = "authorId"),
-            @Mapping(target = "createdAt", source = "createdAt"),
-            @Mapping(target = "updatedAt", source = "updatedAt")
-    })
-    public abstract File fileDtoToFile(FileDto file);
-
-    @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "filename", source = "filename"),
-            @Mapping(target = "length", source = "length"),
-            @Mapping(target = "authorId", source = "authorId"),
-            @Mapping(target = "createdAt", source = "createdAt"),
-            @Mapping(target = "updatedAt", source = "updatedAt")
-    })
     public abstract FileDto fileToFileDto(File file);
 }

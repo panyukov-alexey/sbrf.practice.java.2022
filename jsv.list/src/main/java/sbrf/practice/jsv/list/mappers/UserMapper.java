@@ -19,20 +19,14 @@ public abstract class UserMapper {
     protected PasswordEncoder passwordEncoder;
 
     @Mappings({
-            @Mapping(target = "username", source = "dto.username"),
             @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getPassword()))"),
     })
     public abstract User createUserDtoToUser(CreateUserDto dto);
 
     @Mappings({
-            @Mapping(target = "id", source = "id"),
             @Mapping(target = "password", expression = "java(passwordEncoder.encode(dto.getPassword()))"),
     })
     public abstract User updateUserDtoToUser(UUID id, UpdateUserDto dto);
 
-    @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "username", source = "username"),
-    })
     public abstract UserDto userToUserDto(User user);
 }

@@ -14,4 +14,12 @@ public interface FileRepository extends JpaRepository<File, UUID> {
     List<File> findByAuthorId(UUID id);
 
     Page<File> findByAuthorId(UUID id, Pageable pageable);
+
+    List<File> findByFilenameContains(String filename);
+
+    Page<File> findByFilenameContains(String filename, Pageable pageable);
+
+    List<File> findByAuthorIdAndFilenameContains(UUID id, String filename);
+
+    Page<File> findByAuthorIdAndFilenameContains(UUID id, String filename, Pageable page);
 }

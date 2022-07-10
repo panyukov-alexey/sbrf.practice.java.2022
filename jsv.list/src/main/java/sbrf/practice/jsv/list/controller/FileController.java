@@ -3,6 +3,7 @@ package sbrf.practice.jsv.list.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
@@ -37,11 +38,9 @@ public class FileController {
     }
 
     @GetMapping("/sorted")
-    private Page<FileDto> findAllSorted(@RequestParam("sort") Sort sort,
-                                        @RequestParam("page") Integer page,
-                                        @RequestParam("val") Integer size) {
-        Page<FileDto> sortedFiles = fileService.findAllFiles(sort, page, size);
-        log.info("Got and sorted all files by", sort);
+    private Page<FileDto> findAllFiles(Pageable pageable) {
+        Page<FileDto> sortedFiles = fileService.findAllFiles(pageable);
+        log.info("Got and sorted all files");
         return sortedFiles;
     }
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
@@ -27,25 +28,37 @@ public class FileService {
     private final FileMapper mapper;
 
     public List<FileDto> findAllFiles() {
-        return fileRepository.findAll().stream().map(f -> mapper.fileToFileDto(f)).collect(Collectors.toList());
+        return fileRepository.findAll().stream().map(mapper::fileToFileDto).collect(Collectors.toList());
     }
 
-    public Page<FileDto> findAllFiles(Sort sort, Integer page, Integer size) {
-        return fileRepository.findAll(PageRequest.of(page, size, sort)).map(mapper::fileToFileDto);
+    public Page<FileDto> findAllFiles(Pageable pageable) {
+        return fileRepository.findAll(pageable).map(mapper::fileToFileDto);
     }
 
-    public FileDto findFileById(UUID id) {
+    public FileDto findFileById(UUID id) throws EntityNotFoundException {
         File file;
         file = fileRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id={}", id)));
         return mapper.fileToFileDto(file);
     }
 
     public List<FileDto> findFilesByAuthor(UUID authorId) {
-        return fileRepository.findByAuthorId(authorId).stream().map(f -> mapper.fileToFileDto(f)).collect(Collectors.toList());
+        return fileRepository.findByAuthorId(authorId).stream().map(mapper::fileToFileDto).collect(Collectors.toList());
     }
 
-    public Page<FileDto> findFilesByAuthor(UUID id, Sort sort, Integer page, Integer size) {
-        return fileRepository.findByAuthorId(id, PageRequest.of(page, size, sort)).map(mapper::fileToFileDto);
+    public Page<FileDto> findFilesByAuthor(UUID id, Pageable pageable) {
+        return fileRepository.findByAuthorId(id, pageable).map(mapper::fileToFileDto);
+    }
+
+    public List<FileDto> findByFilenameContains(String filename) {
+        return fileRepository.findByFilenameContains(filename).stream().map(mapper::fileToFileDto).collect(Collectors.toList());
+    }
+
+    public Page<FileDto> findByFilenameContains(String filename, Pageable pageable) {
+        return fileRepository.findByFilenameContains(filename,pageable).map(mapper::fileToFileDto);
+    }
+
+    public Page<FileDto> findByAuthorIdAndFilenameContains(UUID id, String filename, Pageable pageable) {
+        return fileRepository.findByAuthorIdAndFilenameContains(id, filename, pageable).map(mapper::fileToFileDto);
     }
 
     public FileDto create(CreateFileDto dto) {

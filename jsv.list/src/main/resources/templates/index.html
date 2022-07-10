@@ -1,127 +1,146 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
     <title>Файловый менеджер</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
 </head>
-<body>
-<header>
-    <h1>📁 Файловый менеджер</h1>
-    <div style="text-align: right">
-        <span>Уникальный идентификатор: <strong th:text="${user.id}"></strong> <br> Имя пользователя: <strong
-                th:text="${user.username}"></strong></span> <br>
-        <a href="/logout">
-            <button>Выйти</button>
-        </a>
-    </div>
-</header>
-<main>
-    <section class="misc">
-        <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
-            <label for="search">Искать</label>
-            <input id="search" name="filename" type="text"/>
-            <button type="submit">Искать</button>
-        </form>
-        <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}}">
-            <button type="submit">Сортировать</button>
-            <select id="sort" name="criteria">
-                <option value="id">По уникальному идентификатору</option>
-                <option value="filename">По имени файла</option>
-                <option value="length">По размеру файла</option>
-                <option value="updatedAt">По дате обновления</option>
-                <option value="createdAt">По дате создания</option>
-            </select>
-            <input id="ASC" name="direction" th:checked="${isAscending}" type="radio" value="ASC">
-            <label for="ASC">По возрастанию</label>
-            <input id="DESC" name="direction" th:checked="${!isAscending}" type="radio" value="DESC">
-            <label for="DESC">По убыванию</label>
-        </form>
-    </section>
-    <section class="view">
-        <table>
-            <thead>
-            <tr>
-                <th>Уникальный идентификатор</th>
-                <th>Имя файла</th>
-                <th>Размер файла</th>
-                <th>Дата создания</th>
-                <th>Дата обновления</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="file:${files}">
-                <td th:text="${file.id}"></td>
-                <td th:text="${file.filename}"></td>
-                <td th:text="${file.length} + ' байт'"></td>
-                <td th:text="${file.createdAt}"></td>
-                <td th:text="${file.updatedAt}"></td>
-            </tr>
-            <tr th:if="${files.size() < maxElementsPerPage}">
-                <td colspan="5" style="height: 100%">&nbsp;</td>
-            </tr>
-            </tbody>
-            <tfoot>
-            <tr>
-                <th colspan="1">Всего записей:</th>
-                <td colspan="4" th:text="${totalItems}"></td>
-            </tr>
-            </tfoot>
-        </table>
-    </section>
-    <section class="navigation">
-        <nav th:if="${totalPages > 1}">
-            <ul>
-                <li th:if="${currentPage > 2}">
+<body class="d-flex flex-column min-vh-100">
+    <header class="container-fluid p-3 bg-primary text-white">
+        <div class="row">
+            <div class="col">
+                <h1>📁 Файловый менеджер</h1>
+            </div>
+            <div class="col text-end">
+                Уникальный идентификатор: <strong th:text="${currentUser.id}"></strong><br>
+                Имя пользователя: <strong th:text="${currentUser.username}"></strong><br>
+            </div>
+        </div>
+    </header>
+    <main class="container">
+        <section class="row mt-12">
+            <div class="col">
+                <form action="#" enctype="multipart/form-data" method="get" th:action="@{/page/1(criteria=${sortingCriteria},direction=${isAscending ? 'ASC' : 'DESC'})}">
+                    <div class="col-auto">
+                        <div class="input-group mb-3">
+                            <input class="form-control" id="search" name="filename" type="text"/>
+                            <button class="btn btn-outline-primary" type="submit">Поиск</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col">
+                <form action="#" enctype="multipart/form-data" method="get" th:action="@{'/page/' + ${currentPage}(filename=${searchingPattern})}">
+                    <div class="input-group">
+                        <button class="btn btn-primary" type="submit">Сортировать</button>
+                        <select id="sort" class="form-select" name="criteria">
+                            <option value="id">По уникальному идентификатору</option>
+                            <option value="filename">По имени файла</option>
+                            <option value="length">По размеру файла</option>
+                            <option value="updatedAt">По дате обновления</option>
+                            <option value="createdAt">По дате создания</option>
+                        </select>
+                        <select id="direction" class="form-select" name="direction">
+                            <option value="asc">По возрастанию</option>
+                            <option value="desc">По убыванию</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </section>
+        <section class="row">
+            <table class="table table-responsive table-bordered" style="min-height:50%">
+                <thead>
+                <tr>
+                    <th>Уникальный идентификатор</th>
+                    <th>Имя файла</th>
+                    <th>Размер файла</th>
+                    <th>Дата создания</th>
+                    <th>Дата обновления</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="file:${files}">
+                    <td th:text="${file.id}"></td>
+                    <td th:text="${file.filename}"></td>
+                    <td th:text="${file.length} + ' байт'"></td>
+                    <td th:text="${file.createdAt}"></td>
+                    <td th:text="${file.updatedAt}"></td>
+                </tr>
+                <tr th:if="${files.size() < maxElementsPerPage}">
+                    <td colspan="5" style="height: 100%">&nbsp;</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="1">Всего записей:</th>
+                    <td colspan="4" th:text="${totalItems}"></td>
+                </tr>
+                </tfoot>
+            </table>
+        </section>
+        <section class="row" th:if="${totalPages > 1}">
+            <ul class="pagination">
+                <li class="page-item" th:if="${currentPage > 2}">
                     <a th:href="@{/page/1}"> << </a>
                 </li>
-                <li th:if="${currentPage > 1}">
+                <li class="page-item" th:if="${currentPage > 1}">
                     <a th:href="@{'/page/' + ${currentPage - 1}}"> < </a>
                 </li>
-                <li>
-                    <strong th:text="'Текущая страница - ' + ${currentPage} + ' из ' + ${totalPages}"></strong>
+                <li class="page-item">
+                    <a th:href="@{'/page/' + ${currentPage}}" th:text="${currentPage}"></a>
                 </li>
-                <li th:if="${currentPage < totalPages}">
+                <li class="page-item" th:if="${currentPage < totalPages}">
                     <a th:href="@{'/page/' + ${(currentPage + 1)}}"> > </a>
                 </li>
-                <li th:if="${currentPage < totalPages && totalPages > 2}">
+                <li class="page-item" th:if="${currentPage < totalPages && totalPages > 2}">
                     <a th:href="@{'/page/' + ${totalPages}}"> >> </a>
                 </li>
             </ul>
-        </nav>
-    </section>
-    <section class="management">
-        <form action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
-            <label for="fileId">Уникальный идентификатор</label>
-            <br>
-            <input id="fileId" name="id" type="text" value="">
-            <br>
-            <br>
-            <label for="filename">Имя файла</label>
-            <br>
-            <input id="filename" name="filename" type="text" value="">
-            <br>
-            <br>
-            <input name="authorId" th:value="${user.id}" type="hidden"/>
-            <button name="action" type="submit" value="read">Скачать файл</button>
-            <button name="action" type="submit" value="update">Обновить файл</button>
-            <button name="action" type="submit" value="delete">Удалить файл</button>
-        </form>
-        <form action="#" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
-            <label>Файл</label>
-            <br>
-            <br>
-            <input name="file" type="file"/>
-            <br>
-            <br>
-            <input name="authorId" th:value="${user.id}" type="hidden"/>
-            <button name="action" type="submit" value="create">Загрузить файл</button>
-        </form>
-    </section>
-</main>
-<footer>
-    <strong>Летняя практика 2022, ПАО Сбербанк, г. Омск</strong>
-    <strong>Арестов В. А., Лепешкин В.О., Осипова Я. Д., Петров Р.Ю. 😼</strong>
-</footer>
+        </section>
+        <section class="row">
+            <div class="col">
+                <form action="#" enctype="multipart/form-data" method="post" th:object="${updateFileDto}" th:action="@{~/edit}">
+                    <div class="mb-3 mt-3">
+                        <label class="form-label" for="id">Уникальный идентификатор</label>
+                        <input class="form-control" id="id" th:name="id" type="text">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="filename">Имя файла</label>
+                        <input class="form-control" id="filename" name="filename" type="text">
+                    </div>
+                    <input name="authorId" th:value="${currentUser.id}" type="hidden"/>
+                    <div class="btn-group">
+                        <button class="btn btn-primary" name="action" type="submit" value="read">Скачать файл</button>
+                        <button class="btn btn-primary" name="action" type="submit" value="update">Обновить файл</button>
+                        <button class="btn btn-primary" name="action" type="submit" value="delete">Удалить файл</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col">
+                <form action="#" enctype="multipart/form-data" th:object="${createFileDto}" method="post" th:action="@{~/edit}">
+                    <div class="mb-3 mt-3">
+                        <label for="file" class="form-label">Файл</label>
+                        <input class="form-control" id="file" name="file" type="file"/>
+                        <small class="form-text text-muted">Это должен быть файл формата JSON.</small>
+                    </div>
+                    <input name="authorId" th:value="${currentUser.id}" type="hidden"/>
+                    <button class="btn btn-primary" name="action" type="submit" value="create">Загрузить файл</button>
+                </form>
+            </div>
+        </section>
+    </main>
+    <footer class="container-fluid p-3 mt-auto bg-primary text-white">
+        <div class="d-flex flex-row justify-content-between">
+            <div>
+                <strong>Летняя практика 2022, ПАО Сбербанк, г. Омск</strong>
+            </div>
+            <div>
+                <strong>Арестов В. А., Лепешкин В.О., Осипова Я. Д., Петров Р.Ю. 😼</strong>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

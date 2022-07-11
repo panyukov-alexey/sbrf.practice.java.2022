@@ -38,7 +38,7 @@
         </div>
     </div>
 </header>
-<main class="container mt-4 mb-4">
+<main class="container mt-auto">
     <div class="row">
         <form action="#" enctype="multipart/form-data" method="get"
               th:action="@{/page/1(criteria=${sortingCriteria},direction=${isAscending ? 'asc' : 'desc'})}">
@@ -128,7 +128,10 @@
         <form action="#" class="row" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
             <div class="mb-2 mt-2">
                 <label class="form-label" for="id">Уникальный идентификатор файла:</label>
-                <input class="form-control" id="id" name="id" type="text" readonly required>
+                <div class="input-group">
+                    <i class="bi bi-key-fill input-group-text"></i>
+                    <input class="form-control" id="id" name="id" type="text" readonly required>
+                </div>
             </div>
             <div class="mb-2">
                 <label class="form-label" for="filename">Название файла:</label>
@@ -137,7 +140,10 @@
             <input class="form-control" id="authorId" name="authorId" th:value="${currentUser.id}" type="hidden"/>
             <div class="mb-2">
                 <label class="form-label" for="file">Файл:</label>
-                <input class="form-control" id="file" name="file" type="file"/>
+                <div class="input-group">
+                    <input class="form-control" id="file" name="file" type="file"/>
+                    <i class="bi bi-file-earmark-arrow-down input-group-text"></i>
+                </div>
                 <small class="form-text text-muted">Это должен быть файл формата JSON.</small>
             </div>
             <div class="btn-group d-flex" role="group">

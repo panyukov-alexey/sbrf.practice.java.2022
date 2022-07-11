@@ -12,11 +12,14 @@ public class SchemaValidator implements ConstraintValidator<IsValidSchema, Multi
     @Override
     public boolean isValid(MultipartFile content, ConstraintValidatorContext context) {
         try {
-            byte[] bytes = content.getBytes();
-            String str = new String(bytes);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode actualObj = mapper.readTree(str);
-            return !actualObj.isEmpty();
+            if (content != null) {
+                byte[] bytes = content.getBytes();
+                String str = new String(bytes);
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode actualObj = mapper.readTree(str);
+                return !actualObj.isEmpty();
+            }
+            return true;
         } catch (Exception e) {
             return false;
         }

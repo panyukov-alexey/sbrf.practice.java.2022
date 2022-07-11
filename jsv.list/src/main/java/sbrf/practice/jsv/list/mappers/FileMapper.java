@@ -26,16 +26,32 @@ public abstract class FileMapper {
             f.setLength(dto.getFile().getSize());
             f.setContent(dto.getFile().getBytes());
             f.setAuthorId(dto.getAuthorId());
+            if (dto.getFilename() != null && !dto.getFilename().isBlank()) {
+                f.setFilename(dto.getFilename());
+            }
             return f;
         } catch (IOException e) {
-            throw new UncheckedIOException("Cannot convert File to FileDto", e);
+            throw new UncheckedIOException("Cannot convert CreateFileDto to FileDto", e);
         }
     }
 
     public File updateFileDtoToFile(UUID id, UpdateFileDto dto) {
-        File f = fileRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-        f.setFilename(dto.getFilename());
-        return f;
+        try {
+            File f = fileRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+            if (dto.getFile() != null) {
+                f.setFilename(dto.getFile().getOriginalFilename());
+                f.setLength(dto.getFile().getSize());
+                f.setContent(dto.getFile().getBytes());
+                f.setAuthorId(f.getAuthorId());
+            }
+            if (dto.getFilename() != null && !dto.getFilename().isBlank()) {
+                f.setFilename(dto.getFilename());
+            }
+            return f;
+        }
+        catch (IOException e) {
+            throw new UncheckedIOException("Cannot convert CreateFileDto to FileDto", e);
+        }
     }
 
     public abstract FileDto fileToFileDto(File file);

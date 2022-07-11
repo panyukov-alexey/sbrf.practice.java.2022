@@ -21,6 +21,9 @@ public class CreateFileDto {
     @JsonProperty("authorId")
     private UUID authorId;
 
+    @JsonProperty("filename")
+    private String filename;
+
     @NotNull
     @JsonProperty("file")
     @IsValidSchema

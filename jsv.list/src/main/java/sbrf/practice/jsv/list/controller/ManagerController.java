@@ -46,7 +46,7 @@ public class ManagerController {
         } else {
             page = fileService.findByAuthorIdAndFilenameContains(user.getId(), filename, PageRequest.of(pageNumber - 1, size, Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria)));
         }
-        model.addAttribute("searchingPattern", filename);
+        model.addAttribute("searchingFilename", filename);
         model.addAttribute("sortingCriteria", criteria);
         model.addAttribute("files", page.getContent());
         model.addAttribute("currentPage", pageNumber);

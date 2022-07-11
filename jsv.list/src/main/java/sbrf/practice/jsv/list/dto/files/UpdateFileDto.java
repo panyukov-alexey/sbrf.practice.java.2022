@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+import sbrf.practice.jsv.list.validator.IsValidSchema;
 
 import javax.validation.constraints.NotNull;
 
@@ -14,8 +16,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UpdateFileDto {
 
-    @NotNull
     @JsonProperty("filename")
     private String filename;
+
+    @JsonProperty("file")
+    @IsValidSchema
+    private MultipartFile file;
 
 }

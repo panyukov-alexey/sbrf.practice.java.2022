@@ -48,8 +48,7 @@ public abstract class FileMapper {
                 f.setFilename(dto.getFilename());
             }
             return f;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new UncheckedIOException("Cannot convert CreateFileDto to FileDto", e);
         }
     }

@@ -57,28 +57,34 @@
             <tr>
                 <th><a class="text-decoration-none text-white"
                        th:href="@{/page/1(filename=${searchingFilename},criteria=${'id'},direction=${isAscending && sortingCriteria == 'id' ? 'desc' : 'asc'})}">
-                    <i th:if="${sortingCriteria == 'id'}" th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
-                    <i th:unless="${sortingCriteria == 'id'}" class="bi bi-justify"></i>
-                    Название файла </a></th></th>
+                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
+                       th:if="${sortingCriteria == 'id'}"></i>
+                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'id'}"></i>
+                    Название файла </a></th>
+                </th>
                 <th><a class="text-decoration-none text-white"
                        th:href="@{/page/1(filename=${searchingFilename},criteria=${'filename'},direction=${isAscending && sortingCriteria == 'filename' ? 'desc' : 'asc'})}">
-                    <i th:if="${sortingCriteria == 'filename'}" th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
-                    <i th:unless="${sortingCriteria == 'filename'}" class="bi bi-justify"></i>
+                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
+                       th:if="${sortingCriteria == 'filename'}"></i>
+                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'filename'}"></i>
                     Название файла </a></th>
                 <th><a class="text-decoration-none text-white"
                        th:href="@{/page/1(filename=${searchingFilename},criteria='length',direction=${isAscending && sortingCriteria == 'length' ? 'desc' : 'asc'})}">
-                    <i th:if="${sortingCriteria == 'length'}" th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
-                    <i th:unless="${sortingCriteria == 'length'}" class="bi bi-justify"></i>
+                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
+                       th:if="${sortingCriteria == 'length'}"></i>
+                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'length'}"></i>
                     Размер файла </a></th>
                 <th><a class="text-decoration-none text-white"
                        th:href="@{/page/1(filename=${searchingFilename},criteria='createdAt',direction=${isAscending && sortingCriteria == 'createdAt' ? 'desc' : 'asc'})}">
-                    <i th:if="${sortingCriteria == 'createdAt'}" th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
-                    <i th:unless="${sortingCriteria == 'createdAt'}" class="bi bi-justify"></i>
-                     Дата создания </a></th>
+                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
+                       th:if="${sortingCriteria == 'createdAt'}"></i>
+                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'createdAt'}"></i>
+                    Дата создания </a></th>
                 <th><a class="text-decoration-none text-white"
                        th:href="@{/page/1(filename=${searchingFilename},criteria='updatedAt',direction=${isAscending && sortingCriteria == 'updatedAt' ? 'desc' : 'asc'})}">
-                    <i th:if="${sortingCriteria == 'updatedAt'}" th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
-                    <i th:unless="${sortingCriteria == 'updatedAt'}" class="bi bi-justify"></i>
+                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
+                       th:if="${sortingCriteria == 'updatedAt'}"></i>
+                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'updatedAt'}"></i>
                     Дата обновления </a></th>
             </tr>
             </thead>
@@ -130,7 +136,7 @@
                 <label class="form-label" for="id">Уникальный идентификатор файла:</label>
                 <div class="input-group">
                     <i class="bi bi-key-fill input-group-text"></i>
-                    <input class="form-control" id="id" name="id" type="text" readonly required>
+                    <input class="form-control" id="id" name="id" readonly required type="text">
                 </div>
             </div>
             <div class="mb-2">

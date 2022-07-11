@@ -8,8 +8,6 @@ import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import sbrf.practice.jsv.list.validator.IsValidSchema;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
 @Setter
 @AllArgsConstructor

@@ -27,16 +27,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+        .authorizeRequests()  
+        .anyRequest().authenticated()
+        .and()
         .formLogin()
         .loginPage("/login")
         .usernameParameter("username")
         .passwordParameter("password")
         .defaultSuccessUrl("/page/1")
-        .failureForwardUrl("/login_failure_handler");
-        http
+        .failureForwardUrl("/login_failure_handler")
+        .permitAll()
+        .and()
         .logout()
         .logoutUrl("/logout")
-        .logoutSuccessUrl("/logout_seccesful_handler");
+        .logoutSuccessUrl("/logout_seccesful_handler")
+        .permitAll();
         return http.build();
     }
 

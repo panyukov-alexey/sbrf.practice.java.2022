@@ -16,6 +16,7 @@ import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.dto.users.UserDto;
+import sbrf.practice.jsv.list.model.User;
 import sbrf.practice.jsv.list.service.FileService;
 import sbrf.practice.jsv.list.service.UserService;
 
@@ -33,16 +34,16 @@ public class ManagerController {
     private final FileService fileService;
 
     @GetMapping("/page/{id}")
-    public String page(@PathVariable(name = "id") Integer pageNumber,
-                       @RequestParam(name = "filename", defaultValue = "") String filename,
+    public String pageable(@PathVariable(name = "id") Integer pageNumber,
+                       @RequestParam(name = "search", defaultValue = "") String search,
                        @RequestParam(name = "criteria", defaultValue = "id") String criteria,
                        @RequestParam(name = "direction", defaultValue = "asc") String direction,
                        Model model) {
         final int size = 10;
         boolean isAscending = direction.equalsIgnoreCase("asc");
         UserDto user = (UserDto) model.getAttribute("user");
-        Page<FileDto> page = fileService.findByAuthorIdAndFilenameContains(user.getId(), filename, PageRequest.of(pageNumber - 1, size, Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria)));
-        model.addAttribute("filename", filename);
+        Page<FileDto> page = fileService.findByAuthorIdAndFilenameContains(user.getId(), search, PageRequest.of(pageNumber - 1, size, Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria)));
+        model.addAttribute("search", search);
         model.addAttribute("sortCriteria", criteria);
         model.addAttribute("page", page);
         model.addAttribute("isAscending", isAscending);
@@ -51,14 +52,14 @@ public class ManagerController {
 
     @GetMapping("/")
     public String index(Model model) {
-        return page(1, "", "id", "asc", model);
+        return pageable(1, "", "id", "asc", model);
     }
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute CreateFileDto dto) {
+    public String create(@Valid @ModelAttribute CreateFileDto dto, Model model) {
         fileService.create(dto);
-        return "redirect:/";
+        return index(model);
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=read")
@@ -70,9 +71,9 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto) {
+    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto, Model model) {
         fileService.update(id, dto);
-        return "redirect:/";
+        return index(model);
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=delete")
@@ -82,7 +83,7 @@ public class ManagerController {
     }
 
     @ModelAttribute("user")
-    UserDto currentUser() {
+    UserDto user() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.findByUsername(auth.getName());
     }

@@ -16,7 +16,7 @@ public class SchemaValidator implements ConstraintValidator<IsValidSchema, Multi
             String str = new String(bytes);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode actualObj = mapper.readTree(str);
-            return !actualObj.isEmpty();
+            return true;
         } catch (Exception e) {
             return false;
         }

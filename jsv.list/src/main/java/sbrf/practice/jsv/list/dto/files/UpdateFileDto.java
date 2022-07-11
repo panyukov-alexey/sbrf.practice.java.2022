@@ -17,8 +17,8 @@ public class UpdateFileDto {
     @JsonProperty("filename")
     private String filename;
 
-    @JsonProperty("file")
     @IsValidSchema
+    @JsonProperty("file")
     private MultipartFile file;
 
 }

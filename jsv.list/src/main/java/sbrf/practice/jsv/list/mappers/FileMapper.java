@@ -38,18 +38,18 @@ public abstract class FileMapper {
     public File updateFileDtoToFile(UUID id, UpdateFileDto dto) {
         try {
             File f = fileRepository.findById(id).orElseThrow(EntityNotFoundException::new);
-            if (dto.getFile() != null) {
+            if (!dto.getFile().isEmpty()) {
                 f.setFilename(dto.getFile().getOriginalFilename());
                 f.setLength(dto.getFile().getSize());
                 f.setContent(dto.getFile().getBytes());
-                f.setAuthorId(f.getAuthorId());
             }
+            f.setAuthorId(f.getAuthorId());
             if (dto.getFilename() != null && !dto.getFilename().isBlank()) {
                 f.setFilename(dto.getFilename());
             }
             return f;
         } catch (IOException e) {
-            throw new UncheckedIOException("Cannot convert CreateFileDto to FileDto", e);
+            throw new UncheckedIOException("Cannot convert UpdateFileDto to FileDto", e);
         }
     }
 

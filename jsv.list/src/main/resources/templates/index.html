@@ -15,6 +15,10 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, sans-serif;
         }
+        a {
+            text-decoration:none;
+            color: white;
+        }
     </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
@@ -41,11 +45,11 @@
 <main class="container mt-auto pt-3 pb-3">
     <div class="row">
         <form action="#" enctype="multipart/form-data" method="get"
-              th:action="@{/page/1(criteria=${sortingCriteria},direction=${isAscending ? 'asc' : 'desc'})}">
+              th:action="@{/page/1(criteria=${sortCriteria},direction=${isAscending ? 'asc' : 'desc'})}">
             <div class="col-auto">
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                    <input class="form-control" id="search" name="filename" placeholder="Искать..." type="search"/>
+                    <input class="form-control" id="search" name="search" placeholder="Искать..." type="search"/>
                     <button class="btn btn-outline-primary" type="submit">Поиск</button>
                 </div>
             </div>
@@ -56,12 +60,13 @@
             <thead class="table-dark">
             <tr>
                 <th th:each="entry : ${criteries}">
-                    <a class="text-decoration-none text-white"
+                    <a
                        th:href="@{/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${isAscending && sortCriteria == entry.key ? 'desc' : 'asc'})}">
                     <i th:if="${sortCriteria == entry.key}"
                        th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
                     <i class="bi bi-justify" th:unless="${sortCriteria == entry.key}"></i>
-                    [[${entry.value}]]</a>
+                    [[${entry.value}]]
+                    </a>
                 </th>
             </tr>
             </thead>
@@ -90,18 +95,18 @@
             <li th:class="'page-item ' + ${page.getNumber() < 2 ? 'disabled' : ''}">
                 <a class="page-link" th:href="@{/page/1}"> <i class="bi bi-chevron-double-left"></i> </a>
             </li>
-            <li th:class="'page-item ' + ${page.getNumber() < 1 ? 'disabled' : ''}">
+            <li th:class="'page-item ' + ${!page.hasPrevious() ? 'disabled' : ''}">
                 <a class="page-link" th:href="@{'/page/' + ${page.getNumber()}}"> <i class="bi bi-chevron-left"></i> </a>
             </li>
             <li class="page-item">
                 <a class="page-link" th:href="@{'/page/' + ${page.getNumber() + 1}}"
                    th:text="'Страница ' + ${page.getNumber() + 1} + ${page.getTotalPages() > 1 ? ' из ' + page.getTotalPages() : ''}"></a>
             </li>
-            <li th:class="'page-item ' + ${page.isLast() || page.getTotalPages() < 2 ? 'disabled' : ''}">
+            <li th:class="'page-item ' + ${!page.hasNext() ? 'disabled' : ''}">
                 <a class="page-link" th:href="@{'/page/' + ${(page.getNumber() + 2)}}"> <i class="bi bi-chevron-right"></i>
                 </a>
             </li>
-            <li th:class="'page-item ' + ${page.isLast() || page.getTotalPages() < 3 ? 'disabled' : '' } ">
+            <li th:class="'page-item ' + ${page + 1 == page.getTotalPages() - 1 || page.getTotalPages() < 3 ? 'disabled' : '' } ">
                 <a class="page-link" th:href="@{'/page/' + ${page.getTotalPages()}}"> <i class="bi bi-chevron-double-right"></i>
                 </a>
             </li>

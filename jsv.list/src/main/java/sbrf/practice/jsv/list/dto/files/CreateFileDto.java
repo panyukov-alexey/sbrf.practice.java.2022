@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 import sbrf.practice.jsv.list.validator.IsValidSchema;
+import sbrf.practice.jsv.list.validator.NotEmpty;
 
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
@@ -25,7 +26,8 @@ public class CreateFileDto {
     private String filename;
 
     @NotNull
-    @JsonProperty("file")
+    @NotEmpty
     @IsValidSchema
+    @JsonProperty("file")
     private MultipartFile file;
 }

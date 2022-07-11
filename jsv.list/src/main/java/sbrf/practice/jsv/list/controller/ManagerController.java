@@ -59,7 +59,7 @@ public class ManagerController {
 
     @GetMapping("/")
     public String index(Model model) {
-        return page(1, "", "id", "asc", model);
+        return "login";
     }
 
 

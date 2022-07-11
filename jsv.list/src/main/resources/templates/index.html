@@ -26,8 +26,8 @@
         <div class="col-auto text-end">
             <div class="row">
                 <div class="col-auto">
-                    Уникальный идентификатор пользователя: <strong th:text="${currentUser.id}"></strong><br>
-                    Имя пользователя: <strong th:text="${currentUser.username}"></strong>
+                    Уникальный идентификатор пользователя: <strong th:text="${user.id}"></strong><br>
+                    Имя пользователя: <strong th:text="${user.username}"></strong>
                 </div>
                 <div class="col-sm-auto">
                     <a th:href="@{/logout}">
@@ -55,83 +55,60 @@
         <table class="table table-hover table-sm table-responsive table-bordered" style="min-height:400px">
             <thead class="table-dark">
             <tr>
-                <th><a class="text-decoration-none text-white"
-                       th:href="@{/page/1(filename=${searchingFilename},criteria=${'id'},direction=${isAscending && sortingCriteria == 'id' ? 'desc' : 'asc'})}">
-                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
-                       th:if="${sortingCriteria == 'id'}"></i>
-                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'id'}"></i>
-                    Уникальный идентификатор файла </a></th>
+                <th th:each="entry : ${criteries}">
+                    <a class="text-decoration-none text-white"
+                       th:href="@{/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${isAscending && sortCriteria == entry.key ? 'desc' : 'asc'})}">
+                    <i th:if="${sortCriteria == entry.key}"
+                       th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
+                    <i class="bi bi-justify" th:unless="${sortCriteria == entry.key}"></i>
+                    [[${entry.value}]]</a>
                 </th>
-                <th><a class="text-decoration-none text-white"
-                       th:href="@{/page/1(filename=${searchingFilename},criteria=${'filename'},direction=${isAscending && sortingCriteria == 'filename' ? 'desc' : 'asc'})}">
-                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
-                       th:if="${sortingCriteria == 'filename'}"></i>
-                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'filename'}"></i>
-                    Название файла </a></th>
-                <th><a class="text-decoration-none text-white"
-                       th:href="@{/page/1(filename=${searchingFilename},criteria='length',direction=${isAscending && sortingCriteria == 'length' ? 'desc' : 'asc'})}">
-                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
-                       th:if="${sortingCriteria == 'length'}"></i>
-                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'length'}"></i>
-                    Размер файла </a></th>
-                <th><a class="text-decoration-none text-white"
-                       th:href="@{/page/1(filename=${searchingFilename},criteria='createdAt',direction=${isAscending && sortingCriteria == 'createdAt' ? 'desc' : 'asc'})}">
-                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
-                       th:if="${sortingCriteria == 'createdAt'}"></i>
-                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'createdAt'}"></i>
-                    Дата создания </a></th>
-                <th><a class="text-decoration-none text-white"
-                       th:href="@{/page/1(filename=${searchingFilename},criteria='updatedAt',direction=${isAscending && sortingCriteria == 'updatedAt' ? 'desc' : 'asc'})}">
-                    <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
-                       th:if="${sortingCriteria == 'updatedAt'}"></i>
-                    <i class="bi bi-justify" th:unless="${sortingCriteria == 'updatedAt'}"></i>
-                    Дата обновления </a></th>
             </tr>
             </thead>
             <tbody>
-            <tr style="cursor: pointer;" th:attr="onclick=|setUUID('${file.id}')|" th:each="file:${files}">
+            <tr style="cursor: pointer;" th:attr="onclick=|setUUID('${file.id}')|" th:each="file:${page.getContent()}">
                 <td th:text="${file.id}"></td>
                 <td th:text="${file.filename}"></td>
                 <td th:text="${file.length} + ' байт'"></td>
                 <td th:text="${file.createdAt}"></td>
                 <td th:text="${file.updatedAt}"></td>
             </tr>
-            <tr th:if="${files.size() < maxElementsPerPage}">
+            <tr th:if="${page.getNumberOfElements() < page.getSize()}">
                 <td colspan="5" style="height: 100%">&nbsp;</td>
             </tr>
             </tbody>
             <tfoot class="table-dark">
             <tr>
                 <th colspan="1">Всего записей в таблице</th>
-                <td colspan="4" th:text="${totalItems}"></td>
+                <td colspan="4" th:text="${page.getTotalElements()}"></td>
             </tr>
             </tfoot>
         </table>
     </div>
     <div class="row">
         <ul class="pagination justify-content-center">
-            <li th:class="'page-item ' + ${currentPage < 3 ? 'disabled' : ''}">
+            <li th:class="'page-item ' + ${page.getNumber() < 2 ? 'disabled' : ''}">
                 <a class="page-link" th:href="@{/page/1}"> <i class="bi bi-chevron-double-left"></i> </a>
             </li>
-            <li th:class="'page-item ' + ${currentPage <= 1 ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{'/page/' + ${currentPage - 1}}"> <i class="bi bi-chevron-left"></i> </a>
+            <li th:class="'page-item ' + ${page.getNumber() < 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/page/' + ${page.getNumber()}}"> <i class="bi bi-chevron-left"></i> </a>
             </li>
             <li class="page-item">
-                <a class="page-link" th:href="@{'/page/' + ${currentPage}}"
-                   th:text="'Страница ' + ${currentPage} + ${totalPages > 1 ? ' из ' + totalPages : ''}"></a>
+                <a class="page-link" th:href="@{'/page/' + ${page.getNumber() + 1}}"
+                   th:text="'Страница ' + ${page.getNumber() + 1} + ${page.getTotalPages() > 1 ? ' из ' + page.getTotalPages() : ''}"></a>
             </li>
-            <li th:class="'page-item ' + ${currentPage > totalPages - 1 || totalPages < 2 ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{'/page/' + ${(currentPage + 1)}}"> <i class="bi bi-chevron-right"></i>
+            <li th:class="'page-item ' + ${page.isLast() || page.getTotalPages() < 2 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{'/page/' + ${(page.getNumber() + 2)}}"> <i class="bi bi-chevron-right"></i>
                 </a>
             </li>
-            <li th:class="'page-item ' + ${currentPage >= totalPages - 1 || totalPages < 3 ? 'disabled' : '' } ">
-                <a class="page-link" th:href="@{'/page/' + ${totalPages}}"> <i class="bi bi-chevron-double-right"></i>
+            <li th:class="'page-item ' + ${page.isLast() || page.getTotalPages() < 3 ? 'disabled' : '' } ">
+                <a class="page-link" th:href="@{'/page/' + ${page.getTotalPages()}}"> <i class="bi bi-chevron-double-right"></i>
                 </a>
             </li>
         </ul>
     </div>
     <div class="row">
-        <form action="#" class="row" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
+        <form action="#" class="needs-validation" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
             <div class="mb-2 mt-2">
                 <label class="form-label" for="id">Уникальный идентификатор файла:</label>
                 <div class="input-group">
@@ -143,7 +120,7 @@
                 <label class="form-label" for="filename">Название файла:</label>
                 <input class="form-control" id="filename" name="filename" type="text">
             </div>
-            <input class="form-control" id="authorId" name="authorId" th:value="${currentUser.id}" type="hidden"/>
+            <input class="form-control" id="authorId" name="authorId" th:value="${user.id}" type="hidden"/>
             <div class="mb-2">
                 <label class="form-label" for="file">Файл:</label>
                 <div class="input-group">

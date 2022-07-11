@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @AllArgsConstructor
@@ -39,20 +40,11 @@ public class ManagerController {
                        Model model) {
         final int size = 10;
         boolean isAscending = direction.equalsIgnoreCase("asc");
-        UserDto user = (UserDto) model.getAttribute("currentUser");
-        Page<FileDto> page;
-        if (filename.isBlank()) {
-            page = fileService.findFilesByAuthor(user.getId(), PageRequest.of(pageNumber - 1, size, Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria)));
-        } else {
-            page = fileService.findByAuthorIdAndFilenameContains(user.getId(), filename, PageRequest.of(pageNumber - 1, size, Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria)));
-        }
-        model.addAttribute("searchingFilename", filename);
-        model.addAttribute("sortingCriteria", criteria);
-        model.addAttribute("files", page.getContent());
-        model.addAttribute("currentPage", pageNumber);
-        model.addAttribute("maxElementsPerPage", size);
-        model.addAttribute("totalPages", page.getTotalPages());
-        model.addAttribute("totalItems", page.getTotalElements());
+        UserDto user = (UserDto) model.getAttribute("user");
+        Page<FileDto> page = fileService.findByAuthorIdAndFilenameContains(user.getId(), filename, PageRequest.of(pageNumber - 1, size, Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria)));
+        model.addAttribute("filename", filename);
+        model.addAttribute("sortCriteria", criteria);
+        model.addAttribute("page", page);
         model.addAttribute("isAscending", isAscending);
         return "index";
     }
@@ -64,10 +56,7 @@ public class ManagerController {
 
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute CreateFileDto dto, BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "redirect:/";
-        }
+    public String create(@Valid @ModelAttribute CreateFileDto dto) {
         fileService.create(dto);
         return "redirect:/";
     }
@@ -81,14 +70,8 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") String uuid, @Valid @ModelAttribute UpdateFileDto dto, Model model) {
-        UUID id;
-        try {
-            id = UUID.fromString(uuid);
-            fileService.update(id, dto);
-        } catch (IllegalArgumentException e) {
-
-        }
+    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto) {
+        fileService.update(id, dto);
         return "redirect:/";
     }
 
@@ -98,10 +81,21 @@ public class ManagerController {
         return index(model);
     }
 
-    @ModelAttribute("currentUser")
+    @ModelAttribute("user")
     UserDto currentUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return userService.findByUsername(auth.getName());
+    }
+
+    @ModelAttribute("criteries")
+    Map<String, String> criteries() {
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("id", "Уникальный идентификатор файла");
+        map.put("filename", "Название файла");
+        map.put("length", "Размер файла");
+        map.put("createdAt", "Дата создания");
+        map.put("updatedAt", "Дата изменения");
+        return map;
     }
 
 }

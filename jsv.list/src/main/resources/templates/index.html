@@ -60,7 +60,7 @@
                     <i th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"
                        th:if="${sortingCriteria == 'id'}"></i>
                     <i class="bi bi-justify" th:unless="${sortingCriteria == 'id'}"></i>
-                    Название файла </a></th>
+                    Уникальный идентификатор файла </a></th>
                 </th>
                 <th><a class="text-decoration-none text-white"
                        th:href="@{/page/1(filename=${searchingFilename},criteria=${'filename'},direction=${isAscending && sortingCriteria == 'filename' ? 'desc' : 'asc'})}">

@@ -39,7 +39,7 @@ public class ManagerController {
                        Model model) {
         final int size = 10;
         boolean isAscending = direction.equalsIgnoreCase("asc");
-        UserDto user = (UserDto)model.getAttribute("currentUser");
+        UserDto user = (UserDto) model.getAttribute("currentUser");
         Page<FileDto> page;
         if (filename.isBlank()) {
             page = fileService.findFilesByAuthor(user.getId(), PageRequest.of(pageNumber - 1, size, Sort.by(isAscending ? Sort.Direction.ASC : Sort.Direction.DESC, criteria)));
@@ -86,8 +86,7 @@ public class ManagerController {
         try {
             id = UUID.fromString(uuid);
             fileService.update(id, dto);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
 
         }
         return "redirect:/";

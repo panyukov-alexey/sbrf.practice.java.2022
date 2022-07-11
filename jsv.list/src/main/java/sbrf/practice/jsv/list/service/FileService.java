@@ -2,9 +2,7 @@ package sbrf.practice.jsv.list.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
@@ -33,10 +31,8 @@ public class FileService {
         return fileRepository.findAll(pageable).map(mapper::fileToFileDto);
     }
 
-    public FileDto findFileById(UUID id) throws EntityNotFoundException {
-        File file;
-        file = fileRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id={}", id)));
-        return mapper.fileToFileDto(file);
+    public FileDto findFileById(UUID id) {
+        return mapper.fileToFileDto(fileRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("There is no file with id={}", id))));
     }
 
     public List<FileDto> findFilesByAuthor(UUID authorId) {
@@ -52,7 +48,7 @@ public class FileService {
     }
 
     public Page<FileDto> findByFilenameContains(String filename, Pageable pageable) {
-        return fileRepository.findByFilenameContains(filename,pageable).map(mapper::fileToFileDto);
+        return fileRepository.findByFilenameContains(filename, pageable).map(mapper::fileToFileDto);
     }
 
     public Page<FileDto> findByAuthorIdAndFilenameContains(UUID id, String filename, Pageable pageable) {

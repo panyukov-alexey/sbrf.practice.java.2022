@@ -1,6 +1,5 @@
 package sbrf.practice.jsv.list.service;
 
-import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,6 @@ import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
-@Log4j2
 @ExtendWith(SpringExtension.class)
 class FileServiceTest {
     @Mock

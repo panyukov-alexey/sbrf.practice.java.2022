@@ -45,7 +45,7 @@
 <main class="container mt-auto pt-3 pb-3">
     <div class="row">
         <form action="#" enctype="multipart/form-data" method="get"
-              th:action="@{/page/1(criteria=${sortCriteria},direction=${isAscending ? 'asc' : 'desc'})}">
+              th:action="@{/page/1(criteria=${criteria},direction=${ascending == true ? 'asc' : 'desc'})}">
             <div class="col-auto">
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -61,10 +61,10 @@
             <tr>
                 <th th:each="entry : ${criteries}">
                     <a
-                       th:href="@{/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${isAscending && sortCriteria == entry.key ? 'desc' : 'asc'})}">
-                    <i th:if="${sortCriteria == entry.key}"
-                       th:class="'bi ' + ${isAscending ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
-                    <i class="bi bi-justify" th:unless="${sortCriteria == entry.key}"></i>
+                       th:href="@{/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${ascending == true && criteria == entry.key ? 'DESC' : 'ASC'})}">
+                    <i th:if="${criteria == entry.key}"
+                       th:class="'bi ' + ${ascending == true ? 'bi-sort-down-alt' : 'bi-sort-up'}"></i>
+                    <i class="bi bi-justify" th:unless="${criteria == entry.key}"></i>
                     [[${entry.value}]]
                     </a>
                 </th>
@@ -106,7 +106,7 @@
                 <a class="page-link" th:href="@{'/page/' + ${(page.getNumber() + 2)}}"> <i class="bi bi-chevron-right"></i>
                 </a>
             </li>
-            <li th:class="'page-item ' + ${page + 1 == page.getTotalPages() - 1 || page.getTotalPages() < 3 ? 'disabled' : '' } ">
+            <li th:class="'page-item ' + ${page.getNumber() + 1 == page.getTotalPages() || page.getTotalPages() < 3 ? 'disabled' : '' } ">
                 <a class="page-link" th:href="@{'/page/' + ${page.getTotalPages()}}"> <i class="bi bi-chevron-double-right"></i>
                 </a>
             </li>
@@ -142,7 +142,8 @@
                     Скачать файл
                 </button>
                 <button class="btn btn-primary" name="action" type="submit" value="update"><i
-                        class="bi bi-arrow-repeat"></i> Обновить файл
+                        class="bi bi-arrow-repeat"></i>
+                    Обновить файл
                 </button>
                 <button class="btn btn-primary" name="action" type="submit" value="delete"><i class="bi bi-x-lg"></i>
                     Удалить файл

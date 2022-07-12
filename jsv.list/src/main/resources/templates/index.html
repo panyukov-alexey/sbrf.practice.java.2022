@@ -63,8 +63,8 @@
             <tr>
                 <th th:each="entry : ${criteries}">
                     <a
-                            th:href="@{~/manager/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${ascending == true && criteria == entry.key ? 'DESC' : 'ASC'} + (${#strings.isEmpty(search)} ? '' : ('search=' + ${search})))}">
-                        <i th:class="'bi ' + ${ascending == true ? 'bi-sort-down-alt' : 'bi-sort-up'}"
+                            th:href="@{~/manager/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${direction == 'ASC' && criteria == entry.key ? 'DESC' : 'ASC'} + (${#strings.isEmpty(search)} ? '' : ('search=' + ${search})))}">
+                        <i th:class="'bi ' + ${direction == 'ASC' ? 'bi-sort-down-alt' : 'bi-sort-up'}"
                            th:if="${criteria == entry.key}"></i>
                         <i class="bi bi-justify" th:unless="${criteria == entry.key}"></i>
                         [[${entry.value}]]

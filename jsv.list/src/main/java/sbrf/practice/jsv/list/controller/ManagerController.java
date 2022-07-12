@@ -29,7 +29,7 @@ import java.util.UUID;
 
 @Controller
 @AllArgsConstructor
-@SessionAttributes({"page", "search", "criteria", "ascending"})
+@SessionAttributes({"page", "search", "criteria", "direction"})
 public class ManagerController {
 
     private final UserService userService;
@@ -42,9 +42,9 @@ public class ManagerController {
 
     @GetMapping("/manager")
     public String startPage(@RequestParam(name = "size", defaultValue = "10") Integer size, Model model) {
-        model.addAttribute("search", "");
-        model.addAttribute("criteria", "-");
-        model.addAttribute("ascending", false);
+        model.addAttribute("search", null);
+        model.addAttribute("criteria", null);
+        model.addAttribute("direction", "ASC");
         return pageable(1, size, model);
     }
 
@@ -52,6 +52,19 @@ public class ManagerController {
     public String pageable(@PathVariable(name = "id") Integer pageNumber,
                            @RequestParam(name = "size", defaultValue = "10") Integer size,
                            Model model) {
+        pageNumber = Math.max(pageNumber, 1);
+        if (model.getAttribute("criteria") != null) {
+            return pageableWithSorting(pageNumber, size, (String)model.getAttribute("criteria"),
+                    Sort.Direction.fromString(((String)model.getAttribute("direction"))), model);
+        }
+        if (model.getAttribute("search") != null) {
+            return pageableWithFiltering(pageNumber, size, (String)model.getAttribute("search"), model);
+        }
+        if (model.getAttribute("criteria") != null && model.getAttribute("pageable") != null) {
+            return pageableWithSortingAndFiltering(pageNumber, size, (String)model.getAttribute("search"),
+                    (String)model.getAttribute("criteria"),
+                    Sort.Direction.fromString(((String)model.getAttribute("direction"))),model);
+        }
         model.addAttribute("page", fileService.findFilesByAuthor(user().getId(), PageRequest.of(pageNumber - 1, size)));
         return "index";
     }
@@ -65,7 +78,7 @@ public class ManagerController {
         model.addAttribute("page", fileService.findFilesByAuthor(user().getId(),
                 PageRequest.of(pageNumber - 1, size, Sort.by(direction, criteria))));
         model.addAttribute("criteria", criteria);
-        model.addAttribute("ascending", direction.isAscending());
+        model.addAttribute("direction", direction.toString());
         return "index";
     }
 
@@ -97,22 +110,22 @@ public class ManagerController {
                 PageRequest.of(pageNumber - 1, size, Sort.by(direction, criteria))));
         model.addAttribute("search", search);
         model.addAttribute("criteria", criteria);
-        model.addAttribute("ascending", direction.isAscending());
+        model.addAttribute("direction", direction.toString());
         return "index";
     }
 
-
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@ModelAttribute @Valid CreateFileDto dto, BindingResult bindingResult, @ModelAttribute("page") Page<FileDto> page, Model model) {
+    public String create(@ModelAttribute @Valid CreateFileDto dto, BindingResult bindingResult,
+                         @ModelAttribute Page<?> page, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("isntJSON", true);
             return "index";
         }
         fileService.create(dto);
         if (page.isLast() && page.getNumberOfElements() == page.getSize()) {
-            return "redirect:/manager/page/" + (page.getTotalPages() + 1);
+            return pageable(Math.max(page.getTotalPages() + 1, 1), page.getSize(), model);
         }
-        return "redirect:/manager/page/" + (page.getNumber() + 1);
+        return pageable(page.getTotalPages(), page.getSize(), model);
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=read")
@@ -128,7 +141,8 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") String uuid, @ModelAttribute @Valid UpdateFileDto dto, BindingResult bindingResult, @ModelAttribute("page") Page<FileDto> page, Model model) {
+    public String update(@RequestParam("id") String uuid, @ModelAttribute @Valid UpdateFileDto dto,
+                         BindingResult bindingResult,  @ModelAttribute Page<?> page, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("isntJSON", true);
             return "index";
@@ -136,7 +150,7 @@ public class ManagerController {
         try {
             UUID id = UUID.fromString(uuid);
             fileService.update(id, dto);
-            return "redirect:/manager/page/" + (page.getNumber() + 1);
+            return pageable(page.getNumber() + 1, page.getSize(), model);
         } catch (IllegalArgumentException e) {
             model.addAttribute("isntUUID", true);
             return "index";
@@ -144,14 +158,14 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=delete")
-    public String delete(@RequestParam("id") String uuid, @ModelAttribute("page") Page<FileDto> page, Model model) {
+    public String delete(@RequestParam("id") String uuid, @ModelAttribute Page<?> page, Model model) {
         try {
             UUID id = UUID.fromString(uuid);
             fileService.deleteById(id);
-            if (!page.isFirst() && page.getNumberOfElements() == page.getSize()) {
-                return "redirect:/manager/page/" + Math.max(page.getTotalPages() - 1, 1);
+            if (!page.isFirst() && page.getNumberOfElements() == 1) {
+                return pageable(page.getNumber() - 1, page.getSize(), model);
             }
-            return "redirect:/manager/page/" + (page.getNumber() + 1);
+            return pageable(page.getNumber() + 1, page.getSize(), model);
         } catch (IllegalArgumentException e) {
             model.addAttribute("isntUUID", true);
             return "index";

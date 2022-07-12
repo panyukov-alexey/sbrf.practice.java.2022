@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,13 +36,13 @@ public class ManagerController {
     public String pageable(@PathVariable(name = "id") Integer pageNumber,
                            @RequestParam(name = "size", defaultValue = "10") Integer size,
                            Model model) {
-        UserDto user = (UserDto)model.getAttribute("user");
+        UserDto user = (UserDto) model.getAttribute("user");
         Page<FileDto> page = fileService.findFilesByAuthor(user.getId(), PageRequest.of(pageNumber - 1, size));
         model.addAttribute("page", page);
         return "index";
     }
 
-    @RequestMapping(value = "/page/{id}", params={"criteria", "direction"})
+    @RequestMapping(value = "/page/{id}", params = {"criteria", "direction"})
     public String pageableWithSorting(@PathVariable(name = "id") Integer pageNumber,
                                       @RequestParam(name = "size", defaultValue = "10") Integer size,
                                       @RequestParam(name = "criteria") String criteria,
@@ -57,7 +56,7 @@ public class ManagerController {
         return "index";
     }
 
-    @RequestMapping(value = "/page/{id}", params={"search"})
+    @RequestMapping(value = "/page/{id}", params = {"search"})
     public String pageableWithFiltering(@PathVariable(name = "id") Integer pageNumber,
                                         @RequestParam(name = "size", defaultValue = "10") Integer size,
                                         @RequestParam(name = "search") String search,
@@ -71,7 +70,7 @@ public class ManagerController {
         return "index";
     }
 
-    @RequestMapping(value = "/page/{id}", params={"criteria", "direction", "search"})
+    @RequestMapping(value = "/page/{id}", params = {"criteria", "direction", "search"})
     public String pageableWithSortingAndFiltering(@PathVariable(name = "id") Integer pageNumber,
                                                   @RequestParam(name = "size", defaultValue = "10") Integer size,
                                                   @RequestParam(name = "search") String search,

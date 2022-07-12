@@ -53,18 +53,22 @@ public class ManagerController {
                            @RequestParam(name = "size", defaultValue = "10") Integer size,
                            Model model) {
         pageNumber = Math.max(pageNumber, 1);
+
         if (model.getAttribute("criteria") != null) {
             return pageableWithSorting(pageNumber, size, (String)model.getAttribute("criteria"),
                     Sort.Direction.fromString(((String)model.getAttribute("direction"))), model);
         }
+
         if (model.getAttribute("search") != null) {
             return pageableWithFiltering(pageNumber, size, (String)model.getAttribute("search"), model);
         }
-        if (model.getAttribute("criteria") != null && model.getAttribute("pageable") != null) {
+
+        if (model.getAttribute("criteria") != null && model.getAttribute("search") != null && model.getAttribute("search") != null) {
             return pageableWithSortingAndFiltering(pageNumber, size, (String)model.getAttribute("search"),
                     (String)model.getAttribute("criteria"),
                     Sort.Direction.fromString(((String)model.getAttribute("direction"))),model);
         }
+
         model.addAttribute("page", fileService.findFilesByAuthor(user().getId(), PageRequest.of(pageNumber - 1, size)));
         return "index";
     }
@@ -88,7 +92,8 @@ public class ManagerController {
                                         @RequestParam(name = "search") String search,
                                         Model model) {
         if (search.isBlank()) {
-            return "redirect:/manager";
+            model.addAttribute("search", null);
+            return pageable(pageNumber, size, model);
         }
         model.addAttribute("page", fileService.findByAuthorIdAndFilenameContains(user().getId(), search,
                 PageRequest.of(pageNumber - 1, size)));
@@ -104,7 +109,7 @@ public class ManagerController {
                                                   @RequestParam(name = "direction") Sort.Direction direction,
                                                   Model model) {
         if (search.isBlank()) {
-            return "redirect:/manager";
+            model.addAttribute("search", null);
         }
         model.addAttribute("page", fileService.findByAuthorIdAndFilenameContains(user().getId(), search,
                 PageRequest.of(pageNumber - 1, size, Sort.by(direction, criteria))));
@@ -117,6 +122,7 @@ public class ManagerController {
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=create")
     public String create(@ModelAttribute @Valid CreateFileDto dto, BindingResult bindingResult,
                          @ModelAttribute Page<?> page, Model model) {
+        model.addAttribute("search", null);
         if (bindingResult.hasErrors()) {
             model.addAttribute("isntJSON", true);
             return "index";
@@ -125,6 +131,7 @@ public class ManagerController {
         if (page.isLast() && page.getNumberOfElements() == page.getSize()) {
             return pageable(Math.max(page.getTotalPages() + 1, 1), page.getSize(), model);
         }
+        
         return pageable(page.getTotalPages(), page.getSize(), model);
     }
 
@@ -143,6 +150,7 @@ public class ManagerController {
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=update")
     public String update(@RequestParam("id") String uuid, @ModelAttribute @Valid UpdateFileDto dto,
                          BindingResult bindingResult,  @ModelAttribute Page<?> page, Model model) {
+        model.addAttribute("search", null);
         if (bindingResult.hasErrors()) {
             model.addAttribute("isntJSON", true);
             return "index";

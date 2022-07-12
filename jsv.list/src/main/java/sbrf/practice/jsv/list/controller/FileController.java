@@ -43,6 +43,19 @@ public class FileController {
         return sortedFiles;
     }
 
+    @GetMapping("/{filename}")
+    private List<FileDto> findByFilenameContains(@PathVariable("filename") String filename) {
+        List<FileDto> filesByContains = fileService.findByFilenameContains(filename);
+        log.info("Got files by filename");
+        return filesByContains;
+    }
+
+    @GetMapping("/{filename}")
+    private Page<FileDto> findByFilenameContains(@PathVariable("filename") String filename, Pageable pageable) {
+        Page<FileDto> filesByContains = fileService.findByFilenameContains(filename, pageable);
+        log.info("Got files by filename");
+        return filesByContains;
+    }
 
     @PostMapping("/upload")
     public FileDto create(@Valid @ModelAttribute CreateFileDto dto) {

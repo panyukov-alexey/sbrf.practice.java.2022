@@ -12,7 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
@@ -44,7 +46,7 @@ public class ManagerController {
     public String startPage(@RequestParam(name = "size", defaultValue = "10") Integer size, Model model) {
         model.addAttribute("search", "");
         model.addAttribute("criteria", "-");
-        model.addAttribute("ascending", null);
+        model.addAttribute("ascending", false);
         return pageable(1, size, model);
     }
 
@@ -62,8 +64,8 @@ public class ManagerController {
                                       @RequestParam(name = "criteria") String criteria,
                                       @RequestParam(name = "direction") Sort.Direction direction,
                                       Model model) {
-        Sort sort = Sort.by(direction, criteria);
-        model.addAttribute("page", fileService.findFilesByAuthor(user().getId(), PageRequest.of(pageNumber - 1, size, sort)));
+        model.addAttribute("page", fileService.findFilesByAuthor(user().getId(),
+                PageRequest.of(pageNumber - 1, size, Sort.by(direction, criteria))));
         model.addAttribute("criteria", criteria);
         model.addAttribute("ascending", direction.isAscending());
         return "index";
@@ -77,7 +79,8 @@ public class ManagerController {
         if (search.isBlank()) {
             return "redirect:/manager";
         }
-        model.addAttribute("page", fileService.findByAuthorIdAndFilenameContains(user().getId(), search, PageRequest.of(pageNumber - 1, size)));
+        model.addAttribute("page", fileService.findByAuthorIdAndFilenameContains(user().getId(), search,
+                PageRequest.of(pageNumber - 1, size)));
         model.addAttribute("search", search);
         return "index";
     }
@@ -92,10 +95,8 @@ public class ManagerController {
         if (search.isBlank()) {
             return "redirect:/manager";
         }
-        Sort sort = Sort.by(direction, criteria);
-
         model.addAttribute("page", fileService.findByAuthorIdAndFilenameContains(user().getId(), search,
-                PageRequest.of(pageNumber - 1, size, sort)));
+                PageRequest.of(pageNumber - 1, size, Sort.by(direction, criteria))));
         model.addAttribute("search", search);
         model.addAttribute("criteria", criteria);
         model.addAttribute("ascending", direction.isAscending());
@@ -104,7 +105,7 @@ public class ManagerController {
 
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute CreateFileDto dto, @ModelAttribute("page") Page<FileDto> page) {
+    public String create(@Valid @ModelAttribute CreateFileDto dto, @ModelAttribute("page") Page<FileDto> page, BindingResult result, RedirectAttributes redirectAttributes) {
         fileService.create(dto);
         if (page.isLast() && page.getNumberOfElements() == page.getSize()) {
             return "redirect:/manager/page/" + (page.getTotalPages() + 1);
@@ -136,7 +137,7 @@ public class ManagerController {
         if (!page.isFirst() && page.getNumberOfElements() == page.getSize()) {
             return "redirect:/manager/page/" + Math.max(page.getTotalPages() - 1, 1);
         }
-        return "redirect:/manager/page/" + page.getNumber();
+        return "redirect:/manager/page/" + (page.getNumber() + 1);
     }
 
     @ModelAttribute("user")

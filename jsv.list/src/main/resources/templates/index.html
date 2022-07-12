@@ -62,7 +62,7 @@
             <tr>
                 <th th:each="entry : ${criteries}">
                     <a
-                            th:href="@{~/manager/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${ascending == true && criteria == entry.key ? 'DESC' : 'ASC'}, __(${#strings.isEmpty(search)} ? '' : ('search=' + ${search}))__)}">
+                            th:href="@{~/manager/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${ascending == true && criteria == entry.key ? 'DESC' : 'ASC'} + (${#strings.isEmpty(search)} ? '' : ('search=' + ${search})))}">
                         <i th:class="'bi ' + ${ascending == true ? 'bi-sort-down-alt' : 'bi-sort-up'}"
                            th:if="${criteria == entry.key}"></i>
                         <i class="bi bi-justify" th:unless="${criteria == entry.key}"></i>
@@ -158,12 +158,8 @@
 </main>
 <footer class="container-fluid p-3 mt-auto bg-primary text-white" style="min-height: 100px">
     <div class="row text-center justify-content-center align-items-center">
-        <div>
             <strong>Арестов В. А., Лепешкин В.О., Осипова Я. Д., Петров Р.Ю. 😼</strong>
-        </div>
-        <div>
             <strong>☀️ Летняя практика 2022, ПАО Сбербанк, г. Омск</strong>
-        </div>
     </div>
 </footer>
 <script>

@@ -128,7 +128,8 @@
                     <i class="bi bi-key-fill input-group-text"></i>
                     <input class="form-control" id="id" name="id" readonly type="text">
                 </div>
-                <small th:if="${isntUUID == true}" class="form-text text-danger">Уникальный идентификатор файла не выбран.</small>
+                <small class="form-text text-danger" th:if="${isntUUID == true}">Уникальный идентификатор файла не
+                    выбран.</small>
             </div>
             <div class="mb-2">
                 <label class="form-label" for="filename">Название файла:</label>
@@ -141,8 +142,10 @@
                     <input class="form-control" id="file" name="file" type="file"/>
                     <i class="bi bi-file-earmark-arrow-down input-group-text"></i>
                 </div>
-                <small th:if="${isntJSON == true}" class="form-text text-danger">Файл не соответствует формату JSON.</small>
-                <small th:unless="${isntJSON == true}" class="form-text text-muted">Это должен быть файл формата JSON.</small>
+                <small class="form-text text-danger" th:if="${isntJSON == true}">Файл не соответствует формату
+                    JSON.</small>
+                <small class="form-text text-muted" th:unless="${isntJSON == true}">Это должен быть файл формата
+                    JSON.</small>
             </div>
             <div class="btn-group d-flex" role="group">
                 <button class="btn btn-primary" name="action" type="submit" value="create"><i class="bi bi-upload"></i>

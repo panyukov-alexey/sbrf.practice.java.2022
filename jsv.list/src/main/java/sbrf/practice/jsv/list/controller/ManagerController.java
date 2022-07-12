@@ -10,9 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
@@ -22,8 +20,6 @@ import sbrf.practice.jsv.list.service.UserService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -132,7 +128,7 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") String uuid,  @ModelAttribute @Valid UpdateFileDto dto, BindingResult bindingResult, @ModelAttribute("page") Page<FileDto> page, Model model) {
+    public String update(@RequestParam("id") String uuid, @ModelAttribute @Valid UpdateFileDto dto, BindingResult bindingResult, @ModelAttribute("page") Page<FileDto> page, Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("isntJSON", true);
             return "index";

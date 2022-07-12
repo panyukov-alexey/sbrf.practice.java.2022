@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
@@ -21,6 +22,8 @@ import sbrf.practice.jsv.list.service.UserService;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -104,7 +107,11 @@ public class ManagerController {
 
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute CreateFileDto dto, @ModelAttribute("page") Page<FileDto> page, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String create(@ModelAttribute @Valid CreateFileDto dto, BindingResult bindingResult, @ModelAttribute("page") Page<FileDto> page, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isntJSON", true);
+            return "index";
+        }
         fileService.create(dto);
         if (page.isLast() && page.getNumberOfElements() == page.getSize()) {
             return "redirect:/manager/page/" + (page.getTotalPages() + 1);
@@ -113,7 +120,7 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=read")
-    public void read(@RequestParam("id") @Valid UUID id, HttpServletResponse response) {
+    public void read(@RequestParam("id") UUID id, HttpServletResponse response) {
         try {
             FileDto file = fileService.findFileById(id);
             byte[] content = fileService.downloadFileById(id);
@@ -125,18 +132,34 @@ public class ManagerController {
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto, @ModelAttribute("page") Page<FileDto> page) {
-        fileService.update(id, dto);
-        return "redirect:/manager/page/" + (page.getNumber() + 1);
+    public String update(@RequestParam("id") String uuid,  @ModelAttribute @Valid UpdateFileDto dto, BindingResult bindingResult, @ModelAttribute("page") Page<FileDto> page, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("isntJSON", true);
+            return "index";
+        }
+        try {
+            UUID id = UUID.fromString(uuid);
+            fileService.update(id, dto);
+            return "redirect:/manager/page/" + (page.getNumber() + 1);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("isntUUID", true);
+            return "index";
+        }
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=delete")
-    public String delete(@RequestParam("id") @Valid UUID id, @ModelAttribute("page") Page<FileDto> page) {
-        fileService.deleteById(id);
-        if (!page.isFirst() && page.getNumberOfElements() == page.getSize()) {
-            return "redirect:/manager/page/" + Math.max(page.getTotalPages() - 1, 1);
+    public String delete(@RequestParam("id") String uuid, @ModelAttribute("page") Page<FileDto> page, Model model) {
+        try {
+            UUID id = UUID.fromString(uuid);
+            fileService.deleteById(id);
+            if (!page.isFirst() && page.getNumberOfElements() == page.getSize()) {
+                return "redirect:/manager/page/" + Math.max(page.getTotalPages() - 1, 1);
+            }
+            return "redirect:/manager/page/" + (page.getNumber() + 1);
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("isntUUID", true);
+            return "index";
         }
-        return "redirect:/manager/page/" + (page.getNumber() + 1);
     }
 
     @ModelAttribute("user")

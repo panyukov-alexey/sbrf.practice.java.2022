@@ -26,7 +26,7 @@
 <header class="container-fluid p-3 bg-primary text-white" style="min-height: 100px">
     <div class="row align-items-center">
         <div class="col">
-            <h1>🗃️ Файловый менеджер</h1>
+            <h1><a th:href="@{~/manager}">🗃️ Файловый менеджер</a></h1>
         </div>
         <div class="col-auto text-end">
             <div class="row">
@@ -46,7 +46,7 @@
 <main class="container mt-auto pt-3 pb-3">
     <div class="row">
         <form action="#" enctype="multipart/form-data" method="get"
-              th:action="@{/page/1(criteria=${criteria},direction=${ascending == true ? 'asc' : 'desc'})}">
+              th:action="@{~/manager/page/{id}/(id=1)}">
             <div class="col-auto">
                 <div class="input-group mb-3">
                     <span class="input-group-text"><i class="bi bi-search"></i></span>
@@ -62,7 +62,7 @@
             <tr>
                 <th th:each="entry : ${criteries}">
                     <a
-                            th:href="@{/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${ascending == true && criteria == entry.key ? 'DESC' : 'ASC'})}">
+                            th:href="@{~/manager/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${ascending == true && criteria == entry.key ? 'DESC' : 'ASC'}, __(${#strings.isEmpty(search)} ? '' : ('search=' + ${search}))__)}">
                         <i th:class="'bi ' + ${ascending == true ? 'bi-sort-down-alt' : 'bi-sort-up'}"
                            th:if="${criteria == entry.key}"></i>
                         <i class="bi bi-justify" th:unless="${criteria == entry.key}"></i>
@@ -94,30 +94,30 @@
     <div class="row">
         <ul class="pagination justify-content-center">
             <li th:class="'page-item ' + ${page.getNumber() < 2 ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{/page/1}"> <i class="bi bi-chevron-double-left"></i> </a>
+                <a class="page-link" th:href="@{/manager/page/{id}/(id=1)}"> <i class="bi bi-chevron-double-left"></i> </a>
             </li>
             <li th:class="'page-item ' + ${!page.hasPrevious() ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{'/page/' + ${page.getNumber()}}"> <i class="bi bi-chevron-left"></i>
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber()})}"> <i class="bi bi-chevron-left"></i>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" th:href="@{'/page/' + ${page.getNumber() + 1}}"
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber() + 1})}"
                    th:text="'Страница ' + ${page.getNumber() + 1} + ${page.getTotalPages() > 1 ? ' из ' + page.getTotalPages() : ''}"></a>
             </li>
             <li th:class="'page-item ' + ${!page.hasNext() ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{'/page/' + ${(page.getNumber() + 2)}}"> <i
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber() + 2})}"> <i
                         class="bi bi-chevron-right"></i>
                 </a>
             </li>
             <li th:class="'page-item ' + ${page.getNumber() + 1 == page.getTotalPages() || page.getTotalPages() < 3 ? 'disabled' : '' } ">
-                <a class="page-link" th:href="@{'/page/' + ${page.getTotalPages()}}"> <i
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getTotalPages()})}"> <i
                         class="bi bi-chevron-double-right"></i>
                 </a>
             </li>
         </ul>
     </div>
     <div class="row">
-        <form action="#" class="needs-validation" enctype="multipart/form-data" method="post" th:action="@{~/edit}">
+        <form action="#" class="needs-validation" enctype="multipart/form-data" method="post" th:action="@{~/manager/edit}" novalidate>
             <div class="mb-2 mt-2">
                 <label class="form-label" for="id">Уникальный идентификатор файла:</label>
                 <div class="input-group">

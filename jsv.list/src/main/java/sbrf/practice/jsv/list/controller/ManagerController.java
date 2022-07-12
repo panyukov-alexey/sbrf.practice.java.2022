@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -32,7 +34,17 @@ public class ManagerController {
     private final UserService userService;
     private final FileService fileService;
 
-    @GetMapping("/page/{id}")
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/manager";
+    }
+
+    @GetMapping("/manager")
+    public String startPage(@RequestParam(name = "size", defaultValue = "10") Integer size, Model model) {
+        return pageable(1, size, model);
+    }
+
+    @GetMapping("/manager/page/{id}")
     public String pageable(@PathVariable(name = "id") Integer pageNumber,
                            @RequestParam(name = "size", defaultValue = "10") Integer size,
                            Model model) {
@@ -42,7 +54,7 @@ public class ManagerController {
         return "index";
     }
 
-    @RequestMapping(value = "/page/{id}", params = {"criteria", "direction"})
+    @RequestMapping(value = "/manager/page/{id}", params = {"criteria", "direction"})
     public String pageableWithSorting(@PathVariable(name = "id") Integer pageNumber,
                                       @RequestParam(name = "size", defaultValue = "10") Integer size,
                                       @RequestParam(name = "criteria") String criteria,
@@ -56,13 +68,13 @@ public class ManagerController {
         return "index";
     }
 
-    @RequestMapping(value = "/page/{id}", params = {"search"})
+    @RequestMapping(value = "/manager/page/{id}", params = {"search"})
     public String pageableWithFiltering(@PathVariable(name = "id") Integer pageNumber,
                                         @RequestParam(name = "size", defaultValue = "10") Integer size,
                                         @RequestParam(name = "search") String search,
                                         Model model) {
         if (search.isBlank()) {
-            return pageable(pageNumber, size, model);
+            return "redirect:/manager";
         }
         Page<FileDto> page = fileService.findByAuthorIdAndFilenameContains(user().getId(), search, PageRequest.of(pageNumber - 1, size));
         model.addAttribute("page", page);
@@ -70,7 +82,7 @@ public class ManagerController {
         return "index";
     }
 
-    @RequestMapping(value = "/page/{id}", params = {"criteria", "direction", "search"})
+    @RequestMapping(value = "/manager/page/{id}", params = {"criteria", "direction", "search"})
     public String pageableWithSortingAndFiltering(@PathVariable(name = "id") Integer pageNumber,
                                                   @RequestParam(name = "size", defaultValue = "10") Integer size,
                                                   @RequestParam(name = "search") String search,
@@ -90,36 +102,36 @@ public class ManagerController {
         return "index";
     }
 
-    @GetMapping("/")
-    public String index(Model model) {
-        return pageable(1, 10, model);
-    }
 
-
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute CreateFileDto dto, Model model) {
+    @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=create")
+    public String create(@Valid @ModelAttribute CreateFileDto dto) {
         fileService.create(dto);
-        return index(model);
+        return "redirect:/manager";
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=read")
-    public void read(@RequestParam("id") @Valid UUID id, HttpServletResponse response) throws IOException {
-        FileDto file = fileService.findFileById(id);
-        byte[] content = fileService.downloadFileById(id);
-        IOUtils.copy(new ByteArrayInputStream(content), response.getOutputStream());
-        response.setHeader("Content-disposition", "attachment;filename=" + file.getFilename());
+    @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=read")
+    public void read(@RequestParam("id") @Valid UUID id, HttpServletResponse response) {
+        try {
+            FileDto file = fileService.findFileById(id);
+            byte[] content = fileService.downloadFileById(id);
+            IOUtils.copy(new ByteArrayInputStream(content), response.getOutputStream());
+            response.setHeader("Content-disposition", "attachment;filename=" + file.getFilename());
+        } catch (IOException e) {
+            throw new UncheckedIOException("Cannot download file with id", e);
+        }
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto, Model model) {
+    @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=update")
+    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto, @RequestHeader(name = "Referer") String referer){
         fileService.update(id, dto);
-        return index(model);
+        System.out.println(referer);
+        return "redirect:" + referer;
     }
 
-    @RequestMapping(value = "/edit", method = RequestMethod.POST, params = "action=delete")
-    public String delete(@RequestParam("id") @Valid UUID id, Model model) {
+    @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=delete")
+    public String delete(@RequestParam("id") @Valid UUID id, @RequestHeader(name = "Referer") String referer) {
         fileService.deleteById(id);
-        return index(model);
+        return "redirect:" + referer;
     }
 
     @ModelAttribute("user")

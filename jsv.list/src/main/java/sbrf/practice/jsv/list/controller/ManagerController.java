@@ -2,12 +2,14 @@ package sbrf.practice.jsv.list.controller;
 
 import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +25,11 @@ import javax.validation.Valid;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @AllArgsConstructor
+@SessionAttributes({"page", "search", "criteria", "ascending"})
 public class ManagerController {
 
     private final UserService userService;
@@ -41,6 +42,9 @@ public class ManagerController {
 
     @GetMapping("/manager")
     public String startPage(@RequestParam(name = "size", defaultValue = "10") Integer size, Model model) {
+        model.addAttribute("search", "");
+        model.addAttribute("criteria", "-");
+        model.addAttribute("ascending", null);
         return pageable(1, size, model);
     }
 
@@ -48,9 +52,7 @@ public class ManagerController {
     public String pageable(@PathVariable(name = "id") Integer pageNumber,
                            @RequestParam(name = "size", defaultValue = "10") Integer size,
                            Model model) {
-        UserDto user = (UserDto) model.getAttribute("user");
-        Page<FileDto> page = fileService.findFilesByAuthor(user.getId(), PageRequest.of(pageNumber - 1, size));
-        model.addAttribute("page", page);
+        model.addAttribute("page", fileService.findFilesByAuthor(user().getId(), PageRequest.of(pageNumber - 1, size)));
         return "index";
     }
 
@@ -61,8 +63,7 @@ public class ManagerController {
                                       @RequestParam(name = "direction") Sort.Direction direction,
                                       Model model) {
         Sort sort = Sort.by(direction, criteria);
-        Page<FileDto> page = fileService.findFilesByAuthor(user().getId(), PageRequest.of(pageNumber - 1, size, sort));
-        model.addAttribute("page", page);
+        model.addAttribute("page", fileService.findFilesByAuthor(user().getId(), PageRequest.of(pageNumber - 1, size, sort)));
         model.addAttribute("criteria", criteria);
         model.addAttribute("ascending", direction.isAscending());
         return "index";
@@ -76,8 +77,7 @@ public class ManagerController {
         if (search.isBlank()) {
             return "redirect:/manager";
         }
-        Page<FileDto> page = fileService.findByAuthorIdAndFilenameContains(user().getId(), search, PageRequest.of(pageNumber - 1, size));
-        model.addAttribute("page", page);
+        model.addAttribute("page", fileService.findByAuthorIdAndFilenameContains(user().getId(), search, PageRequest.of(pageNumber - 1, size)));
         model.addAttribute("search", search);
         return "index";
     }
@@ -90,23 +90,26 @@ public class ManagerController {
                                                   @RequestParam(name = "direction") Sort.Direction direction,
                                                   Model model) {
         if (search.isBlank()) {
-            return pageable(pageNumber, size, model);
+            return "redirect:/manager";
         }
         Sort sort = Sort.by(direction, criteria);
-        Page<FileDto> page = fileService.findByAuthorIdAndFilenameContains(user().getId(), search,
-                PageRequest.of(pageNumber - 1, size, sort));
-        model.addAttribute("page", page);
-        model.addAttribute("criteria", criteria);
+
+        model.addAttribute("page", fileService.findByAuthorIdAndFilenameContains(user().getId(), search,
+                PageRequest.of(pageNumber - 1, size, sort)));
         model.addAttribute("search", search);
+        model.addAttribute("criteria", criteria);
         model.addAttribute("ascending", direction.isAscending());
         return "index";
     }
 
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=create")
-    public String create(@Valid @ModelAttribute CreateFileDto dto) {
+    public String create(@Valid @ModelAttribute CreateFileDto dto, @ModelAttribute("page") Page<FileDto> page) {
         fileService.create(dto);
-        return "redirect:/manager";
+        if (page.isLast() && page.getNumberOfElements() == page.getSize()) {
+            return "redirect:/manager/page/" + (page.getTotalPages() + 1);
+        }
+        return "redirect:/manager/page/" + (page.getNumber() + 1);
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=read")
@@ -117,21 +120,23 @@ public class ManagerController {
             IOUtils.copy(new ByteArrayInputStream(content), response.getOutputStream());
             response.setHeader("Content-disposition", "attachment;filename=" + file.getFilename());
         } catch (IOException e) {
-            throw new UncheckedIOException("Cannot download file with id", e);
+            throw new UncheckedIOException("Can't download file with id", e);
         }
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=update")
-    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto, @RequestHeader(name = "Referer") String referer){
+    public String update(@RequestParam("id") UUID id, @Valid @ModelAttribute UpdateFileDto dto, @ModelAttribute("page") Page<FileDto> page) {
         fileService.update(id, dto);
-        System.out.println(referer);
-        return "redirect:" + referer;
+        return "redirect:/manager/page/" + (page.getNumber() + 1);
     }
 
     @RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "action=delete")
-    public String delete(@RequestParam("id") @Valid UUID id, @RequestHeader(name = "Referer") String referer) {
+    public String delete(@RequestParam("id") @Valid UUID id, @ModelAttribute("page") Page<FileDto> page) {
         fileService.deleteById(id);
-        return "redirect:" + referer;
+        if (!page.isFirst() && page.getNumberOfElements() == page.getSize()) {
+            return "redirect:/manager/page/" + Math.max(page.getTotalPages() - 1, 1);
+        }
+        return "redirect:/manager/page/" + page.getNumber();
     }
 
     @ModelAttribute("user")

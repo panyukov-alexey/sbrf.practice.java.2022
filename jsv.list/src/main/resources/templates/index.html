@@ -95,25 +95,25 @@
     <div class="row">
         <ul class="pagination justify-content-center">
             <li th:class="'page-item ' + ${page.getNumber() < 2 ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{/manager/page/{id}/(id=1), criteria = ${criteria}, direction=${direction}, search = ${search}}"> <i class="bi bi-chevron-double-left"></i>
+                <a class="page-link" th:href="@{/manager/page/{id}/(id=1,criteria = ${criteria}, direction=${direction}, search = ${search})}"> <i class="bi bi-chevron-double-left"></i>
                 </a>
             </li>
             <li th:class="'page-item ' + ${!page.hasPrevious() ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber()}, criteria = ${criteria}, direction=${direction}, search = ${search})}"> <i
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber()}, criteria = ${criteria}, direction=${direction},search=${search})}"> <i
                         class="bi bi-chevron-left"></i>
                 </a>
             </li>
             <li class="page-item">
-                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber() + 1}, criteria = ${criteria}, direction=${direction}, search = ${search})}"
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber() + 1}, criteria = ${criteria}, direction=${direction},search=${search})}"
                    th:text="'Страница ' + ${page.getNumber() + 1} + ${page.getTotalPages() > 1 ? ' из ' + page.getTotalPages() : ''}"></a>
             </li>
             <li th:class="'page-item ' + ${!page.hasNext() ? 'disabled' : ''}">
-                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber() + 2}, criteria = ${criteria}, direction=${direction}, search = ${search})}"> <i
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber() + 2}, criteria = ${criteria}, direction=${direction},search=${search})}"> <i
                         class="bi bi-chevron-right"></i>
                 </a>
             </li>
             <li th:class="'page-item ' + ${page.getNumber() + 1 == page.getTotalPages() || page.getTotalPages() < 3 ? 'disabled' : '' } ">
-                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getTotalPages()}, criteria = ${criteria}, direction=${direction}, search = ${search})}"> <i
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getTotalPages()}, criteria = ${criteria}, direction=${direction},search=${search})}"> <i
                         class="bi bi-chevron-double-right"></i>
                 </a>
             </li>
@@ -121,7 +121,7 @@
     </div>
     <div class="row">
         <form action="#" enctype="multipart/form-data" method="post"
-              th:action="@{~/manager/edit}">
+              th:action="@{~/manager/edit(criteria = ${criteria}, direction=${direction},search=${search})}">
             <div class="mb-2 mt-2">
                 <label class="form-label" for="id">Уникальный идентификатор файла:</label>
                 <div class="input-group">

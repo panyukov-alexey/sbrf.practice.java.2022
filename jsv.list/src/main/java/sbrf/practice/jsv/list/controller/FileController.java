@@ -36,7 +36,7 @@ public class FileController {
         return foundFile;
     }
 
-    @GetMapping("/sorted")
+    @GetMapping("/page")
     private Page<FileDto> findAllFiles(Pageable pageable) {
         Page<FileDto> sortedFiles = fileService.findAllFiles(pageable);
         log.info("Got and sorted all files");
@@ -50,7 +50,7 @@ public class FileController {
         return filesByContains;
     }
 
-    @GetMapping("/{filename}")
+    @GetMapping("/{filename}/page")
     private Page<FileDto> findByFilenameContains(@PathVariable("filename") String filename, Pageable pageable) {
         Page<FileDto> filesByContains = fileService.findByFilenameContains(filename, pageable);
         log.info("Got files by filename");

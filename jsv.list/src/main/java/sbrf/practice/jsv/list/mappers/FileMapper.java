@@ -45,7 +45,11 @@ public abstract class FileMapper {
             }
             f.setAuthorId(f.getAuthorId());
             if (dto.getFilename() != null && !dto.getFilename().isBlank()) {
-                f.setFilename(dto.getFilename() + ".json");
+                if (dto.getFilename().endsWith(".json")) {
+                    f.setFilename(dto.getFilename());
+                } else {
+                    f.setFilename(dto.getFilename() + ".json");
+                }
             }
             return f;
         } catch (IOException e) {

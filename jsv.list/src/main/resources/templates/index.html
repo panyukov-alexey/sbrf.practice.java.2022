@@ -1,87 +1,181 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
     <title>Файловый менеджер</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="script.js"></script>
-    <link href="style.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" rel="stylesheet">
+    <script crossorigin="anonymous"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        @import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css");
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+        }
+    </style>
 </head>
-<body>
-<header>
-    <h1>Файловый менеджер</h1>
-    <div style="text-align: right">
-        <span>уникальный идентификатор: <strong th:text="${user.getId()}"></strong> <br> имя пользователя: <strong
-                th:text="${user.getUsername()}"></strong></span> <br>
-        <a href="/logout">
-            <button>выйти</button>
-        </a>
+<body class="d-flex flex-column min-vh-100">
+<header class="container-fluid p-3 bg-primary text-white" style="min-height: 100px">
+    <div class="row align-items-center">
+        <div class="col">
+            <h1><a th:href="@{~/manager}">🗃️ Файловый менеджер</a></h1>
+        </div>
+        <div class="col-auto text-end">
+            <div class="row">
+                <div class="col-auto">
+                    Уникальный идентификатор пользователя: <strong th:text="${user.id}"></strong><br>
+                    Имя пользователя: <strong th:text="${user.username}"></strong>
+                </div>
+                <div class="col-sm-auto">
+                    <a th:href="@{/logout}">
+                        <button class="btn btn-danger" style="width: 128px">Выйти</button>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </header>
-<main>
-    <article>
-        <h2>Что это?</h2>
-        <p>Эта страница предназначена для просмотра и управления списком загруженных на сервер JSON файлов. Здесь можно
-            просматривать, обновлять, загружать и удалять файлы.</p>
-    </article>
-    <section class="view">
-        <table>
-            <caption style="text-align: left"><h2>Файлы</h2></caption>
-            <thead>
+<main class="container mt-auto pt-3 pb-3">
+    <div class="row">
+        <form action="#" enctype="multipart/form-data" method="get"
+              th:action="@{~/manager/page/{id}/(id=1)}">
+            <div class="col-auto">
+                <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input class="form-control" id="search" name="search" placeholder="Искать..." th:value="${search}"
+                           type="search"/>
+                    <button class="btn btn-outline-primary" type="submit">Поиск</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="row">
+        <table class="table table-hover table-sm table-responsive table-bordered" style="min-height:400px">
+            <thead class="table-dark">
             <tr>
-                <th>уникальный идентификатор</th>
-                <th>имя файла</th>
-                <th>дата создания</th>
-                <th>дата обновления</th>
+                <th th:each="entry : ${criteries}">
+                    <a
+                            th:href="@{~/manager/page/{id}(id=${page.getNumber() + 1},criteria=${entry.key},direction=${direction == 'ASC' && criteria == entry.key ? 'DESC' : 'ASC'}, search = ${search})}">
+                        <i th:class="'bi ' + ${direction == 'ASC' ? 'bi-sort-down-alt' : 'bi-sort-up'}"
+                           th:if="${criteria == entry.key}"></i>
+                        <i class="bi bi-justify" th:unless="${criteria == entry.key}"></i>
+                        [[${entry.value}]]
+                    </a>
+                </th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="file:${files}">
-                <td th:text="${file.getId()}"></td>
-                <td th:text="${file.getFileName()}"></td>
-                <td th:text="${file.getCreatedAt()}"></td>
-                <td th:text="${file.getUpdatedAt()}"></td>
+            <tr style="cursor: pointer;" th:attr="onclick=|setUUID('${file.id}')|" th:each="file:${page.getContent()}">
+                <td th:text="${file.id}"></td>
+                <td th:text="${file.filename}"></td>
+                <td th:text="${file.length} + ' байт'"></td>
+                <td th:text="${file.createdAt}"></td>
+                <td th:text="${file.updatedAt}"></td>
+            </tr>
+            <tr th:if="${page.getNumberOfElements() < page.getSize()}">
+                <td colspan="5" style="height: 100%">&nbsp;</td>
             </tr>
             </tbody>
+            <tfoot class="table-dark">
+            <tr>
+                <th colspan="1">Всего записей в таблице</th>
+                <td colspan="4" th:text="${page.getTotalElements()}"></td>
+            </tr>
+            </tfoot>
         </table>
-    </section>
-    <section>
-        <div class="management">
-            <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/edit}">
-                <fieldset>
-                    <legend>Операции над файлами</legend>
-                    <label for="id">Уникальный идентификатор</label><br>
-                    <input id="id" name="id" type="text"><br>
-                    <label for="file">Файл:</label><br>
-                    <input id="file" name="file" type="file"/><br>
-                    <input id="authorId" name="authorId" th:value="${user.getId()}" type="hidden">
-                    <input type="submit" name="action" value="create"/><br>
-                    <input type="submit" name="action" value="read"/><br>
-                    <input type="submit" name="action" value="update"/><br>
-                    <input type="submit" name="action" value="delete"/><br>
-                </fieldset>
-            </form>
-            <form action="#" enctype="form-data" method="POST" th:action="@{/filter}">
-                <fieldset>
-                    <legend>Операции над таблицей</legend>
-                    <label>Сортировка</label><br>
-                    <label for="filename"><input type="radio" id="filename" name="sortBy" value="filename"> По имени файла </label><br>
-                    <label for="filesize"><input type="radio" id="filesize" name="sortBy" value="filesize">
-                         По размеру файла</label><br>
-                    <label for="createdAt"><input type="radio" id="createdAt" name="sortBy" value="createdAt">По дате создания файла</label><br>
-                    <label for="updatedAt">                    <input type="radio" id="updatedAt" name="sortBy" value="updatedAt">
-                        По дате обновления файла</label><br>
-                    <label>Пагинация:</label><br>
-                    <input type="range" min="0" max="100"><br>
-                    <input type="submit" value="search"/><br>
-                </fieldset>
-            </form>
-        </div>
-    </section>
+    </div>
+    <div class="row">
+        <ul class="pagination justify-content-center">
+            <li th:class="'page-item ' + ${page.getNumber() < 2 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{/manager/page/{id}/(id=1,criteria = ${criteria}, direction=${direction}, search = ${search})}"> <i class="bi bi-chevron-double-left"></i>
+                </a>
+            </li>
+            <li th:class="'page-item ' + ${!page.hasPrevious() ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber()}, criteria = ${criteria}, direction=${direction},search=${search})}"> <i
+                        class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber() + 1}, criteria = ${criteria}, direction=${direction},search=${search})}"
+                   th:text="'Страница ' + ${page.getNumber() + 1} + ${page.getTotalPages() > 1 ? ' из ' + page.getTotalPages() : ''}"></a>
+            </li>
+            <li th:class="'page-item ' + ${!page.hasNext() ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getNumber() + 2}, criteria = ${criteria}, direction=${direction},search=${search})}"> <i
+                        class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            <li th:class="'page-item ' + ${page.getNumber() + 1 == page.getTotalPages() || page.getTotalPages() < 3 ? 'disabled' : '' } ">
+                <a class="page-link" th:href="@{~/manager/page/{id}/(id=${page.getTotalPages()}, criteria = ${criteria}, direction=${direction},search=${search})}"> <i
+                        class="bi bi-chevron-double-right"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="row">
+        <form action="#" enctype="multipart/form-data" method="post"
+              th:action="@{~/manager/edit(criteria = ${criteria}, direction=${direction},search=${search})}">
+            <div class="mb-2 mt-2">
+                <label class="form-label" for="id">Уникальный идентификатор файла:</label>
+                <div class="input-group">
+                    <i class="bi bi-key-fill input-group-text"></i>
+                    <input class="form-control" id="id" name="id" readonly type="text">
+                </div>
+                <small class="form-text text-danger" th:if="${isntUUID == true}">Уникальный идентификатор файла не
+                    выбран.</small>
+            </div>
+            <div class="mb-2">
+                <label class="form-label" for="filename">Название файла:</label>
+                <input class="form-control" id="filename" name="filename" type="text">
+            </div>
+            <input class="form-control" id="authorId" name="authorId" th:value="${user.id}" type="hidden"/>
+            <div class="mb-2">
+                <label class="form-label" for="file">Файл:</label>
+                <div class="input-group">
+                    <input class="form-control" id="file" name="file" type="file"/>
+                    <i class="bi bi-file-earmark-arrow-down input-group-text"></i>
+                </div>
+                <small class="form-text text-danger" th:if="${isntJSON == true}">Файл не соответствует формату
+                    JSON.</small>
+                <small class="form-text text-muted" th:unless="${isntJSON == true}">Это должен быть файл формата
+                    JSON.</small>
+            </div>
+            <div class="btn-group d-flex" role="group">
+                <button class="btn btn-primary" name="action" type="submit" value="create"><i class="bi bi-upload"></i>
+                    Загрузить файл
+                </button>
+                <button class="btn btn-primary" name="action" type="submit" value="read"><i class="bi bi-download"></i>
+                    Скачать файл
+                </button>
+                <button class="btn btn-primary" name="action" type="submit" value="update"><i
+                        class="bi bi-arrow-repeat"></i>
+                    Обновить файл
+                </button>
+                <button class="btn btn-primary" name="action" type="submit" value="delete"><i class="bi bi-x-lg"></i>
+                    Удалить файл
+                </button>
+            </div>
+        </form>
+    </div>
 </main>
-<footer>
-    <h2>Летняя практика 2022</h2>
-    <strong>ПАО Сбербанк, г. Омск, 😺 Группа Д-5</strong>
+<footer class="container-fluid p-3 mt-auto bg-primary text-white" style="min-height: 100px">
+    <div class="row text-center justify-content-center align-items-center">
+        <strong>Арестов В. А., Лепешкин В.О., Осипова Я. Д., Петров Р.Ю. 😼</strong>
+        <strong>☀️ Летняя практика 2022, ПАО Сбербанк, г. Омск</strong>
+    </div>
 </footer>
+<script>
+    function setUUID(uuid) {
+        const input = document.getElementById('id');
+        input.setAttribute("value", uuid);
+    }
+</script>
 </body>
 </html>

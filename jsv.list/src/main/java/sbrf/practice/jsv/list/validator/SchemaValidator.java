@@ -12,7 +12,8 @@ public class SchemaValidator implements ConstraintValidator<IsValidSchema, Multi
     @Override
     public boolean isValid(MultipartFile content, ConstraintValidatorContext context) {
         try {
-            String str = new String(content.getBytes());
+            byte[] bytes = content.getBytes();
+            String str = new String(bytes);
             ObjectMapper mapper = new ObjectMapper();
             JsonNode actualObj = mapper.readTree(str);
             return true;

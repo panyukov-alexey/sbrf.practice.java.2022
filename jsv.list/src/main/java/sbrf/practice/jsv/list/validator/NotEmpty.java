@@ -7,10 +7,10 @@ import java.lang.annotation.*;
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Constraint(validatedBy = SchemaValidator.class)
-public @interface IsValidSchema {
+@Constraint(validatedBy = MultipartContentValidator.class)
+public @interface NotEmpty {
     //error message
-    String message() default "Invalid JSON schema";
+    String message() default "The content in MultipartFile musn't be empty!";
 
     //represents group of constraints
     Class<?>[] groups() default {};

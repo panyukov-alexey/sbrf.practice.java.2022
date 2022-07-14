@@ -1,38 +1,61 @@
 package sbrf.practice.jsv.list.mappers;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
+import org.springframework.beans.factory.annotation.Autowired;
 import sbrf.practice.jsv.list.dto.files.CreateFileDto;
 import sbrf.practice.jsv.list.dto.files.FileDto;
 import sbrf.practice.jsv.list.dto.files.UpdateFileDto;
 import sbrf.practice.jsv.list.model.File;
+import sbrf.practice.jsv.list.repository.FileRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.UUID;
 
 @Mapper(componentModel = "spring")
-public interface FileMapper {
+public abstract class FileMapper {
 
-    @Mappings({
-            @Mapping(target = "filename", expression = "java(dto.getFile().getOriginalFilename())"),
-            @Mapping(target = "authorId", source = "dto.authorId"),
-            @Mapping(target = "content", expression = "java(dto.getFile().getBytes())"),
-    })
-    File createFileDtoToFile(CreateFileDto dto) throws IOException;
+    @Autowired
+    protected FileRepository fileRepository;
 
-    @Mappings({
-            @Mapping(target = "filename", expression = "java(dto.getFile().getOriginalFilename())"),
-            @Mapping(target = "authorId", source = "dto.authorId"),
-            @Mapping(target = "content", expression = "java(dto.getFile().getBytes())"),
-    })
-    File updateFileDtoToFile(UpdateFileDto dto) throws IOException;
+    public File createFileDtoToFile(CreateFileDto dto) {
+        try {
+            File f = new File();
+            f.setFilename(dto.getFile().getOriginalFilename());
+            f.setLength(dto.getFile().getSize());
+            f.setContent(dto.getFile().getBytes());
+            f.setAuthorId(dto.getAuthorId());
+            if (dto.getFilename() != null && !dto.getFilename().isBlank()) {
+                f.setFilename(dto.getFilename());
+            }
+            return f;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Cannot convert CreateFileDto to FileDto", e);
+        }
+    }
 
-    @Mappings({
-            @Mapping(target = "id", source = "id"),
-            @Mapping(target = "fileName", source = "filename"),
-            @Mapping(target = "authorId", source = "authorId"),
-            @Mapping(target = "createdAt", source = "createdAt"),
-            @Mapping(target = "updatedAt", source = "updatedAt")
-    })
-    FileDto fileToFileDto(File file) throws IOException;
+    public File updateFileDtoToFile(UUID id, UpdateFileDto dto) {
+        try {
+            File f = fileRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+            if (!dto.getFile().isEmpty()) {
+                f.setFilename(dto.getFile().getOriginalFilename());
+                f.setLength(dto.getFile().getSize());
+                f.setContent(dto.getFile().getBytes());
+            }
+            f.setAuthorId(f.getAuthorId());
+            if (dto.getFilename() != null && !dto.getFilename().isBlank()) {
+                if (dto.getFilename().endsWith(".json")) {
+                    f.setFilename(dto.getFilename());
+                } else {
+                    f.setFilename(dto.getFilename() + ".json");
+                }
+            }
+            return f;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Cannot convert UpdateFileDto to FileDto", e);
+        }
+    }
+
+    public abstract FileDto fileToFileDto(File file);
 }

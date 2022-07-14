@@ -1,10 +1,18 @@
 package sbrf.practice.jsv.list.dto.users;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-public class UpdateUserDto extends CreateUserDto {
-    public UpdateUserDto(String username, @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$") String password) {
-        super(username, password);
-    }
+@Getter
+@Setter
+@AllArgsConstructor
+public class UpdateUserDto {
+    @NotNull
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
+    private String password;
 }

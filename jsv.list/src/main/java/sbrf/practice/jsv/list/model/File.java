@@ -29,6 +29,9 @@ public class File extends Base {
     @Column(name = "filename")
     private String filename;
 
+    @Column(name = "length")
+    private Long length;
+
     @ManyToOne()
     @JoinColumn(name = "author_id", insertable = false, updatable = false)
     @JsonIgnore
@@ -42,8 +45,9 @@ public class File extends Base {
     @Lob
     private byte[] content;
 
-    public File(String filename, UUID authorId, byte[] content) {
+    public File(String filename, Long length, UUID authorId, byte[] content) {
         this.filename = filename;
+        this.length = length;
         this.authorId = authorId;
         this.content = content;
     }
